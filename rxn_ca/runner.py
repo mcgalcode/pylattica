@@ -45,8 +45,7 @@ class Runner():
         self.free_element_amounts = {}
         result = ReactionResult(reaction_set, phase_map)
         print(f'Running w/ sim. size {initial_step.size}')
-        if self.parallel:
-            print('Running in parallel!')
+
         step = initial_step
         mols = step_analyzer.to_mole_array(step)
 
@@ -67,6 +66,8 @@ class Runner():
                 PROCESSES = mp.cpu_count()
             else:
                 PROCESSES = self.workers
+
+            print(f'Running in parallel using {PROCESSES} workers')
 
             with mp.get_context('fork').Pool(PROCESSES) as pool:
                 for _ in tqdm(range(num_steps)):
