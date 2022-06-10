@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 
-from reaction_model.phase_map import PhaseMap
+from rxn_ca.phase_map import PhaseMap
 from .colors import COLORS
 
 class StepArtist():

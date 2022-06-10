@@ -1,8 +1,8 @@
 import typing
 import numpy as np
-from reaction_model.reaction_step import ReactionStep
+from rxn_ca.reaction_step import ReactionStep
 
-from reaction_model.scored_reaction_set import ScoredReactionSet
+from rxn_ca.scored_reaction_set import ScoredReactionSet
 
 class PhaseMap():
 

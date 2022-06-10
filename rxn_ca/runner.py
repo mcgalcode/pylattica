@@ -1,7 +1,7 @@
-from reaction_model.distance_map import DistanceMap
-from reaction_model.phase_map import PhaseMap
-from reaction_model.scored_reaction_set import ScoredReactionSet
-from reaction_model.step_analyzer import StepAnalyzer
+from rxn_ca.distance_map import DistanceMap
+from rxn_ca.phase_map import PhaseMap
+from rxn_ca.scored_reaction_set import ScoredReactionSet
+from rxn_ca.step_analyzer import StepAnalyzer
 from .reaction_result import ReactionResult
 from .reaction_step import ReactionStep, get_filter_size_from_side_length
 
@@ -20,7 +20,7 @@ class Runner():
     and it will run a simulation for the prescribed number of steps.
     """
 
-    def __init__(self, parallel = False):
+    def __init__(self, parallel = False, workers = None):
         """Initializes a simulation Runner.
 
         Args:
@@ -28,6 +28,7 @@ class Runner():
             reaction_set (ScoredReactionSet): The set of reactions possible in the simulation
         """
         self.parallel = parallel
+        self.workers = workers
 
     def run(self, initial_step: ReactionStep, reaction_set: ScoredReactionSet, phase_map: PhaseMap, num_steps: int) -> ReactionResult:
         """Run the simulation for the prescribed number of steps.
@@ -61,7 +62,11 @@ class Runner():
             mp_globals['distance_map'] = distance_map
             mp_globals['filter_size'] = filter_size
             mp_globals['step_size'] = initial_step.size
-            PROCESSES = 12
+
+            if self.workers is None:
+                PROCESSES = mp.cpu_count
+            else:
+                PROCESSES = self.workers
 
             with mp.get_context('fork').Pool(PROCESSES) as pool:
                 for _ in tqdm(range(num_steps)):

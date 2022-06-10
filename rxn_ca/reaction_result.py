@@ -1,11 +1,11 @@
 import json
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-from reaction_model.phase_map import PhaseMap
+from rxn_ca.phase_map import PhaseMap
 
-from reaction_model.scored_reaction_set import ScoredReactionSet
-from reaction_model.reaction_step import ReactionStep
-from reaction_model.step_analyzer import StepAnalyzer
+from rxn_ca.scored_reaction_set import ScoredReactionSet
+from rxn_ca.reaction_step import ReactionStep
+from rxn_ca.step_analyzer import StepAnalyzer
 from .artist import StepArtist
 import numpy as np
 from .colors import COLORS

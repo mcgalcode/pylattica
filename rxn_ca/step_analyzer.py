@@ -3,13 +3,13 @@ import random
 import numpy as np
 import typing
 
-from reaction_model.distance_map import DistanceMap
-from reaction_model.reaction_step import ReactionStep, get_filter_size_from_side_length
+from rxn_ca.distance_map import DistanceMap
+from rxn_ca.reaction_step import ReactionStep, get_filter_size_from_side_length
 from .normalizers import normalize
 
-from reaction_model.scored_reaction_set import ScoredReactionSet
-from reaction_model.scored_reaction import ScoredReaction
-from reaction_model.phase_map import PhaseMap
+from rxn_ca.scored_reaction_set import ScoredReactionSet
+from rxn_ca.scored_reaction import ScoredReaction
+from rxn_ca.phase_map import PhaseMap
 
 from pymatgen.core.composition import Composition
 

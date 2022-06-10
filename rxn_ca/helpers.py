@@ -3,6 +3,10 @@ from pymatgen.ext.matproj import MPRester
 from rxn_network.enumerators.minimize import MinimizeGibbsEnumerator
 from rxn_network.entries.entry_set import GibbsEntrySet
 from rxn_network.reactions.reaction_set import ReactionSet
+
+from rxn_ca.scorers import ArrheniusScore, score_reactions
+from rxn_ca.scored_reaction_set import ScoredReactionSet
+
 import os
 
 import json
@@ -23,3 +27,14 @@ def download_rxns(chem_sys, temp, stability_cutoff, parent_dir='.', open_el = No
     name = os.path.join(parent_dir, f'{chem_sys}-{temp}K.json')
     with open(name, 'w+') as f:
         f.write(json.dumps(rxn_set.as_dict()))
+
+def score_and_write_rxns(unscored_path, output_path, temp, free_species = [], open_species = []):
+    f = open(unscored_path, 'r+')
+    rxn_set = ReactionSet.from_dict(json.loads(f.read()))
+    f.close()
+    scorer = ArrheniusScore(temp)
+    scored_rxns = score_reactions(rxn_set, scorer)
+    scored_rxn_set = ScoredReactionSet(scored_rxns, open_species = open_species, free_species=free_species)
+
+    with open(output_path, 'w+') as f:
+        f.write(json.dumps(scored_rxn_set.to_dict()))
