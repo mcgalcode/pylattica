@@ -64,7 +64,7 @@ class Runner():
             mp_globals['step_size'] = initial_step.size
 
             if self.workers is None:
-                PROCESSES = mp.cpu_count
+                PROCESSES = mp.cpu_count()
             else:
                 PROCESSES = self.workers
 
