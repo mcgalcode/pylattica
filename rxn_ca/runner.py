@@ -10,9 +10,11 @@ from tqdm import tqdm
 
 import multiprocessing as mp
 
-
 mp_globals = {}
 
+def printif(cond, statement):
+    if cond:
+        print(statement)
 
 class Runner():
     """Class for orchestrating the running of the simulation. Provide this class a
@@ -30,7 +32,7 @@ class Runner():
         self.parallel = parallel
         self.workers = workers
 
-    def run(self, initial_step: ReactionStep, reaction_set: ScoredReactionSet, phase_map: PhaseMap, num_steps: int) -> ReactionResult:
+    def run(self, initial_step: ReactionStep, reaction_set: ScoredReactionSet, phase_map: PhaseMap, num_steps: int, verbose = False) -> ReactionResult:
         """Run the simulation for the prescribed number of steps.
 
         Args:
@@ -39,12 +41,12 @@ class Runner():
         Returns:
             ReactionResult:
         """
-        print("Initializing run")
+        printif(verbose, "Initializing run")
         step_analyzer = StepAnalyzer(phase_map, reaction_set)
-        print("Initialized analyzer")
-        self.free_element_amounts = {}
+        printif(verbose, "Initialized analyzer")
+        printif.free_element_amounts = {}
         result = ReactionResult(reaction_set, phase_map)
-        print(f'Running w/ sim. size {initial_step.size}')
+        printif(verbose, f'Running w/ sim. size {initial_step.size}')
 
         step = initial_step
         mols = step_analyzer.to_mole_array(step)
@@ -67,15 +69,16 @@ class Runner():
             else:
                 PROCESSES = self.workers
 
-            print(f'Running in parallel using {PROCESSES} workers')
+            printif(verbose, f'Running in parallel using {PROCESSES} workers')
 
             with mp.get_context('fork').Pool(PROCESSES) as pool:
-                for _ in tqdm(range(num_steps)):
+                for i in tqdm(range(num_steps)):
                     padded_state = step_analyzer.pad_state(step, filter_size)
                     new_state, rxn_choices = self._take_step_parallel(padded_state, mols, initial_step.size, pool)
                     step = ReactionStep(new_state)
                     result.add_step(step)
                     result.add_choices(rxn_choices)
+                    printif(verbose, f'Finished step {i}')
         else:
             for _ in tqdm(range(num_steps)):
                 padded_state = step_analyzer.pad_state(step, filter_size)
