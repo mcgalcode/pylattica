@@ -1,4 +1,6 @@
 import typing
+
+from rxn_ca.core.neighborhoods import PADDING_VAL
 from ..core import BasicStepArtist
 from ..core import BasicSimulationStep
 from ..core import COLORS
@@ -24,8 +26,11 @@ class DiscreteStepArtist(BasicStepArtist):
         else:
             self.color_map = color_map
         self.phase_map = phase_map
+        super().__init__()
 
     def get_color_by_cell_state(self, cell_state):
+        if int(cell_state) == PADDING_VAL:
+            return (0,0,0)
         phase_name = self.phase_map.int_to_phase[cell_state]
         return self.color_map[phase_name]
 
@@ -42,6 +47,7 @@ class DiscreteStepArtist(BasicStepArtist):
             display_phases[p] = COLORS[c_idx]
             c_idx += 1
 
+        display_phases[PhaseMap.PADDING] = (0, 0, 0)
         return display_phases
 
     def get_legend(self):

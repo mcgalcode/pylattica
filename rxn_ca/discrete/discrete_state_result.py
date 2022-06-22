@@ -24,6 +24,7 @@ class DiscreteStateResult(BasicSimulationResult):
             rxn_set (ScoredReactionSet):
         """
         self.state_map: PhaseMap = state_map
+        print(self.state_map)
         super().__init__()
 
     @property
@@ -52,7 +53,7 @@ class DiscreteStateResult(BasicSimulationResult):
         """
         display_phases: typing.Dict[str, typing.Tuple[int, int, int]] = {}
         c_idx: int = 0
-        for p in self.all_phases:
+        for p in self.all_states:
             display_phases[p] = COLORS[c_idx]
             c_idx += 1
 
@@ -62,7 +63,7 @@ class DiscreteStateResult(BasicSimulationResult):
         if display_phases is None:
             display_phases = self.phase_color_map
 
-        artist = DiscreteStepArtist(self.phase_map, display_phases)
+        artist = DiscreteStepArtist(self.state_map, display_phases)
         imgs = []
         for idx, step in enumerate(self.steps):
             label = f'Step {idx}'

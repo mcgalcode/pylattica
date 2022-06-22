@@ -15,13 +15,15 @@ def distance(arr1: np.array, arr2: np.array) -> float:
 
 class DistanceMap():
 
-    def __init__(self, filter_size: int):
+    def __init__(self, side_length: int):
         """Intializes a DistanceMap.
 
         Args:
             filter_size (int): The size of the distance map to create
         """
-        self.distances: np.array = self.find_distances(filter_size)
+        if side_length % 2 != 1:
+            print("Warning: distance map initialized with even side length implies ambiguous center point")
+        self.distances: np.array = self.find_distances(side_length)
 
     def find_distances(self, filter_size: int) -> np.array:
         """Generates a filter_size x filter_size grid where each cell contains it's distance
@@ -39,6 +41,16 @@ class DistanceMap():
         for i in range(filter_size):
             for j in range(filter_size):
                 curr_loc = np.array([i, j])
-                distances[(i, j)] = distance(cell_center, curr_loc)
+                distances[(i, j)] = self._distance(cell_center, curr_loc)
 
         return distances
+
+class EuclideanDistanceMap(DistanceMap):
+
+    def _distance(self, p1, p2):
+        return round(distance(p1, p2), 2)
+
+class ManhattanDistanceMap(DistanceMap):
+
+    def _distance(self, p1, p2):
+        return np.abs(p1 - p2).sum()

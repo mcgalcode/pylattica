@@ -8,8 +8,6 @@ from .scored_reaction_set import ScoredReactionSet
 from .reaction_step import ReactionStep
 
 import numpy as np
-import time
-import typing
 
 class ReactionResult(DiscreteStateResult):
     """A class that stores the result of running a simulation. Keeps track of all
@@ -37,11 +35,11 @@ class ReactionResult(DiscreteStateResult):
         Args:
             rxn_set (ScoredReactionSet):
         """
+        super().__init__(phase_map)
         self.steps: list[ReactionStep] = []
         self.mole_steps: list[np.array] = []
         self.rxn_set: ScoredReactionSet = rxn_set
-        self.phase_map: PhaseMap = phase_map
-        self.analyzer = ReactionStepAnalyzer(self.phase_map, self.rxn_set)
+        self.analyzer = ReactionStepAnalyzer(self.state_map, self.rxn_set)
 
     def get_choices_at(self, step_no: int, top: int = None, exclude_ids = True) -> None:
 
@@ -83,103 +81,16 @@ class ReactionResult(DiscreteStateResult):
 
         fig.show()
 
-    @property
-    def all_phases(self) -> list[str]:
-        """A list of all the phases that appeared during this simulation. Note that
-        this is distinct from the list of phases that _could_ appear according to the
-        reaction set used during the simulation.
-
-        Returns:
-            list[str]:
-        """
-
-        phases: list[str] = []
-        for step in self.steps:
-            phases = phases + self.analyzer.phases_present(step)
-
-        return list(set(phases))
-
-
-    def jupyter_play(self, color_map: typing.Dict[str, typing.Tuple[int, int ,int]] = None, cell_size: int = 20, wait: int = 1):
-        """In a jupyter notebook environment, plays the simulation visualization back by showing a
-        series of images with {wait} seconds between each one.
-
-        Args:
-            color_map (typing.Dict[str, typing.Tuple[int, int ,int]], optional): Defaults to None.
-            cell_size (int, optional): The sidelength of a grid cell in pixels. Defaults to 20.
-            wait (int, optional): The time duration between frames in the animation. Defaults to 1.
-        """
-        from IPython.display import clear_output
-
-        imgs = self._get_images(color_map, cell_size)
-        for img in imgs:
-            clear_output()
-            display(img)
-            time.sleep(wait)
-
-    def plot_volume_fractions(self, min_prevalence=0.01) -> None:
-        """In a Jupyter Notebook environment, plots the phase prevalence traces for the simulation.
-
-        Returns:
-            None:
-        """
-
-        fig = go.Figure()
-        fig.update_layout(width=800, height=800)
-        fig.update_yaxes(range=[-0.05,1.05], title="Volume Fraction")
-        fig.update_xaxes(range=[0, len(self.steps) - 1], title="Simulation Step")
-
-        traces = []
-        for phase in self.all_phases:
-            if phase != self.phase_map.FREE_SPACE:
-                xs = np.arange(len(self.steps))
-                ys = [self.analyzer.volume_fraction(step, phase) for step in self.steps]
-                traces.append((xs, ys, phase))
-
-        filtered_traces = [t for t in traces if max(t[1]) > min_prevalence]
-
-        for t in filtered_traces:
-            fig.add_trace(go.Scatter(name=t[2], x=t[0], y=t[1], mode='lines'))
-
-        fig.show()
-
-    def plot_mole_fractions(self, min_prevalence=0.01) -> None:
-        """In a Jupyter Notebook environment, plots the phase prevalence traces for the simulation.
-
-        Returns:
-            None:
-        """
-
-        fig = go.Figure()
-        fig.update_layout(width=800, height=800)
-        fig.update_yaxes(range=[-0.05,1.05], title="Mole Fraction")
-        fig.update_xaxes(title="Simulation Step")
-
-        traces = []
-        for phase in self.all_phases:
-            if phase != self.phase_map.FREE_SPACE:
-                xs = np.arange(len(self.steps))
-                ys = [self.analyzer.mole_fraction(step, phase) for step in self.steps]
-                traces.append((xs, ys, phase))
-
-        filtered_traces = [t for t in traces if max(t[1]) > min_prevalence]
-
-        for t in filtered_traces:
-            fig.add_trace(go.Scatter(name=t[2], x=t[0], y=t[1], mode='lines'))
-
-        fig.show()
-
-
     def plot_elemental_amounts(self) -> None:
         fig = go.Figure()
         fig.update_layout(width=800, height=800)
         fig.update_yaxes(title="Relative Prevalence")
         fig.update_xaxes(title="Simulation Step")
 
-        analyzer = StepAnalyzer(self.phase_map, self.rxn_set)
+        analyzer = ReactionStepAnalyzer(self.state_map, self.rxn_set)
         elements = list(analyzer.elemental_composition(self.steps[0]).keys())
         traces = []
-        amounts = [analyzer.elemental_composition(s, self.mole_steps[idx]) for idx, s in enumerate(self.steps)]
+        amounts = [analyzer.elemental_composition(s) for idx, s in enumerate(self.steps)]
         for el in elements:
             xs = np.arange(len(self.steps))
             ys = [a[el] for a in amounts]
@@ -198,5 +109,5 @@ class ReactionResult(DiscreteStateResult):
             "steps": [s.to_dict() for s in self.steps],
             "choices": self.choices,
             "rxn_set": self.rxn_set.to_dict(),
-            "phase_map": self.phase_map.to_dict()
+            "phase_map": self.state_map.to_dict()
         }

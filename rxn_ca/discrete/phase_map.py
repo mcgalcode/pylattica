@@ -5,6 +5,7 @@ from ..core.basic_simulation_step import BasicSimulationStep
 class PhaseMap():
 
     FREE_SPACE = "_free_space"
+    PADDING = "_padding"
 
     @classmethod
     def from_dict(cls, pm_dict):
@@ -32,6 +33,7 @@ class PhaseMap():
             self.int_to_phase[idx] = phase_name
             self.phase_to_int[phase_name] = idx
 
+        self.padding_id: int = -1
         self.free_space_id: int = self.phase_to_int[self.FREE_SPACE]
 
     def step_as_phase_name_array(self, step: BasicSimulationStep):

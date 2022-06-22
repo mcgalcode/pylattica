@@ -25,13 +25,13 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
         for el, amt in self.elemental_composition(step).items():
             print(f'{el} moles: ', amt)
 
-    def elemental_composition(self, step, mole_amts = None):
+    def elemental_composition(self, step):
         phases = self.phases_present(step)
         elemental_amounts = {}
         total = 0
         for p in phases:
             comp = Composition(p)
-            moles = self.cell_count(step, p, mole_amts)
+            moles = self.cell_count(step, p)
             for el, am in comp.as_dict().items():
                 num_moles = moles * am
                 if el in elemental_amounts:

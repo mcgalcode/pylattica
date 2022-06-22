@@ -2,10 +2,11 @@ import math
 import random
 import numpy as np
 import typing
+
+from rxn_ca.core.neighborhoods import MooreNeighborhood
 from ..core.basic_controller import BasicController
 from ..discrete import PhaseMap
 
-from .distance_map import DistanceMap
 from .reaction_result import ReactionResult
 from .reaction_step import ReactionStep, get_filter_size_from_side_length
 from .normalizers import normalize
@@ -19,8 +20,9 @@ class ReactionController(BasicController):
         self.phase_map: PhaseMap = phase_map
         self.rxn_set: ScoredReactionSet = reaction_set
         self.filter_size = get_filter_size_from_side_length(step_size)
-        self.distance_map = DistanceMap(self.filter_size)
         self.step_size = step_size
+        self.neighborhood_radius = math.floor(self.filter_size / 2)
+        self.neighborhood = MooreNeighborhood(self.neighborhood_radius)
 
     def instantiate_result(self):
         return ReactionResult(self.rxn_set, self.phase_map)
@@ -32,59 +34,35 @@ class ReactionController(BasicController):
       return new_phase, chosen_rxn
 
     def neighbors_in_padded_state(self, padded_state, i, j):
-        radius = math.floor(self.filter_size / 2)
         neighbor_phases = []
         for n_i in range(-1, 2):
             for n_j in range(-1, 2):
                 if np.abs(n_i) + np.abs(n_j) == 1:
-                    phase_int = int(padded_state[(i + n_i + radius, j + radius + n_j)])
+                    phase_int = int(padded_state[(i + n_i + self.neighborhood_radius, j + self.neighborhood_radius + n_j)])
                     neighbor_phases.append(self.phase_map.int_to_phase[phase_int])
 
         return neighbor_phases
 
     def species_at(self, padded_state, i, j):
-        radius = math.floor(self.filter_size / 2)
-        return self.phase_map.int_to_phase[padded_state[i + radius, j + radius]]
+        return self.phase_map.int_to_phase[padded_state[i + self.neighborhood_radius, j + self.neighborhood_radius]]
 
     def pad_state(self, step):
-        padding: int = int((self.filter_size - 1) / 2)
-        return np.pad(step.state, padding, 'constant', constant_values=self.phase_map.free_space_id)
-
-    def subcell_in_padded_state(self, padded_state, i, j):
-        # We are accepting coordinates that don't consider padding,
-        # So modify them to make 0,0 the first non-padding entry
-        radius = math.floor(self.filter_size / 2)
-        i = i + radius
-        j = j + radius
-
-        curr_up = i - radius
-        curr_down = i + radius + 1
-        curr_left = j - radius
-        curr_right = j + radius + 1
-
-        return padded_state[curr_up:curr_down, curr_left:curr_right]
+        return self.neighborhood.pad_state(step, self.phase_map.free_space_id)
 
     def get_rxns_from_step(self, step: ReactionStep, i, j):
         padded_state = self.pad_state(step, self.filter_size)
         return self.get_possible_reactions_at(padded_state, i, j)
 
     def get_rxns_from_padded_state(self, padded_state: np.array, i, j):
-        subcell = self.subcell_in_padded_state(padded_state, i, j)
-        cell_center = np.array([int(subcell.shape[0] / 2), int(subcell.shape[1] / 2)])
-        center_phase = self.phase_map.int_to_phase[subcell[tuple(cell_center)]]
-
+        center_phase = self.species_at(padded_state, i, j)
         neighbor_phases = self.neighbors_in_padded_state(padded_state, i, j)
 
         # Accumulate possible reactions here - this is a list of tuples: (reaction, likelihood)
         possible_reactions = []
-        for i in range(subcell.shape[0]):
-            for j in range(subcell.shape[1]):
-                if not (i == cell_center[0] and j == cell_center[1]):
-                    distance = self.distance_map.distances[(i, j)]
-
-                    r1 = self.phase_map.int_to_phase[subcell[(i, j)]]
-                    possible_rxn = self.get_rxn_and_score([r1, center_phase], distance, neighbor_phases, center_phase)
-                    possible_reactions.append(possible_rxn)
+        for cell, distance in self.neighborhood.iterate(padded_state, i, j, exclude_center=True):
+            r1 = self.phase_map.int_to_phase[cell]
+            possible_rxn = self.get_rxn_and_score([r1, center_phase], distance, neighbor_phases, center_phase)
+            possible_reactions.append(possible_rxn)
 
         for specie in self.rxn_set.open_species:
             possible_rxn = self.get_rxn_and_score([center_phase, specie], 5, neighbor_phases, center_phase)

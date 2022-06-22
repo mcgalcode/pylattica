@@ -1,4 +1,3 @@
-from .distance_map import DistanceMap, distance
 from .laboratory import Laboratory
 from .reaction_controller import ReactionController
 from .reaction_result import ReactionResult
