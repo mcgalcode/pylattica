@@ -1,8 +1,8 @@
 import typing
 import numpy as np
-from rxn_ca.phase_map import PhaseMap
+from ..discrete import PhaseMap
 
-from rxn_ca.scored_reaction_set import ScoredReactionSet
+from .scored_reaction_set import ScoredReactionSet
 from .reaction_step import ReactionStep
 import random
 

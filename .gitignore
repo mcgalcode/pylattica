@@ -1,3 +1,4 @@
 rxn_ca.egg-info
 rxn_ca/__pycache__
 .DS_Store
+**/__pycache__

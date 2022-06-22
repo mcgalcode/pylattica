@@ -1,8 +1,6 @@
 import typing
 import numpy as np
-from rxn_ca.reaction_step import ReactionStep
-
-from rxn_ca.scored_reaction_set import ScoredReactionSet
+from ..core.basic_simulation_step import BasicSimulationStep
 
 class PhaseMap():
 
@@ -25,8 +23,6 @@ class PhaseMap():
 
         Args:
             reactions (list[Reaction]):
-            open_species (list[str], optional): A list of open species, e.g. CO2. Defaults to [].
-            free_species (list[str]), optional): A list of gaseous or liquid species which should not be represented in the grid
         """
         self.phases: list[str] = [self.FREE_SPACE] + phases
 
@@ -38,10 +34,7 @@ class PhaseMap():
 
         self.free_space_id: int = self.phase_to_int[self.FREE_SPACE]
 
-    def step_as_phase_name_array_no_padding(self, step: ReactionStep):
-        return self.as_phase_name_array(step.state)
-
-    def step_as_phase_name_array(self, step):
+    def step_as_phase_name_array(self, step: BasicSimulationStep):
         state = step.state
         return self.as_phase_name_array(state)
 
