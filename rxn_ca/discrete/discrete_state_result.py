@@ -23,9 +23,8 @@ class DiscreteStateResult(BasicSimulationResult):
         Args:
             rxn_set (ScoredReactionSet):
         """
-        self.state_map: PhaseMap = state_map
-        print(self.state_map)
         super().__init__()
+        self.state_map: PhaseMap = state_map
 
     @property
     def all_states(self) -> list[str]:

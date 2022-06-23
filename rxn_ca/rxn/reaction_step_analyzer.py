@@ -8,8 +8,8 @@ from pymatgen.core.composition import Composition
 class ReactionStepAnalyzer(DiscreteStepAnalyzer):
 
     def __init__(self, phase_map: PhaseMap, reaction_set: ScoredReactionSet) -> None:
-        self.rxn_set: ScoredReactionSet = reaction_set
         super().__init__(phase_map)
+        self.rxn_set: ScoredReactionSet = reaction_set
 
     def summary(self, step, phases = None):
         if phases is None:
