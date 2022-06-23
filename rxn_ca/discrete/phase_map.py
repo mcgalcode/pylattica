@@ -4,18 +4,13 @@ from ..core.basic_simulation_step import BasicSimulationStep
 
 class PhaseMap():
 
-    FREE_SPACE = "_free_space"
-    PADDING = "_padding"
-
     @classmethod
     def from_dict(cls, pm_dict):
         pm = cls([])
         pm.phases = pm_dict["phases"]
         pm.int_to_phase = { int(k): v for (k, v) in pm_dict["int_to_phase"].items() }
         pm.phase_to_int = pm_dict["phase_to_int"]
-        pm.free_space_id = pm_dict["free_space_id"]
         return pm
-
 
     def __init__(self, phases: list[str]):
         """Initializes a SolidReactionSet object. Requires a list of possible reactions
@@ -25,16 +20,13 @@ class PhaseMap():
         Args:
             reactions (list[Reaction]):
         """
-        self.phases: list[str] = [self.FREE_SPACE] + phases
+        self.phases: list[str] = phases
 
         self.int_to_phase: typing.Dict[int, str] = {}
         self.phase_to_int: typing.Dict[str, int] = {}
         for idx, phase_name in enumerate(self.phases):
             self.int_to_phase[idx] = phase_name
             self.phase_to_int[phase_name] = idx
-
-        self.padding_id: int = -1
-        self.free_space_id: int = self.phase_to_int[self.FREE_SPACE]
 
     def step_as_phase_name_array(self, step: BasicSimulationStep):
         state = step.state
@@ -52,5 +44,4 @@ class PhaseMap():
             "phases": self.phases,
             "phase_to_int": self.phase_to_int,
             "int_to_phase": self.int_to_phase,
-            "free_space_id": self.free_space_id
         }

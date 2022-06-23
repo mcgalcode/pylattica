@@ -5,4 +5,4 @@ from .basic_step_artist import BasicStepArtist
 from .runner import Runner
 from .colors import COLORS
 
-from .neighborhoods import MooreNeighborhood, VonNeumannNeighborhood, CircularNeighborhood, PseudoHexagonal
+from .neighborhoods import MooreNeighborhood, VonNeumannNeighborhood, CircularNeighborhood, PseudoHexagonal, PseudoPentagonal

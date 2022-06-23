@@ -33,6 +33,10 @@ class BasicSimulationResult():
     def get_metadata_at(self, step_no: int) -> None:
         return self.steps[step_no].metadata
 
+    @property
+    def last_step(self):
+        return self.steps[-1]
+
     def to_dict(self):
         return {
             "steps": [s.to_dict() for s in self.steps]

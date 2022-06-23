@@ -39,7 +39,7 @@ class ReactionResult(DiscreteStateResult):
         self.steps: list[ReactionStep] = []
         self.mole_steps: list[np.array] = []
         self.rxn_set: ScoredReactionSet = rxn_set
-        self.analyzer = ReactionStepAnalyzer(self.state_map, self.rxn_set)
+        self.analyzer = ReactionStepAnalyzer(self.phase_map, self.rxn_set)
 
     def get_choices_at(self, step_no: int, top: int = None, exclude_ids = True) -> None:
 
@@ -87,10 +87,10 @@ class ReactionResult(DiscreteStateResult):
         fig.update_yaxes(title="Relative Prevalence")
         fig.update_xaxes(title="Simulation Step")
 
-        analyzer = ReactionStepAnalyzer(self.state_map, self.rxn_set)
+        analyzer = ReactionStepAnalyzer(self.phase_map, self.rxn_set)
         elements = list(analyzer.elemental_composition(self.steps[0]).keys())
         traces = []
-        amounts = [analyzer.elemental_composition(s) for idx, s in enumerate(self.steps)]
+        amounts = [analyzer.elemental_composition(s) for s in self.steps]
         for el in elements:
             xs = np.arange(len(self.steps))
             ys = [a[el] for a in amounts]
@@ -109,5 +109,5 @@ class ReactionResult(DiscreteStateResult):
             "steps": [s.to_dict() for s in self.steps],
             "choices": self.choices,
             "rxn_set": self.rxn_set.to_dict(),
-            "phase_map": self.state_map.to_dict()
+            "phase_map": self.phase_map.to_dict()
         }

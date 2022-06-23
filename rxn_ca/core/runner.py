@@ -60,19 +60,17 @@ class Runner():
 
             with mp.get_context('fork').Pool(PROCESSES) as pool:
                 for i in tqdm(range(num_steps)):
-                    padded_state = controller.pad_state(step)
-                    step = self._take_step_parallel(padded_state, initial_step.size, pool)
+                    step = self._take_step_parallel(step, initial_step.size, pool, controller)
                     result.add_step(step)
                     printif(verbose, f'Finished step {i}')
         else:
             for _ in tqdm(range(num_steps)):
-                padded_state = controller.pad_state(step)
-                step = self._take_step(padded_state, initial_step.size, controller)
+                step = self._take_step(step, initial_step.size, controller)
                 result.add_step(step)
 
         return result
 
-    def _take_step_parallel(self, padded_state, state_size, pool) -> BasicSimulationStep:
+    def _take_step_parallel(self, step, state_size, pool, controller: BasicController) -> BasicSimulationStep:
         """Given a BasicSimulationStep, advances the system state by one time increment
         and returns a new reaction step.
 
@@ -83,6 +81,8 @@ class Runner():
             BasicSimulationStep:
         """
         params = []
+        padded_state = controller.pad_step(step)
+
         for i in range(0, state_size):
             params.append([padded_state, state_size, i])
 
@@ -94,9 +94,10 @@ class Runner():
         return BasicSimulationStep(new_state, step_metadata)
 
 
-    def _take_step(self, padded_state: np.array, state_size: int, controller: BasicController) -> BasicSimulationStep:
+    def _take_step(self, step: BasicSimulationStep, state_size: int, controller: BasicController) -> BasicSimulationStep:
         results = []
 
+        padded_state = controller.pad_step(step)
         for i in range(0, state_size):
             results.append(step_row(padded_state, state_size, i, controller))
 
@@ -113,7 +114,7 @@ def step_row_parallel(padded_state, state_size, row_num):
         mp_globals['controller'],
     )
 
-def step_row(padded_state: np.array, state_size: int, row_num: int, controller: BasicController):
+def step_row(padded_state, state_size: int, row_num: int, controller: BasicController):
     new_state = np.zeros(state_size)
     cells_metadata = []
     for j in range(0, state_size):

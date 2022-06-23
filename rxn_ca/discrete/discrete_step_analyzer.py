@@ -26,4 +26,4 @@ class DiscreteStepAnalyzer():
         return len(np.unique(step.state)) - 1
 
     def phases_present(self, step):
-        return [self.phase_map.int_to_phase[p] for p in np.unique(step.state) if p != self.phase_map.free_space_id]
+        return [self.phase_map.int_to_phase[p] for p in np.unique(step.state)]

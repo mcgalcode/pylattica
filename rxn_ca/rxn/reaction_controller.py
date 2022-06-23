@@ -1,9 +1,11 @@
 import math
 import random
+from tracemalloc import start
 import numpy as np
 import typing
+from rxn_ca.core.basic_simulation_step import BasicSimulationStep
 
-from rxn_ca.core.neighborhoods import MooreNeighborhood
+from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood, VonNeumannNeighborhood
 from ..core.basic_controller import BasicController
 from ..discrete import PhaseMap
 
@@ -16,41 +18,39 @@ from .scored_reaction import ScoredReaction
 
 class ReactionController(BasicController):
 
-    def __init__(self, phase_map: PhaseMap, reaction_set: ScoredReactionSet, step_size: int) -> None:
+    @classmethod
+    def get_neighborhood(cls, starting_state: BasicSimulationStep):
+        filter_size = get_filter_size_from_side_length(starting_state.size)
+        neighborhood_radius = math.floor(filter_size / 2)
+        return MooreNeighborhood(neighborhood_radius)
+
+    def __init__(self, phase_map: PhaseMap, reaction_set: ScoredReactionSet, neighborhood: Neighborhood) -> None:
         self.phase_map: PhaseMap = phase_map
         self.rxn_set: ScoredReactionSet = reaction_set
-        self.filter_size = get_filter_size_from_side_length(step_size)
-        self.step_size = step_size
-        self.neighborhood_radius = math.floor(self.filter_size / 2)
-        self.neighborhood = MooreNeighborhood(self.neighborhood_radius)
+        self.neighborhood = neighborhood
+        self.vn_neighborhood = VonNeumannNeighborhood(1)
 
     def instantiate_result(self):
         return ReactionResult(self.rxn_set, self.phase_map)
 
     def get_new_state(self, padded_state, row_num, j):
-      possible_reactions = self.get_rxns_from_padded_state(padded_state, row_num, j)
-      curr_species = self.species_at(padded_state, row_num, j)
-      new_phase, chosen_rxn = self.get_product_from_scores(possible_reactions, curr_species)
-      return new_phase, chosen_rxn
+        possible_reactions = self.get_rxns_from_padded_state(padded_state, row_num, j)
+        curr_species = self.species_at(padded_state, row_num, j)
+        new_phase, chosen_rxn = self.get_product_from_scores(possible_reactions, curr_species)
+        return new_phase, chosen_rxn
 
     def neighbors_in_padded_state(self, padded_state, i, j):
         neighbor_phases = []
-        for n_i in range(-1, 2):
-            for n_j in range(-1, 2):
-                if np.abs(n_i) + np.abs(n_j) == 1:
-                    phase_int = int(padded_state[(i + n_i + self.neighborhood_radius, j + self.neighborhood_radius + n_j)])
-                    neighbor_phases.append(self.phase_map.int_to_phase[phase_int])
+        for cell, _ in self.vn_neighborhood.iterate(padded_state, i, j, overload_radius=1):
+            neighbor_phases.append(self.phase_map.int_to_phase[cell])
 
         return neighbor_phases
 
     def species_at(self, padded_state, i, j):
-        return self.phase_map.int_to_phase[padded_state[i + self.neighborhood_radius, j + self.neighborhood_radius]]
-
-    def pad_state(self, step):
-        return self.neighborhood.pad_state(step, self.phase_map.free_space_id)
+        return self.phase_map.int_to_phase[self.neighborhood.state_at(padded_state, i, j)]
 
     def get_rxns_from_step(self, step: ReactionStep, i, j):
-        padded_state = self.pad_state(step, self.filter_size)
+        padded_state = self.pad_state(step)
         return self.get_possible_reactions_at(padded_state, i, j)
 
     def get_rxns_from_padded_state(self, padded_state: np.array, i, j):
@@ -97,15 +97,11 @@ class ReactionController(BasicController):
         choices: np.array = np.array(range(0,len(rxns)))
         chosen_rxn: ScoredReaction = rxns[np.random.choice(choices, p=normalized)]
 
-
         if chosen_rxn is not None:
-            # Choose whether reaction will proceed according to volumetric reactant stoichiometry
-            # likelihood = (chosen_rxn.reactant_stoich(reacting_species) *volumes[reacting_species]) / sum([chosen_rxn.reactant_stoich(r) * volumes[r] for r in chosen_rxn.reactants])
             likelihood = (chosen_rxn.reactant_stoich(reacting_species)) / sum([chosen_rxn.reactant_stoich(r) for r in chosen_rxn.reactants])
             draw = random.random()
             if draw < likelihood:
                 possible_products: list[str] = chosen_rxn.products
-                # likelihoods: np.array = np.array([chosen_rxn.product_stoich(p) * volumes[p] for p in possible_products])
                 likelihoods: np.array = np.array([chosen_rxn.product_stoich(p) for p in possible_products])
                 likelihoods: np.array = likelihoods / likelihoods.sum()
                 new_phase_name: str = np.random.choice(possible_products, p=np.array(likelihoods))

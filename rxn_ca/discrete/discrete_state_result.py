@@ -17,17 +17,17 @@ class DiscreteStateResult(BasicSimulationResult):
     was used in the simulation.
     """
 
-    def __init__(self, state_map: PhaseMap):
+    def __init__(self, phase_map: PhaseMap):
         """Initializes a ReactionResult with the reaction set used in the simulation
 
         Args:
             rxn_set (ScoredReactionSet):
         """
         super().__init__()
-        self.state_map: PhaseMap = state_map
+        self.phase_map: PhaseMap = phase_map
 
     @property
-    def all_states(self) -> list[str]:
+    def all_phases(self) -> list[str]:
         """A list of all the phases that appeared during this simulation. Note that
         this is distinct from the list of phases that _could_ appear according to the
         reaction set used during the simulation.
@@ -35,7 +35,7 @@ class DiscreteStateResult(BasicSimulationResult):
         Returns:
             list[str]:
         """
-        analyzer = DiscreteStepAnalyzer(self.state_map)
+        analyzer = DiscreteStepAnalyzer(self.phase_map)
         phases: list[str] = []
         for step in self.steps:
             phases = phases + analyzer.phases_present(step)
@@ -52,7 +52,7 @@ class DiscreteStateResult(BasicSimulationResult):
         """
         display_phases: typing.Dict[str, typing.Tuple[int, int, int]] = {}
         c_idx: int = 0
-        for p in self.all_states:
+        for p in self.all_phases:
             display_phases[p] = COLORS[c_idx]
             c_idx += 1
 
@@ -62,7 +62,7 @@ class DiscreteStateResult(BasicSimulationResult):
         if display_phases is None:
             display_phases = self.phase_color_map
 
-        artist = DiscreteStepArtist(self.state_map, display_phases)
+        artist = DiscreteStepArtist(self.phase_map, display_phases)
         imgs = []
         for idx, step in enumerate(self.steps):
             label = f'Step {idx}'
@@ -143,6 +143,19 @@ class DiscreteStateResult(BasicSimulationResult):
             fig.add_trace(go.Scatter(name=t[2], x=t[0], y=t[1], mode='lines'))
 
         fig.show()
+
+    def final_phase_fractions(self):
+        analyzer = DiscreteStepAnalyzer(self.phase_map)
+        fracs = {}
+        for phase in self.all_phases:
+            if phase != self.phase_map.FREE_SPACE:
+                fracs[phase] = analyzer.cell_fraction(self.steps[-1], phase)
+
+        return fracs
+
+    def print_final_phase_fracs(self):
+        for phase, frac in self.final_phase_fractions().items():
+            print(f'{phase}: {frac}')
 
     def phase_fraction_at(self, step, phase):
         analyzer = DiscreteStepAnalyzer(self.phase_map)
