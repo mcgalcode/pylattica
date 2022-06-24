@@ -118,7 +118,7 @@ class CircularNeighborhood(Neighborhood):
 
 class PseudoHexagonal(Neighborhood):
 
-    def __init__(self):
+    def __init__(self, _ = None):
         super().__init__(1)
 
     def _screen_square(self, square):
@@ -136,7 +136,7 @@ class PseudoHexagonal(Neighborhood):
 
 class PseudoPentagonal(Neighborhood):
 
-    def __init__(self):
+    def __init__(self, _ = None):
         super().__init__(1)
 
     def _screen_square(self, square):
