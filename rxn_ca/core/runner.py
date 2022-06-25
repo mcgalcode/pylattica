@@ -1,3 +1,4 @@
+from random import randint
 from .basic_controller import BasicController
 from .basic_simulation_result import BasicSimulationResult
 from .basic_simulation_step import BasicSimulationStep
@@ -19,7 +20,7 @@ class Runner():
     and it will run a simulation for the prescribed number of steps.
     """
 
-    def __init__(self, parallel = False, workers = None):
+    def __init__(self, parallel = False, workers = None, is_async = True):
         """Initializes a simulation Runner.
 
         Args:
@@ -28,6 +29,7 @@ class Runner():
         """
         self.parallel = parallel
         self.workers = workers
+        self.is_async = is_async
 
     def run(self, initial_step: BasicSimulationStep, controller: BasicController, num_steps: int, verbose = False) -> BasicSimulationResult:
         """Run the simulation for the prescribed number of steps.
@@ -48,29 +50,34 @@ class Runner():
 
         global mp_globals
 
-        if self.parallel:
-            mp_globals['controller'] = controller
-
-            if self.workers is None:
-                PROCESSES = mp.cpu_count()
-            else:
-                PROCESSES = self.workers
-
-            printif(verbose, f'Running in parallel using {PROCESSES} workers')
-
-            with mp.get_context('fork').Pool(PROCESSES) as pool:
-                for i in tqdm(range(num_steps)):
-                    step = self._take_step_parallel(step, initial_step.size, pool, controller)
-                    result.add_step(step)
-                    printif(verbose, f'Finished step {i}')
-        else:
+        if self.is_async:
             for _ in tqdm(range(num_steps)):
-                step = self._take_step(step, initial_step.size, controller)
+                step = self._take_step_async(step, controller)
                 result.add_step(step)
+        else:
+            if self.parallel:
+                mp_globals['controller'] = controller
+
+                if self.workers is None:
+                    PROCESSES = mp.cpu_count()
+                else:
+                    PROCESSES = self.workers
+
+                printif(verbose, f'Running in parallel using {PROCESSES} workers')
+
+                with mp.get_context('fork').Pool(PROCESSES) as pool:
+                    for i in tqdm(range(num_steps)):
+                        step = self._take_step_parallel(step, pool, controller)
+                        result.add_step(step)
+                        printif(verbose, f'Finished step {i}')
+            else:
+                for _ in tqdm(range(num_steps)):
+                    step = self._take_step(step, controller)
+                    result.add_step(step)
 
         return result
 
-    def _take_step_parallel(self, step, state_size, pool, controller: BasicController) -> BasicSimulationStep:
+    def _take_step_parallel(self, step, pool, controller: BasicController) -> BasicSimulationStep:
         """Given a BasicSimulationStep, advances the system state by one time increment
         and returns a new reaction step.
 
@@ -83,8 +90,8 @@ class Runner():
         params = []
         padded_state = controller.pad_step(step)
 
-        for i in range(0, state_size):
-            params.append([padded_state, state_size, i])
+        for i in range(0, step.size):
+            params.append([padded_state, step.size, i])
 
         results = pool.starmap(step_row_parallel, params)
 
@@ -94,15 +101,30 @@ class Runner():
         return BasicSimulationStep(new_state, step_metadata)
 
 
-    def _take_step(self, step: BasicSimulationStep, state_size: int, controller: BasicController) -> BasicSimulationStep:
+    def _take_step(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
         results = []
 
         padded_state = controller.pad_step(step)
-        for i in range(0, state_size):
-            results.append(step_row(padded_state, state_size, i, controller))
+        for i in range(0, step.size):
+            results.append(step_row(padded_state, step.size, i, controller))
 
         new_state = np.array(list(map(lambda x: x[0], results)))
         step_metadata = list(map(lambda x: x[1], results))
+
+        return BasicSimulationStep(new_state, step_metadata)
+
+    def _take_step_async(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
+
+        padded_state = controller.pad_step(step)
+
+        rand_i = randint(0,step.size - 1)
+        rand_j = randint(0,step.size - 1)
+
+        new_cell_state, step_metadata = controller.get_new_state(padded_state, rand_i, rand_j)
+
+        new_state = controller.neighborhood.unpad_state(padded_state)
+
+        new_state[rand_i, rand_j] = new_cell_state
 
         return BasicSimulationStep(new_state, step_metadata)
 

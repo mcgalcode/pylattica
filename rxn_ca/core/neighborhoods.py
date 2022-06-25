@@ -13,6 +13,11 @@ class Neighborhood():
             padding = self.radius
         return padded_state[i + padding, j + padding]
 
+    def padded_coords(self, i, j, padding = None):
+        if padding is None:
+            padding = self.radius
+        return (i + padding, j + padding)
+
     def __init__(self, radius, distance_map: DistanceMap = None):
         self.radius = radius
         if distance_map is None:
@@ -28,6 +33,17 @@ class Neighborhood():
 
     def pad_state(self, state):
         return np.pad(state, self.radius, 'constant', constant_values=self.PADDING_VAL)
+
+    def unpad_state(self, state, padding = None):
+        if padding is None:
+            padding = self.radius
+        end = state.shape[0] - padding
+        return state[padding:end,padding:end]
+
+    def unpad_step(self, step, padding = None):
+        if padding is None:
+            padding = self.radius
+        return self.unpad_state(step.state, padding)
 
     def get_in_step(self, step, i, j):
         return self.get(self.pad_step(step), i, j)
