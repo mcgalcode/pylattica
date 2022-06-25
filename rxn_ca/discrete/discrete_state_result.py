@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+from tqdm import tqdm
 from rxn_ca.core import BasicSimulationResult
 
 from .phase_map import PhaseMap
@@ -64,7 +65,7 @@ class DiscreteStateResult(BasicSimulationResult):
 
         artist = DiscreteStepArtist(self.phase_map, display_phases)
         imgs = []
-        for idx, step in enumerate(self.steps):
+        for idx, step in tqdm(enumerate(self.steps), total = len(self.steps)):
             label = f'Step {idx}'
             img = artist.get_img(step, label, cell_size)
             imgs.append(img)
