@@ -118,7 +118,7 @@ class Laboratory():
         for i in range(size):
             for j in range(size):
                 blank[i][j] = self.phase_map.phase_to_int[random.choice(phases)]
-        return blank
+        return ReactionStep(blank)
 
     def prepare_random_mixture(self, side_length, grain_size, phases, weights = None):
         cells = []
