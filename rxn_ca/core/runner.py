@@ -20,7 +20,7 @@ class Runner():
     and it will run a simulation for the prescribed number of steps.
     """
 
-    def __init__(self, parallel = False, workers = None, is_async = True):
+    def __init__(self, parallel = False, workers = None, is_async = False):
         """Initializes a simulation Runner.
 
         Args:
