@@ -12,18 +12,17 @@ class Laboratory():
     states in specific shapes
     """
 
-    def __init__(self, rxn_set: ScoredReactionSet, phase_map: PhaseMap):
+    def __init__(self, phase_map: PhaseMap):
         """Initializes a laboratory object by providing a reaction set that is used to
         specify cell states
 
         Args:
             rxn_set (ScoredReactionSet):
         """
-        self.rxn_set: ScoredReactionSet = rxn_set
         self.phase_map: PhaseMap = phase_map
 
     def _build_blank_experiment(self, size: int) -> np.array:
-        experiment: np.array = np.ones((size, size)) * self.phase_map.free_space_id
+        experiment: np.array = np.ones((size, size))
         return experiment
 
     def prepare_interface(self, size: int, p1: str, p2: str) -> ReactionStep:
@@ -113,6 +112,13 @@ class Laboratory():
         )
         result = np.tile(tile, (num_cells, num_cells))
         return ReactionStep(result)
+
+    def prepare_noise(self, size, phases):
+        blank = self._build_blank_experiment(size)
+        for i in range(size):
+            for j in range(size):
+                blank[i][j] = self.phase_map.phase_to_int[random.choice(phases)]
+        return blank
 
     def prepare_random_mixture(self, side_length, grain_size, phases, weights = None):
         cells = []
