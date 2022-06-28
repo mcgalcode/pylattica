@@ -1,5 +1,5 @@
 from rxn_ca.core import BasicController
-from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood
+from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood, NeighborhoodView
 from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
 from .growth_result import GrowthResult
 
@@ -17,11 +17,10 @@ class GrowthController(BasicController):
     def instantiate_result(self):
         return GrowthResult(self.phase_map)
 
-    def get_new_state(self, padded_state, i, j):
-        curr_state = self.neighborhood.state_at(padded_state, i, j)
-        if curr_state == self.phase_map.free_space_id:
+    def get_new_state(self, nb_view: NeighborhoodView):
+        if nb_view.center_value == self.phase_map.free_space_id:
             counts = {}
-            for cell, _ in self.neighborhood.iterate(padded_state, i, j):
+            for cell, _ in nb_view.iterate():
                 if cell != self.phase_map.free_space_id and cell != Neighborhood.PADDING_VAL:
                     if cell not in counts:
                         counts[cell] = 1
@@ -39,7 +38,7 @@ class GrowthController(BasicController):
                 return int(max_spec), None
 
             else:
-                return int(curr_state), None
+                return int(nb_view.center_value), None
         else:
-            return int(curr_state), None
+            return int(nb_view.center_value), None
 

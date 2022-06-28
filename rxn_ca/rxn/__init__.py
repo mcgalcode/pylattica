@@ -1,4 +1,3 @@
-from .laboratory import Laboratory
 from .reaction_controller import ReactionController
 from .reaction_result import ReactionResult
 from .reaction_step import ReactionStep

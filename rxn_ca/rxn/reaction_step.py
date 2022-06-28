@@ -9,14 +9,14 @@ class ReactionStep(BasicSimulationStep):
     simulation procedure.
     """
 
-    def __init__(self, unpadded_state: np.array, metadata = []):
+    def __init__(self, state: np.array, metadata = []):
         """Intializes a ReactionStep.
 
         Args:
             state (np.array): A 2D np.array of integers representing the distribution of phases.
                 The value of the integers corresponds to phases in the reaction_set's int_to_phase mapping.
         """
-        super().__init__(unpadded_state, metadata)
+        super().__init__(state, metadata)
         self.reaction_choices = {}
 
         if len(metadata) > 0:

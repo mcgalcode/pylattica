@@ -42,7 +42,7 @@ class GrowthSetup():
                     found_existing_nucleus_in_nb = True
             if not found_existing_nucleus_in_nb:
                 chosen_spec = nuc_species[np.random.choice(specie_idxs, p=normalized_ratios)]
-                blank[rand_i][rand_j] = self.phase_map.phase_to_int[chosen_spec]
+                blank[rand_i][rand_j] = self.phase_map.get_state_value(chosen_spec)
                 num_sites_planted += 1
 
             total_attempts += 1

@@ -1,4 +1,6 @@
 from random import randint
+
+from rxn_ca.core.neighborhoods import Neighborhood, NeighborhoodView
 from .basic_controller import BasicController
 from .basic_simulation_result import BasicSimulationResult
 from .basic_simulation_step import BasicSimulationStep
@@ -67,7 +69,7 @@ class Runner():
 
                 with mp.get_context('fork').Pool(PROCESSES) as pool:
                     for i in tqdm(range(num_steps)):
-                        step = self._take_step_parallel(step, pool, controller)
+                        step = self._take_step_parallel(step, pool)
                         result.add_step(step)
                         printif(verbose, f'Finished step {i}')
             else:
@@ -77,7 +79,7 @@ class Runner():
 
         return result
 
-    def _take_step_parallel(self, step, pool, controller: BasicController) -> BasicSimulationStep:
+    def _take_step_parallel(self, step, pool) -> BasicSimulationStep:
         """Given a BasicSimulationStep, advances the system state by one time increment
         and returns a new reaction step.
 
@@ -88,10 +90,9 @@ class Runner():
             BasicSimulationStep:
         """
         params = []
-        padded_state = controller.pad_step(step)
 
         for i in range(0, step.size):
-            params.append([padded_state, step.size, i])
+            params.append([step, step.size, i])
 
         results = pool.starmap(step_row_parallel, params)
 
@@ -104,9 +105,8 @@ class Runner():
     def _take_step(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
         results = []
 
-        padded_state = controller.pad_step(step)
         for i in range(0, step.size):
-            results.append(step_row(padded_state, step.size, i, controller))
+            results.append(step_row(step, step.size, i, controller))
 
         new_state = np.array(list(map(lambda x: x[0], results)))
         step_metadata = list(map(lambda x: x[1], results))
@@ -115,32 +115,31 @@ class Runner():
 
     def _take_step_async(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
 
-        padded_state = controller.pad_step(step)
+        new_state = np.copy(step.state)
 
         rand_i = randint(0,step.size - 1)
         rand_j = randint(0,step.size - 1)
-
-        new_cell_state, step_metadata = controller.get_new_state(padded_state, rand_i, rand_j)
-
-        new_state = controller.neighborhood.unpad_state(padded_state)
+        nb_view = controller.neighborhood.get_in_step(step, [rand_i, rand_j])
+        new_cell_state, step_metadata = controller.get_new_state(nb_view)
 
         new_state[rand_i, rand_j] = new_cell_state
 
         return BasicSimulationStep(new_state, step_metadata)
 
-def step_row_parallel(padded_state, state_size, row_num):
+def step_row_parallel(step: BasicSimulationStep, state_size: int, row_num: int):
     return step_row(
-        padded_state,
+        step,
         state_size,
         row_num,
         mp_globals['controller'],
     )
 
-def step_row(padded_state, state_size: int, row_num: int, controller: BasicController):
+def step_row(step: BasicSimulationStep, state_size: int, i: int, controller: BasicController):
     new_state = np.zeros(state_size)
     cells_metadata = []
     for j in range(0, state_size):
-        new_cell_state, cell_update_metadata = controller.get_new_state(padded_state, row_num, j)
+        view: NeighborhoodView = controller.neighborhood.get_in_step(step, [i, j])
+        new_cell_state, cell_update_metadata = controller.get_new_state(view)
         cells_metadata.append(cell_update_metadata)
 
         new_state[j] = new_cell_state

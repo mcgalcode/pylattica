@@ -1,22 +1,52 @@
 from random import randint
 import numpy as np
 
-from rxn_ca.core.distance_map import DistanceMap, EuclideanDistanceMap, ManhattanDistanceMap
+from rxn_ca.core.distance_map import DistanceMap, EuclideanDistanceMap, ManhattanDistanceMap, distance
+
+class NeighborhoodView():
+
+    def __init__(self, coords, view, full_state, distance_map) -> None:
+        self.coords = coords
+        self.view = view
+        self.center_value = full_state[coords[0], coords[1]]
+        self.full_state = full_state
+        self.distance_map = distance_map
+
+    def get_distance(self, i, j):
+        return self.distance_map.distances[(i, j)]
+
+    def count_equal(self, val):
+        return self.count_vals(lambda x: x == val)
+
+    def count_vals(self, val_condition):
+        return sum([1 for cell, _ in self.iterate()
+                   if val_condition(cell)])
+
+    def is_padding(self, state):
+        return state == Neighborhood.PADDING_VAL
+
+    def get_distance(self, i, j):
+        return self.distance_map.distances[(i, j)]
+
+    def iterate(self, exclude_center = True):
+        subcell = self.view
+        cell_center = np.array([int(subcell.shape[0] / 2), int(subcell.shape[1] / 2)])
+        for i in range(subcell.shape[0]):
+            for j in range(subcell.shape[1]):
+                contents = subcell[(i, j)]
+                if self.is_padding(contents):
+                    continue
+
+                if exclude_center and (i == cell_center[0] and j == cell_center[1]):
+                    continue
+
+                distance = self.get_distance(i, j)
+                yield subcell[(i, j)], distance
 
 
 class Neighborhood():
 
     PADDING_VAL = -1
-
-    def state_at(self, padded_state, i, j, padding = None):
-        if padding is None:
-            padding = self.radius
-        return padded_state[i + padding, j + padding]
-
-    def padded_coords(self, i, j, padding = None):
-        if padding is None:
-            padding = self.radius
-        return (i + padding, j + padding)
 
     def __init__(self, radius, distance_map: DistanceMap = None):
         self.radius = radius
@@ -25,36 +55,15 @@ class Neighborhood():
         else:
             self.distance_map = distance_map
 
-    def is_padding(self, state):
-        return state == self.PADDING_VAL
-
-    def pad_step(self, step):
-        return self.pad_state(step.state)
-
     def pad_state(self, state):
         return np.pad(state, self.radius, 'constant', constant_values=self.PADDING_VAL)
 
-    def unpad_state(self, state, padding = None):
-        if padding is None:
-            padding = self.radius
-        end = state.shape[0] - padding
-        return state[padding:end,padding:end]
+    def get_in_step(self, step, coords):
+        return self.get(step.state, coords)
 
-    def unpad_step(self, step, padding = None):
-        if padding is None:
-            padding = self.radius
-        return self.unpad_state(step.state, padding)
-
-    def get_in_step(self, step, i, j):
-        return self.get(self.pad_step(step), i, j)
-
-    def get_in_state(self, state, i, j):
-        return self.get(self.pad_state(state), i, j)
-
-    def get_distance(self, i, j):
-        return self.distance_map.distances[(i, j)]
-
-    def _get_square_neighborhood(self, padded_state, i, j, overload_radius = None):
+    def _get_square_neighborhood(self, padded_state, coords, overload_radius = None):
+        i = coords[0]
+        j = coords[1]
 
         if overload_radius is not None:
             radius = overload_radius
@@ -72,30 +81,11 @@ class Neighborhood():
 
         return padded_state[curr_up:curr_down, curr_left:curr_right]
 
-    def iterate_step(self, step, i, j, exclude_center = True, overload_radius = None):
-        return self.iterate(self.pad_step(step), i, j, exclude_center, overload_radius=overload_radius)
-
-    def iterate_state(self, state, i, j, exclude_center = True, overload_radius = None):
-        return self.iterate(self.pad_state(state), i, j, exclude_center, overload_radius=overload_radius)
-
-    def iterate(self, padded_state, i, j, exclude_center = True, overload_radius = None):
-        subcell = self.get(padded_state, i, j, overload_radius=overload_radius)
-        cell_center = np.array([int(subcell.shape[0] / 2), int(subcell.shape[1] / 2)])
-        for i in range(subcell.shape[0]):
-            for j in range(subcell.shape[1]):
-                contents = subcell[(i, j)]
-                if self.is_padding(contents):
-                    continue
-
-                if exclude_center and (i == cell_center[0] and j == cell_center[1]):
-                    continue
-
-                distance = self.get_distance(i, j)
-                yield subcell[(i, j)], distance
-
-    def get(self, padded_state, i, j, overload_radius = None):
-        square = np.copy(self._get_square_neighborhood(padded_state, i, j, overload_radius=overload_radius))
-        return self._screen_square(square)
+    def get(self, unpadded_state, coords, overload_radius = None):
+        padded_state = self.pad_state(unpadded_state)
+        square = np.copy(self._get_square_neighborhood(padded_state, coords, overload_radius=overload_radius))
+        screened = self._screen_square(square)
+        return NeighborhoodView(coords, screened, unpadded_state, self.distance_map)
 
 
 class MooreNeighborhood(Neighborhood):

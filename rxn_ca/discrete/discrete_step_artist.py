@@ -34,7 +34,7 @@ class DiscreteStepArtist(BasicStepArtist):
     def get_color_by_cell_state(self, cell_state):
         if int(cell_state) == Neighborhood.PADDING_VAL:
             return (0,0,0)
-        phase_name = self.phase_map.int_to_phase[cell_state]
+        phase_name = self.phase_map.get_state_name(cell_state)
         return self.color_map[phase_name]
 
     def _phase_color_map(self, phase_list) -> typing.Dict[str, typing.Tuple[int, int ,int]]:

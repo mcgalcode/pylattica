@@ -11,16 +11,16 @@ class BasicSimulationStep():
     def from_dict(cls, step_dict):
         return cls(np.array(step_dict["state"]).astype(int))
 
-    def __init__(self, unpadded_state: np.array, metadata = []):
+    def __init__(self, state: np.array, metadata = []):
         """Intializes a ReactionStep.
 
         Args:
             state (np.array): A 2D np.array of integers representing the distribution of phases.
                 The value of the integers corresponds to phases in the reaction_set's int_to_phase mapping.
         """
-        self.size: int = unpadded_state.shape[0]
-        self.shape: tuple(int, int) = unpadded_state.shape
-        self.state: np.array = unpadded_state
+        self.size: int = state.shape[0]
+        self.shape: tuple(int, int) = state.shape
+        self.state: np.array = state
         self.metadata = metadata
 
     def to_dict(self):

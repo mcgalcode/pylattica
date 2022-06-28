@@ -11,6 +11,7 @@ import numpy as np
 from ..core import COLORS
 import time
 import typing
+import multiprocessing as mp
 
 class DiscreteStateResult(BasicSimulationResult):
     """A class that stores the result of running a simulation. Keeps track of all
@@ -65,10 +66,12 @@ class DiscreteStateResult(BasicSimulationResult):
 
         artist = DiscreteStepArtist(self.phase_map, display_phases)
         imgs = []
-        for idx, step in tqdm(enumerate(self.steps), total = len(self.steps)):
-            label = f'Step {idx}'
-            img = artist.get_img(step, label, cell_size)
-            imgs.append(img)
+        PROCESSES = mp.cpu_count()
+        with mp.get_context('fork').Pool(PROCESSES) as pool:
+            for idx, step in tqdm(enumerate(self.steps), total = len(self.steps)):
+                label = f'Step {idx}'
+                img = artist.get_img(step, label, cell_size)
+                imgs.append(img)
 
         return imgs
 

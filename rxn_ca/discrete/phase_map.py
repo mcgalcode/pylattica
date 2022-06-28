@@ -28,6 +28,12 @@ class PhaseMap():
             self.int_to_phase[idx] = phase_name
             self.phase_to_int[phase_name] = idx
 
+    def get_state_value(self, state_name):
+        return self.phase_to_int[state_name]
+
+    def get_state_name(self, state_value):
+        return self.int_to_phase[state_value]
+
     def step_as_phase_name_array(self, step: BasicSimulationStep):
         state = step.state
         return self.as_phase_name_array(state)

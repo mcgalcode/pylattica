@@ -1,4 +1,6 @@
 from PIL import Image, ImageDraw
+
+from rxn_ca.core.neighborhoods import NeighborhoodView
 from .basic_simulation_step import BasicSimulationStep
 import numpy as np
 
@@ -10,6 +12,10 @@ class BasicStepArtist():
 
     def jupyter_show_state(self, state: np.array, label = None, cell_size = 20):
         img = self._draw_image(state, label, cell_size)
+        display(img)
+
+    def jupyter_show_view(self, view: NeighborhoodView, label = None, cell_size = 20):
+        img = self._draw_image(view.view, label, cell_size)
         display(img)
 
     def get_img_state(self, state: np.array, label = None, cell_size = 20):

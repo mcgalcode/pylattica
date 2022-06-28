@@ -3,7 +3,7 @@ import random
 import numpy as np
 import typing
 
-from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood, VonNeumannNeighborhood
+from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood, NeighborhoodView, VonNeumannNeighborhood
 from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
 from ..core.basic_controller import BasicController
 
@@ -57,34 +57,32 @@ class ReactionController(BasicController):
     def instantiate_result(self):
         return ReactionResult(self.rxn_set, self.phase_map)
 
-    def get_new_state(self, padded_state, row_num, j):
-        possible_reactions = self.get_rxns_from_padded_state(padded_state, row_num, j)
-        curr_species = self.species_at(padded_state, row_num, j)
+    def get_new_state(self, nb_view: NeighborhoodView):
+        curr_species = self.phase_map.get_state_name(nb_view.center_value)
+        possible_reactions = self.rxns_from_view(nb_view)
         new_phase, chosen_rxn = self.get_product_from_scores(possible_reactions, curr_species)
         return new_phase, chosen_rxn
 
-    def neighbors_in_padded_state(self, padded_state, i, j):
+    def immediate_neighbors(self, state, coords):
         neighbor_phases = []
-        for cell, _ in self.vn_neighborhood.iterate(padded_state, i, j, overload_radius=1):
-            neighbor_phases.append(self.phase_map.int_to_phase[cell])
+        view = self.vn_neighborhood.get(state, coords)
+        for cell, _ in view.iterate():
+            neighbor_phases.append(self.phase_map.get_state_name(cell))
 
         return neighbor_phases
 
-    def species_at(self, padded_state, i, j):
-        return self.phase_map.int_to_phase[self.neighborhood.state_at(padded_state, i, j)]
-
     def get_rxns_from_step(self, step: ReactionStep, i, j):
-        padded_state = self.pad_state(step)
-        return self.get_possible_reactions_at(padded_state, i, j)
+        view = self.neighborhood.get_in_step(step, i, j)
+        return self.rxns_from_view(view)
 
-    def get_rxns_from_padded_state(self, padded_state: np.array, i, j):
-        this_phase = self.species_at(padded_state, i, j)
-        neighbor_phases = self.neighbors_in_padded_state(padded_state, i, j)
+    def rxns_from_view(self, nb_view: NeighborhoodView):
+        this_phase = self.phase_map.get_state_name(nb_view.center_value)
+        neighbor_phases = self.immediate_neighbors(nb_view.full_state, nb_view.coords)
 
         # Look through neighborhood, enumerate possible reactions
         possible_reactions = []
-        for other_cell, distance in self.neighborhood.iterate(padded_state, i, j, exclude_center=True):
-            other_phase = self.phase_map.int_to_phase[other_cell]
+        for other_cell, distance in nb_view.iterate(exclude_center=True):
+            other_phase = self.phase_map.get_state_name(other_cell)
             possible_rxn = self.get_rxn_and_score([other_phase, this_phase], distance, neighbor_phases, this_phase)
             possible_reactions.append(possible_rxn)
 
@@ -138,9 +136,9 @@ class ReactionController(BasicController):
                 if new_phase_name in self.rxn_set.free_species:
                     new_phase_name = self.phase_map.FREE_SPACE
 
-                return self.phase_map.phase_to_int[new_phase_name],chosen_rxn
+                return self.phase_map.get_state_value(new_phase_name),chosen_rxn
             else:
-                return self.phase_map.phase_to_int[reacting_species],chosen_rxn
+                return self.phase_map.get_state_value(reacting_species),chosen_rxn
         else:
             return self.phase_map.free_space_id, None
 
