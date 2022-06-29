@@ -13,7 +13,7 @@ setup(
         'matplotlib >= 3.5.1',
         'scipy >= 1.8.0',
         'tqdm >= 4.63.0',
-        'reaction-network == 5.0.0',
+        'reaction-network >= 5.0.0',
         'pymatgen >= 2022.3.29',
         'plotly >= 5.6.0'
     ],

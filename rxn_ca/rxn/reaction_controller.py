@@ -47,7 +47,7 @@ class ReactionController(BasicController):
         self.phase_map: SolidPhaseMap = phase_map
         self.rxn_set: ScoredReactionSet = reaction_set
         self.neighborhood = neighborhood
-        self.vn_neighborhood = VonNeumannNeighborhood(1)
+        self.vn_neighborhood = MooreNeighborhood(1)
 
         # proxy for partial pressures
         self.effective_open_distances = {}
@@ -124,12 +124,16 @@ class ReactionController(BasicController):
         choices: np.array = np.array(range(0,len(rxns)))
         chosen_rxn: ScoredReaction = rxns[np.random.choice(choices, p=normalized)]
 
+        volumes = self.rxn_set.volumes
         if chosen_rxn is not None:
-            likelihood = (chosen_rxn.reactant_stoich(reacting_species)) / sum([chosen_rxn.reactant_stoich(r) for r in chosen_rxn.reactants])
+            volume_weighted_reactant_stoich = chosen_rxn.reactant_stoich(reacting_species) * volumes[reacting_species]
+            total_volume_reactants = sum([chosen_rxn.reactant_stoich(r) * volumes[r] for r in chosen_rxn.reactants])
+            likelihood = volume_weighted_reactant_stoich / total_volume_reactants
+
             draw = random.random()
             if draw < likelihood:
                 possible_products: list[str] = chosen_rxn.products
-                likelihoods: np.array = np.array([chosen_rxn.product_stoich(p) for p in possible_products])
+                likelihoods: np.array = np.array([chosen_rxn.product_stoich(p) * volumes[p] for p in possible_products])
                 likelihoods: np.array = likelihoods / likelihoods.sum()
                 new_phase_name: str = np.random.choice(possible_products, p=np.array(likelihoods))
 
@@ -147,7 +151,7 @@ class ReactionController(BasicController):
 
         if possible_reaction is not None:
             score = self.get_score_contribution(possible_reaction.competitiveness, distance)
-            score = self.adjust_score_for_nucleation(score, neighbor_phases, possible_reaction.products)
+            score = self.adjust_score_for_nucleation(score, neighbor_phases, possible_reaction.products, possible_reaction.reactants)
             return (possible_reaction, score)
         elif replaced_phase == self.phase_map.FREE_SPACE:
             return (None, 1)
@@ -157,15 +161,19 @@ class ReactionController(BasicController):
             return (rxn, score)
 
 
-    def adjust_score_for_nucleation(self, score, neighbors, reaction_products):
-        # if len(set(neighbors) & set(reaction_products)) == 0:
-        #         score = score * 0.15
-
+    def adjust_score_for_nucleation(self, score, neighbors, products, reactants):
+        total_friendly_neighbors = len(neighbors)
         for neighbor in neighbors:
-            if neighbor not in reaction_products:
-                score = score * 0.5
-        return score
+            if neighbor not in products:
+                score = score * 0.9
+            if neighbor not in reactants and neighbor not in products:
+                total_friendly_neighbors -= 1
+
+        if total_friendly_neighbors == 0:
+            return 0
+        else:
+            return score
 
 
     def get_score_contribution(self, weight, distance):
-        return weight * 1 / (distance ** 2)
+        return weight * 1 / (distance ** 2.2)

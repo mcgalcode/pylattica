@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
-import numpy as np
 from rxn_ca.core.basic_simulation_result import BasicSimulationResult
 
-from rxn_ca.core.basic_simulation_step import BasicSimulationStep
 from rxn_ca.core.neighborhoods import NeighborhoodView
 
 

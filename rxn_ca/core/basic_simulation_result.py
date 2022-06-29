@@ -37,6 +37,10 @@ class BasicSimulationResult():
     def last_step(self):
         return self.steps[-1]
 
+    @property
+    def first_step(self):
+        return self.steps[0]
+
     def to_dict(self):
         return {
             "steps": [s.to_dict() for s in self.steps]

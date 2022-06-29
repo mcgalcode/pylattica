@@ -43,7 +43,7 @@ class ReactionResult(DiscreteStateResult):
 
     def get_choices_at(self, step_no: int, top: int = None, exclude_ids = True) -> None:
 
-        data = super().get_metadata_at(step_no)
+        data = self.analyzer.get_reaction_choices(self.steps[step_no])
         names = list(data.keys())
         values = list(data.values())
         zipped = list(zip(names, values))

@@ -13,6 +13,9 @@ import time
 import typing
 import multiprocessing as mp
 
+
+_dsr_globals = {}
+
 class DiscreteStateResult(BasicSimulationResult):
     """A class that stores the result of running a simulation. Keeps track of all
     the steps that the simulation proceeded through, and the set of reactions that
@@ -64,14 +67,22 @@ class DiscreteStateResult(BasicSimulationResult):
         if display_phases is None:
             display_phases = self.phase_color_map
 
-        artist = DiscreteStepArtist(self.phase_map, display_phases)
+        global _dsr_globals
+        _dsr_globals['artist'] = DiscreteStepArtist(self.phase_map, display_phases)
         imgs = []
         PROCESSES = mp.cpu_count()
         with mp.get_context('fork').Pool(PROCESSES) as pool:
-            for idx, step in tqdm(enumerate(self.steps), total = len(self.steps)):
+            print('parallel')
+            params = []
+            for idx, step in enumerate(self.steps):
                 label = f'Step {idx}'
-                img = artist.get_img(step, label, cell_size)
+                params.append([step, label, cell_size])
+
+            for img in pool.starmap(get_img_parallel, params):
                 imgs.append(img)
+
+                # img = artist.get_img(step, label, cell_size)
+                # imgs.append(img)
 
         return imgs
 
@@ -180,3 +191,5 @@ class DiscreteStateResult(BasicSimulationResult):
             "phase_map": self.phase_map.to_dict()
         }
 
+def get_img_parallel(step, label, cell_size):
+    return _dsr_globals['artist'].get_img(step, label, cell_size)

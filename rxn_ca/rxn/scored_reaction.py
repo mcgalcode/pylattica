@@ -126,6 +126,10 @@ class ScoredReaction:
     def products(self):
         return list(self._products.keys())
 
+    @property
+    def all_phases(self):
+        return list(set(self.reactants + self.products))
+
     def stoich_ratio(self, phase1, phase2) -> Number:
         all_phases = {**self._reactants, **self._products}
         return all_phases[phase1] / all_phases[phase2]
@@ -177,7 +181,7 @@ class ScoredReaction:
             f"{stoich_map_to_str(self._reactants)}->{stoich_map_to_str(self._products)}"
         )
 
-    def to_dict(self):
+    def as_dict(self):
         return {
             "reactants": self._reactants,
             "products": self._products,

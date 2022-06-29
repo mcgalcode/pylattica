@@ -1,3 +1,4 @@
+from rxn_ca.core.basic_simulation_step import BasicSimulationStep
 from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
 from ..discrete import DiscreteStepAnalyzer
 from ..discrete import PhaseMap
@@ -26,6 +27,19 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
         for el, amt in self.elemental_composition(step).items():
             print(f'{el} moles: ', amt)
 
+    def get_reaction_choices(self, step: BasicSimulationStep):
+        metadata = step.metadata
+        rxns = {}
+        for i in range(len(metadata)):
+            for j in range(len(metadata[0])):
+                rxn = metadata[i][j]
+                rxn_str = str(rxn)
+                if rxn_str in rxns:
+                    rxns[rxn_str] += 1
+                else:
+                    rxns[rxn_str] = 0
+        return rxns
+
     def elemental_composition(self, step):
         phases = self.phases_present(step)
         elemental_amounts = {}
@@ -33,7 +47,7 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
         for p in phases:
             if p is not self.phase_map.FREE_SPACE:
                 comp = Composition(p)
-                moles = self.cell_count(step, p)
+                moles = float(self.cell_count(step, p) * self.rxn_set.volumes[p])
                 for el, am in comp.as_dict().items():
                     num_moles = moles * am
                     if el in elemental_amounts:

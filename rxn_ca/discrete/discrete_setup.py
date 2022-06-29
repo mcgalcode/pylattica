@@ -2,7 +2,7 @@ import typing
 import numpy as np
 from rxn_ca.core.basic_simulation_step import BasicSimulationStep
 
-from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood
+from rxn_ca.core.neighborhoods import MooreNeighborhood
 from .phase_map import PhaseMap
 
 from ..rxn.reaction_step import ReactionStep

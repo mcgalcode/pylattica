@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 
-from rxn_ca.core.neighborhoods import NeighborhoodView
+from .neighborhoods import NeighborhoodView
 from .basic_simulation_step import BasicSimulationStep
 import numpy as np
 

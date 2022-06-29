@@ -1,7 +1,7 @@
 from random import randint
 import numpy as np
 
-from rxn_ca.core.distance_map import DistanceMap, EuclideanDistanceMap, ManhattanDistanceMap, distance
+from .distance_map import DistanceMap, EuclideanDistanceMap, ManhattanDistanceMap, distance
 
 class NeighborhoodView():
 
