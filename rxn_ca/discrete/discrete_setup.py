@@ -4,8 +4,6 @@ from rxn_ca.core.basic_simulation_step import BasicSimulationStep
 
 from rxn_ca.core.neighborhoods import MooreNeighborhood
 from .phase_map import PhaseMap
-
-from ..rxn.reaction_step import ReactionStep
 import random
 
 
@@ -30,7 +28,7 @@ class DiscreteStateSetup():
             state = state * fill
         return state
 
-    def setup_interface(self, size: int, p1: str, p2: str) -> ReactionStep:
+    def setup_interface(self, size: int, p1: str, p2: str) -> BasicSimulationStep:
         """Generates a starting state that is divided into two phases. One phase
         occupies the left half of the state, and one phase occupies the right half of the state
 
@@ -40,7 +38,7 @@ class DiscreteStateSetup():
             p2 (str): The name of the right phase
 
         Returns:
-            ReactionStep:
+            BasicSimulationStep:
         """
         state: np.array = self._build_blank_state(size)
         half: int = int(size/2)
@@ -48,7 +46,7 @@ class DiscreteStateSetup():
         state[:,half:size] = self.phase_map.get_state_value(p2)
         return self.step_class(state)
 
-    def setup_particle(self, size: int, radius: int, bulk_phase: str, particle_phase: str) -> ReactionStep:
+    def setup_particle(self, size: int, radius: int, bulk_phase: str, particle_phase: str) -> BasicSimulationStep:
         """Generates a starting state with a bulk phase surrounding a particle in the
         center of the state.
 
@@ -59,7 +57,7 @@ class DiscreteStateSetup():
             particle_phase (str): The name of the particle phase
 
         Returns:
-            ReactionStep:
+            BasicSimulationStep:
         """
         state: np.array = self._build_blank_state(size)
         state[:,:] = self.phase_map.get_state_value(bulk_phase)
@@ -67,7 +65,7 @@ class DiscreteStateSetup():
         state: np.array = self.add_particle_to_state(state, center, radius, particle_phase)
         return self.step_class(state)
 
-    def setup_random_particles(self, size: int, radius: int, num_particles: int, bulk_phase: str, particle_phases: str) -> ReactionStep:
+    def setup_random_particles(self, size: int, radius: int, num_particles: int, bulk_phase: str, particle_phases: str) -> BasicSimulationStep:
         """Generates a starting state with a one phase in the background and num_particles particles distributed
         onto it randomly
 
@@ -79,7 +77,7 @@ class DiscreteStateSetup():
             particle_phases (str): The name of the particulate phase
 
         Returns:
-            ReactionStep:
+            BasicSimulationStep:
         """
         state: np.array = self._build_blank_state(size)
         state[:,:] = self.phase_map.get_state_value(bulk_phase)
@@ -116,14 +114,14 @@ class DiscreteStateSetup():
             ]
         )
         result = np.tile(tile, (num_cells, num_cells))
-        return ReactionStep(result)
+        return BasicSimulationStep(result)
 
     def setup_noise(self, size, phases):
         blank = self._build_blank_state(size)
         for i in range(size):
             for j in range(size):
                 blank[i][j] = self.phase_map.get_state_value(random.choice(phases))
-        return ReactionStep(blank)
+        return BasicSimulationStep(blank)
 
     def setup_random_mixture(self, side_length, grain_size, phases, weights = None):
         cells = []
@@ -143,7 +141,7 @@ class DiscreteStateSetup():
 
 
         result = np.concatenate(rows)
-        return ReactionStep(result)
+        return BasicSimulationStep(result)
 
     def setup_random_sites(self, size, num_sites_desired, background_spec, nuc_species, nuc_ratios = None, buffer = 2):
         bg_state = self.phase_map.get_state_value(background_spec)

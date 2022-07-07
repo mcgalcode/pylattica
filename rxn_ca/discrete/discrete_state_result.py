@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-from tqdm import tqdm
 from rxn_ca.core import BasicSimulationResult
 
 from .phase_map import PhaseMap
@@ -72,7 +71,6 @@ class DiscreteStateResult(BasicSimulationResult):
         imgs = []
         PROCESSES = mp.cpu_count()
         with mp.get_context('fork').Pool(PROCESSES) as pool:
-            print('parallel')
             params = []
             for idx, step in enumerate(self.steps):
                 label = f'Step {idx}'

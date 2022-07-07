@@ -4,12 +4,18 @@ from pymatgen.ext.matproj import MPRester
 from pymatgen.core.units import Mass
 
 import typing
+import json
 
 class ScoredReactionSet():
     """A set of ScoredReactions that capture the events that can occur during a simulation. Typically
     includes every reaction possible in the chemical system defined by the precursors and open
     elements
     """
+
+    @classmethod
+    def from_file(cls, fpath):
+        with open(fpath, 'r+') as f:
+            return cls.from_dict(json.loads(f.read()))
 
     @classmethod
     def from_dict(cls, rxn_set_dict):

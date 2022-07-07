@@ -47,7 +47,7 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
         for p in phases:
             if p is not self.phase_map.FREE_SPACE:
                 comp = Composition(p)
-                moles = float(self.cell_count(step, p) * self.rxn_set.volumes[p])
+                moles = float(self.cell_count(step, p) / self.rxn_set.volumes[p])
                 for el, am in comp.as_dict().items():
                     num_moles = moles * am
                     if el in elemental_amounts:
