@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+
+from ..discrete import DiscreteStepAnalyzer
 from ..discrete import DiscreteStateResult
 from ..discrete import PhaseMap
 from .reaction_step_analyzer import ReactionStepAnalyzer
@@ -93,7 +95,7 @@ class ReactionResult(DiscreteStateResult):
         amounts = [analyzer.elemental_composition(s) for s in self.steps]
         for el in elements:
             xs = np.arange(len(self.steps))
-            ys = [a[el] for a in amounts]
+            ys = [a.get(el, 0) for a in amounts]
             traces.append((xs, ys, el))
 
         # filtered_traces = [t for t in traces if max(t[1]) > min_prevalence]
@@ -103,6 +105,50 @@ class ReactionResult(DiscreteStateResult):
 
         fig.show()
 
+
+    def plot_phase_mole_fractions(self, min_prevalence=0.01) -> None:
+        """In a Jupyter Notebook environment, plots the phase prevalence traces for the simulation.
+
+        Returns:
+            None:
+        """
+
+        fig = go.Figure()
+        fig.update_layout(width=800, height=800)
+        fig.update_yaxes(range=[-0.05,1.05], title="Mole Fraction")
+        fig.update_xaxes(range=[0, len(self.steps) - 1], title="Simulation Step")
+
+        analyzer = ReactionStepAnalyzer(self.phase_map, self.rxn_set)
+        traces = []
+        for phase in self.all_phases:
+            if phase != self.phase_map.FREE_SPACE:
+                xs = np.arange(len(self.steps))
+                ys = [analyzer.mole_fraction(step, phase) for step in self.steps]
+                traces.append((xs, ys, phase))
+
+        filtered_traces = [t for t in traces if max(t[1]) > min_prevalence]
+
+        for t in filtered_traces:
+            fig.add_trace(go.Scatter(name=t[2], x=t[0], y=t[1], mode='lines'))
+
+        fig.show()
+
+    def final_phase_fractions(self):
+        analyzer = DiscreteStepAnalyzer(self.phase_map)
+        fracs = {}
+        for phase in self.all_phases:
+            if phase != self.phase_map.FREE_SPACE:
+                fracs[phase] = analyzer.cell_fraction(self.steps[-1], phase)
+
+        return fracs
+
+    def print_final_phase_fracs(self):
+        for phase, frac in self.final_phase_fractions().items():
+            print(f'{phase}: {frac}')
+
+    def phase_fraction_at(self, step, phase):
+        analyzer = DiscreteStepAnalyzer(self.phase_map)
+        return analyzer.cell_fraction(self.steps[step - 1], phase)
 
     def to_dict(self):
         return {

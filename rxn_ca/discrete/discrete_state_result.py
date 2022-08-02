@@ -54,20 +54,20 @@ class DiscreteStateResult(BasicSimulationResult):
             typing.Dict[str, typing.Tuple[int, int ,int]]: A mapping of phase name to RGB
             color values
         """
-        display_phases: typing.Dict[str, typing.Tuple[int, int, int]] = {}
+        color_map: typing.Dict[str, typing.Tuple[int, int, int]] = {}
         c_idx: int = 0
         for p in self.all_phases:
-            display_phases[p] = COLORS[c_idx]
+            color_map[p] = COLORS[c_idx]
             c_idx += 1
 
-        return display_phases
+        return color_map
 
-    def _get_images(self, display_phases = None, cell_size = 20):
-        if display_phases is None:
-            display_phases = self.phase_color_map
+    def _get_images(self, color_map = None, cell_size = 20):
+        if color_map is None:
+            color_map = self.phase_color_map
 
         global _dsr_globals
-        _dsr_globals['artist'] = DiscreteStepArtist(self.phase_map, display_phases)
+        _dsr_globals['artist'] = DiscreteStepArtist(self.phase_map, color_map)
         imgs = []
         PROCESSES = mp.cpu_count()
         with mp.get_context('fork').Pool(PROCESSES) as pool:
@@ -84,50 +84,50 @@ class DiscreteStateResult(BasicSimulationResult):
 
         return imgs
 
-    def jupyter_show_step(self, step_no: int, display_phases: typing.Dict[str, typing.Tuple[int, int ,int]] = None, cell_size = 20) -> None:
+    def jupyter_show_step(self, step_no: int, color_map: typing.Dict[str, typing.Tuple[int, int ,int]] = None, cell_size = 20) -> None:
         """In a jupyter notebook environment, visualizes the step as a color coded phase grid.
 
         Args:
             step_no (int): The step of the simulation to visualize
-            display_phases (typing.Dict[str, typing.Tuple[int, int ,int]], optional): Defaults to None.
+            color_map (typing.Dict[str, typing.Tuple[int, int ,int]], optional): Defaults to None.
         """
 
-        if display_phases is None:
-            display_phases = self.phase_color_map
+        if color_map is None:
+            color_map = self.phase_color_map
 
         label = f'Step {step_no}'
-        artist = DiscreteStepArtist(self.phase_map, display_phases)
+        artist = DiscreteStepArtist(self.phase_map, color_map)
         step = self.steps[step_no]
         artist.jupyter_show(step, label, cell_size=cell_size)
 
-    def jupyter_play(self, display_phases: typing.Dict[str, typing.Tuple[int, int ,int]] = None, cell_size: int = 20, wait: int = 1):
+    def jupyter_play(self, color_map: typing.Dict[str, typing.Tuple[int, int ,int]] = None, cell_size: int = 20, wait: int = 1):
         """In a jupyter notebook environment, plays the simulation visualization back by showing a
         series of images with {wait} seconds between each one.
 
         Args:
-            display_phases (typing.Dict[str, typing.Tuple[int, int ,int]], optional): Defaults to None.
+            color_map (typing.Dict[str, typing.Tuple[int, int ,int]], optional): Defaults to None.
             cell_size (int, optional): The sidelength of a grid cell in pixels. Defaults to 20.
             wait (int, optional): The time duration between frames in the animation. Defaults to 1.
         """
         from IPython.display import clear_output
 
-        imgs = self._get_images(display_phases, cell_size)
+        imgs = self._get_images(color_map, cell_size)
         for img in imgs:
             clear_output()
             display(img)
             time.sleep(wait)
 
-    def to_gif(self, filename: str, display_phases = None, cell_size: int = 20, wait: float = 0.8) -> None:
+    def to_gif(self, filename: str, color_map = None, cell_size: int = 20, wait: float = 0.8) -> None:
         """Saves the areaction result as an animated GIF.
 
         Args:
             filename (str): The name of the output GIF. Must end in .gif.
-            display_phases (_type_, optional): Defaults to None.
+            color_map (_type_, optional): Defaults to None.
             cell_size (int, optional): The side length of a grid cell in pixels. Defaults to 20.
             wait (float, optional): The time in seconds between each frame. Defaults to 0.8.
         """
 
-        imgs = self._get_images(display_phases, cell_size)
+        imgs = self._get_images(color_map, cell_size)
         imgs[0].save(filename, save_all=True, append_images=imgs[1:], duration=wait * 1000, loop=0)
 
     def plot_phase_fractions(self, min_prevalence=0.01) -> None:

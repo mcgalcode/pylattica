@@ -26,4 +26,4 @@ class DiscreteStepAnalyzer():
         return len(np.unique(step.state)) - 1
 
     def phases_present(self, step):
-        return [self.phase_map.get_state_name(p) for p in np.unique(step.state)]
+        return [self.phase_map.get_state_name(p) for p in np.unique(step.state) if self.phase_map.is_valid_state_value(p)]

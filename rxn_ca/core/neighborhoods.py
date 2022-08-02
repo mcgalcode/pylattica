@@ -1,5 +1,6 @@
 from random import randint
 import numpy as np
+from sympy import E
 
 from .distance_map import DistanceMap, EuclideanDistanceMap, ManhattanDistanceMap, distance
 
@@ -27,6 +28,13 @@ class NeighborhoodView():
 
     def get_distance(self, i, j):
         return self.distance_map.distances[(i, j)]
+
+    def as_list(self, exclude_center = True):
+        cells = []
+        for cell in self.iterate(exclude_center=exclude_center):
+            cells.append(cell)
+
+        return cells
 
     def iterate(self, exclude_center = True):
         subcell = self.view
@@ -101,9 +109,9 @@ class VonNeumannNeighborhood(Neighborhood):
         self.mh_distances = ManhattanDistanceMap(radius * 2 + 1)
 
     def _screen_square(self, square):
-        sl = square.shape[0]
-        for i in range(sl):
-            for j in range(sl):
+        side_length = square.shape[0]
+        for i in range(side_length):
+            for j in range(side_length):
                 if self.mh_distances.distances[i][j] > self.radius:
                     square[i][j] = self.PADDING_VAL
         return square

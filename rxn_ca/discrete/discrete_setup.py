@@ -116,6 +116,14 @@ class DiscreteStateSetup():
         result = np.tile(tile, (num_cells, num_cells))
         return BasicSimulationStep(result)
 
+
+    def setup_coords(self, size, background_state, coordinates):
+        state: np.array = self._build_blank_state(size)
+        state[:,:] = self.phase_map.get_state_value(background_state)
+        for phase, coord_list in coordinates:
+            for coords in coord_list:
+                state[coords[0]][coords[1]] = self.phase_map.get_state_value(phase)
+
     def setup_noise(self, size, phases):
         blank = self._build_blank_state(size)
         for i in range(size):
@@ -144,6 +152,22 @@ class DiscreteStateSetup():
         return BasicSimulationStep(result)
 
     def setup_random_sites(self, size, num_sites_desired, background_spec, nuc_species, nuc_ratios = None, buffer = 2):
+        """_summary_
+
+        Args:
+            size (_type_): _description_
+            num_sites_desired (_type_): _description_
+            background_spec (_type_): _description_
+            nuc_species (_type_): _description_
+            nuc_ratios (_type_, optional): _description_. Defaults to None.
+            buffer (int, optional): _description_. Defaults to 2.
+
+        Raises:
+            RuntimeError: _description_
+
+        Returns:
+            _type_: _description_
+        """
         bg_state = self.phase_map.get_state_value(background_spec)
         blank = self._build_blank_state(size, fill=bg_state)
         nb = MooreNeighborhood(buffer)

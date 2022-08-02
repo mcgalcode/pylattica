@@ -32,12 +32,12 @@ class BasicStepArtist():
     def get_img(self, simulation_step: BasicSimulationStep, label = None, cell_size = 20):
         return self._draw_image(simulation_step.state, label, cell_size)
 
-    def get_legend(self):
+    def get_legend(self, state: np.array):
         return {}
 
     def _draw_image(self, state: np.array, label=None, cell_size = 20):
 
-        legend = self.get_legend()
+        legend = self.get_legend(state)
         state_size = state.shape[0]
         width = state_size + 6
 

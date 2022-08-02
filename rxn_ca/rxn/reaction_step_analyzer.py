@@ -40,6 +40,35 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
                     rxns[rxn_str] = 0
         return rxns
 
+    def mole_fraction(self, step, phase):
+        total_moles = 0
+        for p in self.phases_present(step):
+            if p is not SolidPhaseMap.FREE_SPACE:
+                total_moles += self.moles_of(step, p)
+
+        return self.moles_of(step, phase) / total_moles
+
+    def molar_breakdown(self, step):
+        mole_fractions = {}
+        for phase in self.phases_present(step):
+            mole_fractions[phase] = self.mole_fraction(step, phase)
+        return mole_fractions
+
+    def normalized_molar_breakdown(self, step):
+        moles = self.molar_breakdown(step)
+        min_moles = 1
+        min_phase = None
+        for phase, mole_count in moles.items():
+            if mole_count <= min_moles:
+                min_phase = phase
+                min_moles = mole_count
+
+        return { phase: mole_count / min_moles for phase, mole_count in moles.items() }
+
+
+    def moles_of(self, step, phase):
+        return float(self.cell_count(step, phase) / self.rxn_set.volumes[phase])
+
     def elemental_composition(self, step):
         phases = self.phases_present(step)
         elemental_amounts = {}
@@ -47,7 +76,7 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
         for p in phases:
             if p is not self.phase_map.FREE_SPACE:
                 comp = Composition(p)
-                moles = float(self.cell_count(step, p) / self.rxn_set.volumes[p])
+                moles = self.moles_of(step, p)
                 for el, am in comp.as_dict().items():
                     num_moles = moles * am
                     if el in elemental_amounts:

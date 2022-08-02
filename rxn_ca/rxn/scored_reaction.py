@@ -48,7 +48,7 @@ class ScoredReaction:
         )
 
     @classmethod
-    def self_reaction(cls, phase: str) -> ScoredReaction:
+    def self_reaction(cls, phase: str, strength = 1) -> ScoredReaction:
         """Instantiates a reaction object representing the identity reaction, i.e. this phase
         reacting to form itself.
 
@@ -63,7 +63,7 @@ class ScoredReaction:
 
         products = {phase: 1}
 
-        return cls(reactants, products, 1)
+        return cls(reactants, products, strength)
 
     @classmethod
     def from_rxn_network(cls, score, original_rxn: BasicReaction) -> ScoredReaction:
@@ -88,6 +88,10 @@ class ScoredReaction:
         self._total_product_stoich = sum(reactants.values())
         self.competitiveness: Number = competitiveness
         self.original_rxn = original_rxn
+
+    def rescore(self, scorer) -> ScoredReaction:
+        new_score = scorer.score(self)
+        return ScoredReaction(self._reactants, self._products, new_score, self.original_rxn)
 
     def can_proceed_with(self, reactants: list[str]) -> bool:
         """Helper method that, given a list of reactants, returns true if it is the same
@@ -166,6 +170,9 @@ class ScoredReaction:
             Number:
         """
         return self._reactants[phase] / self._total_reactant_stoich
+
+    def any_reactants(self, phases):
+        return len(set(self.reactants).intersection(phases)) > 0
 
     @property
     def is_identity(self) -> bool:

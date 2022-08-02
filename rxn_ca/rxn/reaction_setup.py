@@ -20,3 +20,7 @@ class ReactionSetup(DiscreteStateSetup):
             nuc_ratios=volume_scaled_ratios,
             buffer=buffer
         )
+
+    def setup_random_mixture(self, side_length, grain_size, phases, weights=None):
+        volume_scaled_ratios = [self.volumes[phase] * weights[idx] for idx, phase in enumerate(phases)]
+        return super().setup_random_mixture(side_length, grain_size, phases, volume_scaled_ratios)

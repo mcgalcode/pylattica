@@ -1,10 +1,28 @@
 from .scored_reaction import ScoredReaction, phases_to_str
 from pymatgen.core.composition import Composition
 from pymatgen.ext.matproj import MPRester
-from pymatgen.core.units import Mass
 
-import typing
 import json
+
+def get_phase_vols(phases):
+
+    volumes = {}
+
+    with MPRester() as mpr:
+        res = mpr.query(criteria={
+            "pretty_formula": {
+                "$in": phases,
+            },
+            "e_above_hull": {
+                "$lt": 0.1
+            },
+        }, properties=["structure", "full_formula", "task_id"])
+        for item in res:
+            struct = item["structure"]
+            comp = Composition(item["full_formula"])
+            volumes[comp.reduced_formula] = struct.volume / comp.get_reduced_composition_and_factor()[1]
+
+    return volumes
 
 class ScoredReactionSet():
     """A set of ScoredReactions that capture the events that can occur during a simulation. Typically
@@ -21,57 +39,50 @@ class ScoredReactionSet():
     def from_dict(cls, rxn_set_dict):
         return cls(
             [ScoredReaction.from_dict(r) for r in rxn_set_dict["reactions"]],
-            rxn_set_dict["open_species"],
             rxn_set_dict["free_species"]
         )
 
-    def __init__(self, reactions: list[ScoredReaction], open_species: list[str] = [], free_species: list[str] = [], skip_vols: bool = False):
+    def __init__(self, reactions: list[ScoredReaction], free_species: list[str] = [], skip_vols: bool = False):
         """Initializes a SolidReactionSet object. Requires a list of possible reactions
         and the elements which should be considered available in the atmosphere of the
         simulation.
 
         Args:
             reactions (list[Reaction]):
-            open_species (list[str], optional): A list of open species, e.g. CO2. Defaults to [].
             free_species (list[str]), optional): A list of gaseous or liquid species which should not be represented in the grid
         """
-        phases: list[str] = []
+        self.reactant_map = {}
+        self.reactions = []
+        self.rxn_map = {}
+        self.phases = []
+        self.free_species: list[str] = list(set(free_species))
+        # Replace strength of identity reaction with the depth of the hull its in
 
         for r in reactions:
-            if len(set(r.products) - set(open_species)) != 0:
-                phases = phases + r.products + r.reactants
+            self.add_rxn(r)
 
-        phases = list(set(phases))
-        self_reactions: list[ScoredReaction] = [ScoredReaction.self_reaction(phase) for phase in phases if phase not in open_species]
-        self.phases: list[str] = phases
+        for phase in self.phases:
+            self_rxn = ScoredReaction.self_reaction(phase, strength = 0.1)
+            existing = self.get_reaction([phase])
+            if existing is not None and not existing.is_identity:
+                self.add_rxn(self_rxn)
+            elif existing is None:
+                self.add_rxn(self_rxn)
+
         if not skip_vols:
-            self._get_phase_vols()
-        self.reactions: list[ScoredReaction] = reactions + self_reactions
-        self.open_species: list[str] = open_species
-        self.free_species: list[str] = list(set(open_species + free_species))
+            self.volumes = get_phase_vols(self.phases)
 
-        # A hashmap for quick lookup of reactions in this reaction set.
-        self.reactant_map: typing.Dict[str, ScoredReaction] = { rxn.reactant_str(): rxn for rxn in self.reactions}
-        self.rxn_map: typing.Dict[str, ScoredReaction] = { str(rxn): rxn for rxn in self.reactions}
+    def rescore(self, scorer):
+        rescored = [rxn.rescore(scorer) for rxn in self.reactions if not rxn.is_identity]
+        skip_vols = bool(self.volumes)
+        return ScoredReactionSet(rescored, self.free_species, skip_vols)
 
-    def _get_phase_vols(self):
-
-        self.volumes = {}
-
-        with MPRester() as mpr:
-            res = mpr.query(criteria={
-                "pretty_formula": {
-                    "$in": self.phases,
-                },
-                "e_above_hull": 0
-            }, properties=["structure", "full_formula", "task_id"])
-            for item in res:
-                struct = item["structure"]
-                comp = Composition(item["full_formula"])
-                density = struct.density
-                scaling = comp.get_reduced_composition_and_factor()[1]
-                molar_mass = Mass(comp.weight, "amu").to("g") * 6.022*10**23
-                self.volumes[comp.reduced_formula] = molar_mass / (scaling * density)
+    def add_rxn(self, rxn: ScoredReaction) -> None:
+        self.reactant_map[rxn.reactant_str()] = rxn
+        self.rxn_map[str(rxn)] = rxn
+        self.reactions.append(rxn)
+        for phase in rxn.all_phases:
+            self.phases = list(set(self.phases + [phase]))
 
     def get_reaction(self, reactants: list[str]) -> ScoredReaction:
         """Given a list of string reaction names, returns a reaction that uses exactly those
@@ -108,9 +119,23 @@ class ScoredReactionSet():
         """
         return [rxn for rxn in self.reactions if set(rxn.products).issuperset(products)]
 
+    def search_all(self, products: list[str], reactants: list[str]) -> list[ScoredReaction]:
+        return [rxn for rxn in self.reactions if set(rxn.products).issuperset(products) and set(rxn.reactants).issuperset(reactants)]
+
+    def search_reactants(self, reactants: list[str]) -> list[ScoredReaction]:
+        """Returns all the reactions in this SolidReactionSet that produce all of the
+        reactant phases specified.
+
+        Args:
+            reactants (list[str]): The reactants which matching reactions will produce.
+
+        Returns:
+            list[Reaction]: The matching reactions.
+        """
+        return [rxn for rxn in self.reactions if set(rxn.reactants).issuperset(reactants)]
+
     def to_dict(self):
         return {
-            "reactions": [r.to_dict() for r in self.reactions],
-            "open_species": self.open_species,
+            "reactions": [r.as_dict() for r in self.reactions],
             "free_species": self.free_species
         }

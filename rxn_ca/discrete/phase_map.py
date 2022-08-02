@@ -31,6 +31,9 @@ class PhaseMap():
     def get_state_value(self, state_name):
         return self.phase_to_int[state_name]
 
+    def is_valid_state_value(self, state_value):
+        return state_value in self.int_to_phase
+
     def get_state_name(self, state_value):
         return self.int_to_phase[state_value]
 
