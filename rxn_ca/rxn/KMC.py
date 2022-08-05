@@ -186,6 +186,24 @@ class KMCResult():
             xlabels.append(i)
         plt.plot(xlabels, points, label=mol)
 
+    def get_molecule_trace(self, mol, bounds = None):
+        if bounds is None:
+            bounds = [0, len(self.populations)]
+
+        if bounds[1] > len(self.populations) - 1:
+            bounds[1] = len(self.populations) - 1
+
+        if (bounds[1] - bounds[0]) > 1000:
+            step_size = int((bounds[1] - bounds[0]) / 1000)
+        else:
+            step_size = 1
+        points = []
+        xlabels = []
+        for i in range(bounds[0], bounds[1], step_size):
+            points.append(self.populations[i].get(mol, 0))
+            xlabels.append(i)
+        return (xlabels, points, mol)
+
     def plot_molecules(self, mols, bounds = None):
         [self.plot_molecule(mol, bounds=bounds) for mol in mols]
         plt.legend()
@@ -197,11 +215,20 @@ class KMCResult():
                 if amt > 0:
                     mols_present.append(mol)
         mols_present = list(set(mols_present))
+
+        fig = go.Figure()
+        fig.update_layout(width=800, height=800)
+        fig.update_yaxes(title="Molecule Count")
+        fig.update_xaxes(range=[0, len(self.populations) - 1], title="Simulation Step")
+
+        traces = []
         for mol in mols_present:
-            self.plot_molecule(mol, bounds=bounds)
-        plt.legend()
-        fig = matplotlib.pyplot.gcf()
-        fig.set_size_inches(20.5, 12.5)
+            traces.append(self.get_molecule_trace(mol, bounds=bounds))
+
+        for t in traces:
+            fig.add_trace(go.Scatter(name=t[2], x=t[0], y=t[1], mode='lines'))
+
+        fig.show()
 
     def phases_present(self, step_no):
         present = []

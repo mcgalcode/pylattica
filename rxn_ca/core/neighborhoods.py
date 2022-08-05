@@ -69,7 +69,9 @@ class Neighborhood():
     def get_in_step(self, step, coords):
         return self.get(step.state, coords)
 
-    def _get_square_neighborhood(self, padded_state, coords, overload_radius = None):
+    def _get_square_neighborhood(self, state, coords, overload_radius = None):
+        padded_state = self.pad_state(state)
+
         i = coords[0]
         j = coords[1]
 
@@ -79,21 +81,23 @@ class Neighborhood():
             radius = self.radius
         # We are accepting coordinates that don't consider padding,
         # So modify them to make 0,0 the first non-padding entry
-        i = i + radius
-        j = j + radius
+        # i = i + radius
+        # j = j + radius
 
-        curr_up = i - radius
-        curr_down = i + radius + 1
-        curr_left = j - radius
-        curr_right = j + radius + 1
+        state_size = state.shape[0]
 
-        return padded_state[curr_up:curr_down, curr_left:curr_right]
+        curr_up = state_size + i - radius
+        curr_down = state_size + i + radius + 1
+        curr_left = state_size + j - radius
+        curr_right = state_size + j + radius + 1
 
-    def get(self, unpadded_state, coords, overload_radius = None):
-        padded_state = self.pad_state(unpadded_state)
-        square = np.copy(self._get_square_neighborhood(padded_state, coords, overload_radius=overload_radius))
+        tiled = np.tile(state, (3,3))
+        return tiled[curr_up:curr_down, curr_left:curr_right]
+
+    def get(self, state, coords, overload_radius = None):
+        square = np.copy(self._get_square_neighborhood(state, coords, overload_radius=overload_radius))
         screened = self._screen_square(square)
-        return NeighborhoodView(coords, screened, unpadded_state, self.distance_map)
+        return NeighborhoodView(coords, screened, state, self.distance_map)
 
 
 class MooreNeighborhood(Neighborhood):
