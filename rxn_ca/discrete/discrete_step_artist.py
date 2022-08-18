@@ -1,5 +1,3 @@
-from itertools import cycle
-from turtle import color
 import typing
 from rxn_ca.core import BasicSimulationStep
 import numpy as np
@@ -52,8 +50,8 @@ class DiscreteStepArtist(BasicStepArtist):
         else:
             return self.legend
 
-    def _draw_image(self, state: np.array, label=None, cell_size=20):
+    def _draw_image(self, state: np.array, **kwargs):
         self.legend = self.get_legend(state)
-        return super()._draw_image(state, label, cell_size)
+        return super()._draw_image(state, **kwargs)
 
 

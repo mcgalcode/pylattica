@@ -15,13 +15,13 @@ class BasicSimulationStep():
         """Intializes a ReactionStep.
 
         Args:
-            state (np.array): A 2D np.array of integers representing the distribution of phases.
-                The value of the integers corresponds to phases in the reaction_set's int_to_phase mapping.
+            state (np.array): A 3D array
         """
         self.size: int = state.shape[0]
-        self.shape: tuple(int, int) = state.shape
+        self.shape: tuple = state.shape
         self.state: np.array = state
         self.metadata = metadata
+        self.dim = len(state.shape)
 
     def to_dict(self):
         return {

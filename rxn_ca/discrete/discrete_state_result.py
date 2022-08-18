@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from rxn_ca.core import BasicSimulationResult
@@ -11,6 +12,8 @@ from ..core import COLORS
 import time
 import typing
 import multiprocessing as mp
+
+from PIL import Image
 
 
 _dsr_globals = {}
@@ -62,7 +65,8 @@ class DiscreteStateResult(BasicSimulationResult):
 
         return color_map
 
-    def _get_images(self, color_map = None, cell_size = 20):
+    def _get_images(self, **kwargs):
+        color_map = kwargs.get('color_map', self.phase_color_map)
         if color_map is None:
             color_map = self.phase_color_map
 
@@ -74,7 +78,8 @@ class DiscreteStateResult(BasicSimulationResult):
             params = []
             for idx, step in enumerate(self.steps):
                 label = f'Step {idx}'
-                params.append([step, label, cell_size])
+                step_kwargs = { **kwargs, 'label': label }
+                params.append([step, step_kwargs])
 
             for img in pool.starmap(get_img_parallel, params):
                 imgs.append(img)
@@ -111,13 +116,13 @@ class DiscreteStateResult(BasicSimulationResult):
         """
         from IPython.display import clear_output
 
-        imgs = self._get_images(color_map, cell_size)
+        imgs = self._get_images(color_map = color_map, cell_size = cell_size)
         for img in imgs:
             clear_output()
             display(img)
             time.sleep(wait)
 
-    def to_gif(self, filename: str, color_map = None, cell_size: int = 20, wait: float = 0.8) -> None:
+    def to_gif(self, filename: str, **kwargs) -> None:
         """Saves the areaction result as an animated GIF.
 
         Args:
@@ -126,9 +131,18 @@ class DiscreteStateResult(BasicSimulationResult):
             cell_size (int, optional): The side length of a grid cell in pixels. Defaults to 20.
             wait (float, optional): The time in seconds between each frame. Defaults to 0.8.
         """
+        wait = kwargs.get('wait', 0.8)
+        imgs = self._get_images(**kwargs)
+        for idx, img in enumerate(imgs):
+            img.save(f'tmp_rxn_ca_step_{idx}.png')
 
-        imgs = self._get_images(color_map, cell_size)
-        imgs[0].save(filename, save_all=True, append_images=imgs[1:], duration=wait * 1000, loop=0)
+        reloaded_imgs = []
+        for idx in range(len(imgs)):
+            fname = f'tmp_rxn_ca_step_{idx}.png'
+            reloaded_imgs.append(Image.open(fname))
+            os.remove(fname)
+
+        reloaded_imgs[0].save(filename, save_all=True, append_images=reloaded_imgs[1:], duration=wait * 1000, loop=0)
 
     def plot_phase_fractions(self, min_prevalence=0.01) -> None:
         """In a Jupyter Notebook environment, plots the phase prevalence traces for the simulation.
@@ -189,5 +203,5 @@ class DiscreteStateResult(BasicSimulationResult):
             "phase_map": self.phase_map.to_dict()
         }
 
-def get_img_parallel(step, label, cell_size):
-    return _dsr_globals['artist'].get_img(step, label, cell_size)
+def get_img_parallel(step, step_kwargs):
+    return _dsr_globals['artist'].get_img(step, **step_kwargs)

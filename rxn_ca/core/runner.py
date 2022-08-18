@@ -1,3 +1,4 @@
+import itertools
 from random import randint, random, seed
 
 from .neighborhoods import NeighborhoodView
@@ -69,7 +70,7 @@ class Runner():
 
                 with mp.get_context('fork').Pool(PROCESSES) as pool:
                     for i in tqdm(range(num_steps)):
-                        step = self._take_step_parallel(step, pool, controller)
+                        step = self._take_step_parallel(step, pool)
                         result.add_step(step)
                         printif(verbose, f'Finished step {i}')
             else:
@@ -79,7 +80,7 @@ class Runner():
 
         return result
 
-    def _take_step_parallel(self, step, pool, controller) -> BasicSimulationStep:
+    def _take_step_parallel(self, step: BasicSimulationStep, pool) -> BasicSimulationStep:
         """Given a BasicSimulationStep, advances the system state by one time increment
         and returns a new reaction step.
 
@@ -90,27 +91,46 @@ class Runner():
             BasicSimulationStep:
         """
         params = []
-
-        for i in range(0, step.size):
-            params.append([step, step.size, i])
+        new_state = np.zeros(step.shape)
+        for coords in itertools.product(range(step.size), repeat = step.dim - 1):
+            params.append([step, step.size, coords])
 
         results = pool.starmap(step_row_parallel, params)
-        new_state = np.array(list(map(lambda x: x[0], results)))
+
+        for param, result in zip(params, results):
+            new_state[param[-1]] = result[0]
+
         step_metadata = list(map(lambda x: x[1], results))
 
         return BasicSimulationStep(new_state, step_metadata)
 
 
     def _take_step(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
-        results = []
+        new_state = []
+        metadata  = []
 
-        for i in range(0, step.size):
-            results.append(step_row(step, step.size, i, controller))
+        dimensionality = step.dim
 
-        new_state = np.array(list(map(lambda x: x[0], results)))
-        step_metadata = list(map(lambda x: x[1], results))
+        if dimensionality == 2:
+            for i in range(0, step.size):
+                row_state, row_metadata = step_row(step, step.size, [i], controller)
+                new_state.append(row_state)
+                metadata.append(row_metadata)
 
-        return BasicSimulationStep(new_state, step_metadata)
+        if dimensionality == 3:
+            for i in range(0, step.size):
+                state_slice = []
+                metadata_slice = []
+                for j in range(0, step.size):
+                    row_coords = (i, j)
+                    row_state, row_metadata = step_row(step, step.size, row_coords, controller)
+                    state_slice.append(row_state)
+                    metadata_slice.append(row_metadata)
+
+                new_state.append(state_slice)
+                metadata.append(metadata_slice)
+
+        return BasicSimulationStep(np.array(new_state), metadata)
 
     def _take_step_async(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
 
@@ -125,21 +145,22 @@ class Runner():
 
         return BasicSimulationStep(new_state, step_metadata)
 
-def step_row_parallel(step: BasicSimulationStep, state_size: int, row_num: int):
+def step_row_parallel(step: BasicSimulationStep, state_size: int, row_coords: tuple):
     return step_row(
         step,
         state_size,
-        row_num,
+        row_coords,
         mp_globals['controller']
     )
 
-def step_row(step: BasicSimulationStep, state_size: int, i: int, controller: BasicController):
-    new_state = np.zeros(state_size)
+def step_row(step: BasicSimulationStep, state_size: int, row_coords: tuple, controller: BasicController):
+    new_row_state = np.zeros(state_size)
     cells_metadata = []
-    for j in range(0, state_size):
-        view: NeighborhoodView = controller.neighborhood.get_in_step(step, [i,j])
+    for z in range(0, state_size):
+        new_coords = tuple(list(row_coords) + [z])
+        view: NeighborhoodView = controller.neighborhood.get_in_step(step, new_coords)
         new_cell_state, cell_update_metadata = controller.get_new_state(view)
         cells_metadata.append(cell_update_metadata)
 
-        new_state[j] = new_cell_state
-    return new_state, cells_metadata
+        new_row_state[z] = new_cell_state
+    return new_row_state, cells_metadata

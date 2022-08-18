@@ -1,4 +1,7 @@
 import numpy as np
+
+from rxn_ca.core.basic_simulation_step import BasicSimulationStep
+
 from .phase_map import PhaseMap
 
 class DiscreteStepAnalyzer():
@@ -6,9 +9,9 @@ class DiscreteStepAnalyzer():
     def __init__(self, phase_map: PhaseMap) -> None:
         self.phase_map: PhaseMap = phase_map
 
-    def cell_fraction(self, step, phase_name: str):
+    def cell_fraction(self, step: BasicSimulationStep, phase_name: str):
         phase_count = self.cell_count(step, phase_name)
-        total_occupied_cells = step.size ** 2
+        total_occupied_cells = step.size ** step.dim
         return phase_count / total_occupied_cells
 
     def cell_count(self, step, phase_name: str):
@@ -27,3 +30,6 @@ class DiscreteStepAnalyzer():
 
     def phases_present(self, step):
         return [self.phase_map.get_state_name(p) for p in np.unique(step.state) if self.phase_map.is_valid_state_value(p)]
+
+    def phases_present_in_state(self, state):
+        return [self.phase_map.get_state_name(p) for p in np.unique(state) if self.phase_map.is_valid_state_value(p)]

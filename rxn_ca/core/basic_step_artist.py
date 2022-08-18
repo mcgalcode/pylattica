@@ -3,39 +3,43 @@ from PIL import Image, ImageDraw
 from .neighborhoods import NeighborhoodView
 from .basic_simulation_step import BasicSimulationStep
 import numpy as np
+import io
+
+import matplotlib.pyplot as plt
 
 class BasicStepArtist():
-
-    def show_state(self, state: np.array, label = None, cell_size = 20):
-        img = self._draw_image(state, label, cell_size)
-        img.show()
-
-    def jupyter_show_state(self, state: np.array, label = None, cell_size = 20):
-        img = self._draw_image(state, label, cell_size)
-        display(img)
-
-    def jupyter_show_view(self, view: NeighborhoodView, label = None, cell_size = 20):
-        img = self._draw_image(view.view, label, cell_size)
-        display(img)
-
-    def get_img_state(self, state: np.array, label = None, cell_size = 20):
-        return self._draw_image(state, label, cell_size)
-
-    def show(self, simulation_step: BasicSimulationStep, label = None, cell_size = 20):
-        img = self._draw_image(simulation_step.state, label, cell_size)
-        img.show()
-
-    def jupyter_show(self, simulation_step: BasicSimulationStep, label = None, cell_size = 20):
-        img = self.get_img(simulation_step, label, cell_size)
-        display(img)
-
-    def get_img(self, simulation_step: BasicSimulationStep, label = None, cell_size = 20):
-        return self._draw_image(simulation_step.state, label, cell_size)
 
     def get_legend(self, state: np.array):
         return {}
 
-    def _draw_image(self, state: np.array, label=None, cell_size = 20):
+    def jupyter_show_state(self, state: np.array, **kwargs):
+        img = self._draw_image(state, **kwargs)
+        display(img)
+
+    def jupyter_show_view(self, view: NeighborhoodView, **kwargs):
+        img = self._draw_image(view.view_state, **kwargs)
+        display(img)
+
+    def get_img_state(self, state: np.array, **kwargs):
+        return self._draw_image(state, **kwargs)
+
+    def jupyter_show(self, simulation_step: BasicSimulationStep, **kwargs):
+        img = self.get_img(simulation_step, **kwargs)
+        display(img)
+
+    def get_img(self, simulation_step: BasicSimulationStep, **kwargs):
+        return self._draw_image(simulation_step.state, **kwargs)
+
+    def _draw_image(self, state, **kwargs):
+        dim = len(state.shape)
+        if dim == 2:
+            return self._draw_image_2D(state, **kwargs)
+        elif dim == 3:
+            return self._draw_image_3D(state, **kwargs)
+
+    def _draw_image_2D(self, state: np.array, **kwargs):
+        label = kwargs.get('label', None)
+        cell_size = kwargs.get('cell_size', 20)
 
         legend = self.get_legend(state)
         state_size = state.shape[0]
@@ -82,3 +86,51 @@ class BasicStepArtist():
             draw.text((5,5),label,(255,255,255))
 
         return img
+
+    def _draw_image_3D(self, state, **kwargs):
+        shell_only = kwargs.get('shell_only', False)
+        include_phases = kwargs.get('include_phases', None)
+
+        legend = self.get_legend(state)
+        shape = state.shape
+        size = state.shape[0]
+        dataset = {}
+        if include_phases is None:
+            include_phases = self.phase_map.phases
+
+        dataset['empty'] = np.ones(shape)
+        for phase in include_phases:
+            phase_data = np.zeros(shape)
+            for xloc in range(0, size):
+                for yloc in range(0, size):
+                    for zloc in range(0, size):
+                        if not shell_only or (yloc == 0 or xloc == (size - 1) or zloc == (size - 1)):
+                            if state[xloc][yloc][zloc] == self.phase_map.phase_to_int[phase]:
+                                phase_data[xloc][yloc][zloc] = 1
+                                dataset['empty'][xloc][yloc][zloc] = 0
+            if phase_data.sum() > 0:
+                dataset[phase] = phase_data
+
+        ax = plt.figure(figsize=(12,12)).add_subplot(projection='3d')
+
+        for phase, data in dataset.items():
+            if phase == 'empty':
+                colors = [0.8, 0.8, 0.8, 0.2]
+                ax.voxels(data, facecolors=colors, edgecolor='k', linewidth=0)
+            else:
+                colors = np.array(legend[phase]) / 255
+                ax.voxels(data, facecolors=colors, edgecolor='k', linewidth=0.25)
+
+
+        plt.axis('off')
+        fig = ax.get_figure()
+        buf = io.BytesIO()
+        fig.savefig(buf)
+        plt.close()
+        buf.seek(0)
+        img = Image.open(buf)
+        return img
+
+    def draw_step_3D(self, step, legend, shell_only = False, include_phases = None):
+        self._draw_image_3D(step.state, legend, shell_only = shell_only, include_phases = include_phases)
+

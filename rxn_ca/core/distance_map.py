@@ -1,7 +1,7 @@
 import numpy as np
 
 def distance(arr1: np.array, arr2: np.array) -> float:
-    """Given two 2D coordinate pairs, return the euclidean distance between them. This implementation
+    """Given two 2D or 3D coordinate tuples, return the euclidean distance between them. This implementation
     is simpler than the scipy.distance one, but it is much more efficient for small array.s
 
     Args:
@@ -15,35 +15,48 @@ def distance(arr1: np.array, arr2: np.array) -> float:
 
 class DistanceMap():
 
-    def __init__(self, side_length: int):
+    def __init__(self, side_length: int, dimension = 2):
         """Intializes a DistanceMap.
 
         Args:
-            filter_size (int): The size of the distance map to create
+            side_length (int): The size of the distance map to create
         """
         if side_length % 2 != 1:
-            print("Warning: distance map initialized with even side length implies ambiguous center point")
+            print("Warning: distance map initialized with even side length has an ambiguous center point")
+        self.dimension = dimension
         self.distances: np.array = self.find_distances(side_length)
 
-    def find_distances(self, filter_size: int) -> np.array:
-        """Generates a filter_size x filter_size grid where each cell contains it's distance
+    def find_distances(self, side_length: int) -> np.array:
+        """Generates a side_length x side_length grid where each cell contains it's distance
         from the central cell
 
         Args:
-            filter_size (int): _description_
+            side_length (int): _description_
 
         Returns:
             np.array: _description_
         """
-        distances: np.array = np.zeros((filter_size, filter_size))
-        cell_center: np.array = np.array([int(distances.shape[0] / 2), int(distances.shape[1] / 2)])
+        if self.dimension == 2:
+            distances: np.array = np.zeros((side_length, side_length))
+            cell_center: np.array = np.array([int(distances.shape[0] / 2), int(distances.shape[1] / 2)])
 
-        for i in range(filter_size):
-            for j in range(filter_size):
-                curr_loc = np.array([i, j])
-                distances[(i, j)] = self._distance(cell_center, curr_loc)
+            for i in range(side_length):
+                for j in range(side_length):
+                    curr_loc = np.array([i, j])
+                    distances[(i, j)] = self._distance(cell_center, curr_loc)
 
-        return distances
+            return distances
+        elif self.dimension == 3:
+            distances: np.array = np.zeros((side_length, side_length, side_length))
+            cell_center: np.array = np.array([int(distances.shape[0] / 2), int(distances.shape[1] / 2), int(distances.shape[1] / 2)])
+
+            for i in range(side_length):
+                for j in range(side_length):
+                    for k in range(side_length):
+                        curr_loc = np.array([i, j, k])
+                        distances[(i, j, k)] = self._distance(cell_center, curr_loc)
+
+            return distances
 
 class EuclideanDistanceMap(DistanceMap):
 
