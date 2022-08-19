@@ -9,7 +9,7 @@ class BasicSimulationStep():
 
     @classmethod
     def from_dict(cls, step_dict):
-        return cls(np.array(step_dict["state"]).astype(int))
+        return cls(np.array(step_dict["state"]).astype(int), step_dict["metadata"])
 
     def __init__(self, state: np.array, metadata = []):
         """Intializes a ReactionStep.
@@ -23,10 +23,12 @@ class BasicSimulationStep():
         self.metadata = metadata
         self.dim = len(state.shape)
 
-    def to_dict(self):
+    def as_dict(self):
         return {
             "state": self.state.tolist(),
-            "metadata": self.metadata_to_dict()
+            "metadata": self.metadata_to_dict(),
+            "@module": self.__class__.__module__,
+            "@class": self.__class__.__name__,
         }
 
     def metadata_to_dict(self):

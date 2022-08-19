@@ -134,8 +134,10 @@ class ScoredReactionSet():
         """
         return [rxn for rxn in self.reactions if set(rxn.reactants).issuperset(reactants)]
 
-    def to_dict(self):
+    def as_dict(self):
         return {
             "reactions": [r.as_dict() for r in self.reactions],
-            "free_species": self.free_species
+            "free_species": self.free_species,
+            "@module": self.__class__.__module__,
+            "@class": self.__class__.__name__,
         }

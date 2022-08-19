@@ -10,7 +10,7 @@ from .scored_reaction_set import ScoredReactionSet
 import os
 from pathlib import Path
 
-import json
+from monty.serialization import loadfn, dumpfn
 
 class ReactionStore():
 
@@ -25,7 +25,7 @@ class ReactionStore():
         return f'{chem_sys}-{temp}K.json'
 
     def load_rxn_set(self, chem_sys, temp):
-        return ScoredReactionSet.from_file(self.get_scored_path(chem_sys, temp))
+        return loadfn(self.get_scored_path(chem_sys, temp))
 
     def get_unscored_path(self, chem_sys, temp):
         return os.path.join(self.unscored_root, self.get_fname_for_rxn_group(chem_sys, temp))
@@ -52,17 +52,12 @@ class ReactionStore():
                 )
 
         filepath = self.get_unscored_path(chem_sys, temp)
-        with open(filepath, 'w+') as f:
-            f.write(json.dumps(rxn_set.as_dict()))
+        dumpfn(rxn_set, filepath)
 
     def score_and_write_rxns(self, chem_sys, temp, scorer, free_species = []):
         unscored_path = self.get_unscored_path(chem_sys, temp)
-        f = open(unscored_path, 'r+')
-        rxn_set = ReactionSet.from_dict(json.loads(f.read()))
-        f.close()
+        rxn_set = loadfn(unscored_path)
         scored_rxns = score_rxns(rxn_set, scorer)
         scored_rxn_set = ScoredReactionSet(scored_rxns, free_species=free_species)
-
         scored_path = self.get_scored_path(chem_sys, temp)
-        with open(scored_path, 'w+') as f:
-            f.write(json.dumps(scored_rxn_set.to_dict()))
+        dumpfn(scored_rxn_set, scored_path)

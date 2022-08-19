@@ -193,4 +193,6 @@ class ScoredReaction:
             "reactants": self._reactants,
             "products": self._products,
             "competitiveness": self.competitiveness,
+            "@module": self.__class__.__module__,
+            "@class": self.__class__.__name__,
         }
