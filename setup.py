@@ -15,6 +15,7 @@ setup(
         'tqdm >= 4.63.0',
         'reaction-network >= 5.0.0',
         'pymatgen >= 2022.3.29',
-        'plotly >= 5.6.0'
+        'plotly >= 5.6.0',
+        'jobflow >= 0.1.8'
     ],
 )
