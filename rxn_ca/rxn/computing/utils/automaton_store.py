@@ -33,13 +33,14 @@ class AutomatonStore(MongoStore):
 
     def get_scored_rxns(self, chem_sys, temperature):
         chem_sys = format_chem_sys(chem_sys)
+        print(chem_sys, temperature)
         result = self.query_one({
             "output.job_type": JobTypes.SCORE_RXNS.value,
             "output.chem_sys": chem_sys,
-            "output.temp": temperature
+            "output.temperature": temperature
         })
         if result is not None:
-            ScoredReactionSet.from_dict(result["output"]["scored_rxn_set"])
+            return ScoredReactionSet.from_dict(result["output"]["scored_rxn_set"])
         else:
             return None
 

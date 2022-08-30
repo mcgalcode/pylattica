@@ -17,7 +17,7 @@ class EnumeratedRxnsModel(BaseModel):
     stability_cutoff: float = Field(description="The energy tolerance for considering a phase stable")
     open_el: Optional[str] = Field(description="An open element")
     chem_pot: Optional[float] = Field(description="The chemical potential of the open element")
-    temperature: float = Field(description="The temperature at which the energy of the reactions is calculated")
+    temperature: int = Field(description="The temperature at which the energy of the reactions is calculated")
     job_type: str = Field(default=JobTypes.ENUMERATE_RXNS.value)
 
     def __init__(self, **data: Any):

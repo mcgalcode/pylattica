@@ -26,5 +26,5 @@ class ScoredRxnsModel(BaseModel):
             task_id = str(uuid4()),
             scored_rxn_set = scored_rxn_set.as_dict(),
             chem_sys = chem_sys,
-            temp = temp
+            temperature = temp
         )

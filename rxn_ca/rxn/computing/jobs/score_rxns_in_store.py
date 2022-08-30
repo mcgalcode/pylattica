@@ -39,7 +39,6 @@ class ScoreRxnsMaker(Maker):
         scorer = ArrheniusScore(temp)
         scored_rxns = score_rxns(rxn_set, scorer)
         scored_rxn_set = ScoredReactionSet(scored_rxns)
-
         result_model = ScoredRxnsModel.from_obj(
             scored_rxn_set,
             chem_sys = chem_sys,

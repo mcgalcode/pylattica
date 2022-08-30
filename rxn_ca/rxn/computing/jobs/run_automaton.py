@@ -21,6 +21,8 @@ from ... import SolidPhaseMap, ReactionSetup, ReactionSetup3D, ScoredReactionSet
 
 from uuid import uuid4
 
+from ..utils.log import get_logger
+
 
 @dataclass
 class RunRxnAutomatonMaker(Maker):
@@ -43,16 +45,21 @@ class RunRxnAutomatonMaker(Maker):
             parallel: bool = True,
         ):
 
+        log = get_logger()
+        scored_rxn_set = None
+
         if scored_rxns is not None:
             scored_rxn_set: ScoredReactionSet = ScoredReactionSet.from_dict(scored_rxns.scored_rxn_set)
         else:
+            log.info("Retrieving scored reactions from store")
             store = AutomatonStore(**db_connection_params)
             store.connect()
             if task_id is not None:
                 scored_rxn_set = store.get_scored_rxns_by_task_id(task_id)
             else:
-                result = store.get_scored_rxns(chem_sys, temperature=temp)
-                if result is None:
+                scored_rxn_set = store.get_scored_rxns(chem_sys, temperature=temp)
+                if scored_rxn_set is None:
+                    log.info(f'No rxns for chemical system {chem_sys} and temp {temp} found, initiating enumeration')
                     enumerate_maker = EnumerateRxnsMaker()
                     score_maker = ScoreRxnsMaker()
                     run_maker = RunRxnAutomatonMaker()
@@ -87,7 +94,7 @@ class RunRxnAutomatonMaker(Maker):
 
         assert scored_rxn_set is not None, "ScoredRxnSet not found!"
         phase_map: SolidPhaseMap = SolidPhaseMap(scored_rxn_set.phases)
-        print(scored_rxn_set)
+
         if dimensionality == 2:
             setup = ReactionSetup(phase_map, volumes = scored_rxn_set.volumes)
         else:
