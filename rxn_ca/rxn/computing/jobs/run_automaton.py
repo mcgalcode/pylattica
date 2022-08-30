@@ -51,11 +51,7 @@ class RunRxnAutomatonMaker(Maker):
             if task_id is not None:
                 scored_rxn_set = store.get_scored_rxns_by_task_id(task_id)
             else:
-                result = store.query_one({
-                    "output.job_type": JobTypes.SCORE_RXNS.value,
-                    "output.chem_sys": chem_sys,
-                    "output.temp": temp
-                })
+                result = store.get_scored_rxns(chem_sys, temperature=temp)
                 if result is None:
                     enumerate_maker = EnumerateRxnsMaker()
                     score_maker = ScoreRxnsMaker()
@@ -88,7 +84,6 @@ class RunRxnAutomatonMaker(Maker):
                     return Response(
                         replace=flow
                     )
-                scored_rxn_set = ScoredReactionSet.from_dict(result["output"]["scored_rxn_set"])
 
         assert scored_rxn_set is not None, "ScoredRxnSet not found!"
         phase_map: SolidPhaseMap = SolidPhaseMap(scored_rxn_set.phases)

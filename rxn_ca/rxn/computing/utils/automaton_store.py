@@ -16,14 +16,20 @@ class AutomatonStore(MongoStore):
                 "output.task_id": task_id,
                 "output.job_type": JobTypes.ENUMERATE_RXNS.value
             })
-        return ReactionSet.from_dict(result["output"]["rxn_set"])
+        if result is not None:
+            return ReactionSet.from_dict(result["output"]["rxn_set"])
+        else:
+            return None
 
     def get_scored_rxns_by_task_id(self, task_id: str):
         result = self.query_one({
             "output.task_id": task_id,
             "output.job_type": JobTypes.SCORE_RXNS.value
         })
-        return ScoredReactionSet.from_dict(result["output"]["scored_rxn_set"])
+        if result is not None:
+            return ScoredReactionSet.from_dict(result["output"]["scored_rxn_set"])
+        else:
+            return None
 
     def get_scored_rxns(self, chem_sys, temperature):
         chem_sys = format_chem_sys(chem_sys)
@@ -32,3 +38,8 @@ class AutomatonStore(MongoStore):
             "output.chem_sys": chem_sys,
             "output.temp": temperature
         })
+        if result is not None:
+            ScoredReactionSet.from_dict(result["output"]["scored_rxn_set"])
+        else:
+            return None
+
