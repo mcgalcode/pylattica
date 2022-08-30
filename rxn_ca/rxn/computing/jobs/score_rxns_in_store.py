@@ -13,7 +13,7 @@ from ...scorers import ArrheniusScore, score_rxns
 
 from rxn_network.reactions.reaction_set import ReactionSet
 
-from maggma.stores.mongolike import MongoStore
+from ..utils.automaton_store import AutomatonStore
 
 @dataclass
 class ScoreRxnsMaker(Maker):
@@ -30,13 +30,9 @@ class ScoreRxnsMaker(Maker):
         ):
 
         if rxns is None:
-            store = MongoStore(**db_connection_params)
+            store = AutomatonStore(**db_connection_params)
             store.connect()
-            result = store.query_one({
-                "output.task_id": task_id,
-                "output.job_type": JobTypes.ENUMERATE_RXNS.value
-            })
-            rxn_set = ReactionSet.from_dict(result["output"]["rxn_set"])
+            rxn_set = store.get_rxn_enumeration_by_task_id(task_id)
         else:
             rxn_set = ReactionSet.from_dict(rxns.rxn_set)
 

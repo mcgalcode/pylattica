@@ -1,4 +1,7 @@
 from pydantic import BaseModel, Field
+from rxn_ca.rxn.computing.utils.functions import format_chem_sys
+
+from typing import Any
 
 from rxn_ca.rxn.scored_reaction_set import ScoredReactionSet
 from uuid import uuid4
@@ -11,8 +14,11 @@ class ScoredRxnsModel(BaseModel):
     scored_rxn_set: dict = Field(description="The scored reactions")
     chem_sys: str = Field(description="The chemical system containing these reactions")
     job_type: str = Field(default=JobTypes.SCORE_RXNS.value)
-    temp: int = Field(description="The temperature used to score these reactions")
+    temperature: int = Field(description="The temperature used to score these reactions")
 
+    def __init__(self, **data: Any):
+        super().__init__(**data)
+        self.chem_sys = format_chem_sys(self.chem_sys)
 
     @classmethod
     def from_obj(cls, scored_rxn_set: ScoredReactionSet, chem_sys: str, temp: int):

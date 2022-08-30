@@ -1,9 +1,11 @@
 from uuid import uuid4
 from pydantic import BaseModel, Field
 
-from typing import Optional
+from typing import Optional, Any
 
 from rxn_network.reactions.reaction_set import ReactionSet
+
+from rxn_ca.rxn.computing.utils.functions import format_chem_sys
 
 from .job_types import JobTypes
 
@@ -17,6 +19,10 @@ class EnumeratedRxnsModel(BaseModel):
     chem_pot: Optional[float] = Field(description="The chemical potential of the open element")
     temperature: float = Field(description="The temperature at which the energy of the reactions is calculated")
     job_type: str = Field(default=JobTypes.ENUMERATE_RXNS.value)
+
+    def __init__(self, **data: Any):
+        super().__init__(**data)
+        self.chem_sys = format_chem_sys(self.chem_sys)
 
     @classmethod
     def from_obj(cls,

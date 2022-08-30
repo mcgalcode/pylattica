@@ -7,6 +7,7 @@ from maggma.stores.mongolike import MongoStore
 
 from rxn_ca.rxn.computing.schemas.ca_result_schema import RxnCAResultModel
 from rxn_ca.rxn.computing.schemas.scored_rxns_schema import ScoredRxnsModel
+from rxn_ca.rxn.computing.utils.automaton_store import AutomatonStore
 from rxn_ca.rxn.reaction_result import ReactionResult
 
 from .enumerate_rxns_maker import EnumerateRxnsMaker
@@ -45,14 +46,10 @@ class RunRxnAutomatonMaker(Maker):
         if scored_rxns is not None:
             scored_rxn_set: ScoredReactionSet = ScoredReactionSet.from_dict(scored_rxns.scored_rxn_set)
         else:
-            store = MongoStore(**db_connection_params)
+            store = AutomatonStore(**db_connection_params)
             store.connect()
             if task_id is not None:
-                result = store.query_one({
-                    "output.task_id": task_id,
-                    "output.job_type": JobTypes.SCORE_RXNS.value
-                })
-                scored_rxn_set = ScoredReactionSet.from_dict(result["output"]["scored_rxn_set"])
+                scored_rxn_set = store.get_scored_rxns_by_task_id(task_id)
             else:
                 result = store.query_one({
                     "output.job_type": JobTypes.SCORE_RXNS.value,
