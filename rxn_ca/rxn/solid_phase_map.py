@@ -26,8 +26,10 @@ class SolidPhaseMap(PhaseMap):
         super().__init__(phases)
         self.free_space_id: int = self.phase_to_int[self.FREE_SPACE]
 
-    def to_dict(self):
+    def as_dict(self):
         return {
+            "@module": self.__class__.__module__,
+            "@class": self.__class__.__name__,
             "phases": self.phases,
             "phase_to_int": self.phase_to_int,
             "int_to_phase": self.int_to_phase,

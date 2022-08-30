@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
+from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
+
 from ..discrete import DiscreteStepAnalyzer
 from ..discrete import DiscreteStateResult
 from ..discrete import PhaseMap
@@ -21,13 +23,10 @@ class ReactionResult(DiscreteStateResult):
     def from_dict(cls, res_dict):
         res = ReactionResult(
             ScoredReactionSet.from_dict(res_dict["rxn_set"]),
-            PhaseMap.from_dict(res_dict["phase_map"])
+            SolidPhaseMap.from_dict(res_dict["phase_map"])
         )
         for step_dict in res_dict["steps"]:
             res.add_step(ReactionStep.from_dict(step_dict))
-
-        for choices in res_dict["choices"]:
-            res.add_choices(choices)
 
         return res
 
@@ -39,7 +38,6 @@ class ReactionResult(DiscreteStateResult):
         """
         super().__init__(phase_map)
         self.steps: list[ReactionStep] = []
-        self.mole_steps: list[np.array] = []
         self.rxn_set: ScoredReactionSet = rxn_set
         self.analyzer = ReactionStepAnalyzer(self.phase_map, self.rxn_set)
 
@@ -150,10 +148,11 @@ class ReactionResult(DiscreteStateResult):
         analyzer = DiscreteStepAnalyzer(self.phase_map)
         return analyzer.cell_fraction(self.steps[step - 1], phase)
 
-    def to_dict(self):
+    def as_dict(self):
         return {
-            "steps": [s.to_dict() for s in self.steps],
-            "choices": self.choices,
-            "rxn_set": self.rxn_set.to_dict(),
-            "phase_map": self.phase_map.to_dict()
+            "@module": self.__class__.__module__,
+            "@class": self.__class__.__name__,
+            "steps": [s.as_dict() for s in self.steps],
+            "rxn_set": self.rxn_set.as_dict(),
+            "phase_map": self.phase_map.as_dict()
         }

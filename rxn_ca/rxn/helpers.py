@@ -41,4 +41,4 @@ def score_and_write_rxns(unscored_path, output_path, scorer, free_species = []):
     scored_rxn_set = ScoredReactionSet(scored_rxns, free_species=free_species)
 
     with open(output_path, 'w+') as f:
-        f.write(json.dumps(scored_rxn_set.to_dict()))
+        f.write(json.dumps(scored_rxn_set.as_dict()))

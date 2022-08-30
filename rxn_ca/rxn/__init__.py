@@ -7,3 +7,4 @@ from .scored_reaction_set import ScoredReactionSet
 from .scorers import ArrheniusScore
 from .solid_phase_map import SolidPhaseMap
 from .reaction_setup import ReactionSetup, ReactionSetup3D
+from .reaction_store import ReactionStore

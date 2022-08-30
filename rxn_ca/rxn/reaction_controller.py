@@ -3,12 +3,15 @@ import numpy as np
 import typing
 
 from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood, NeighborhoodView, VonNeumannNeighborhood
+from rxn_ca.rxn.scorers import ArrheniusScore, score_rxns
 from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
 from ..core.basic_controller import BasicController
 
 from .reaction_result import ReactionResult
 from .reaction_step import ReactionStep
 from .normalizers import normalize
+
+from rxn_network.reactions.reaction_set import ReactionSet
 
 from .scored_reaction_set import ScoredReactionSet
 from .scored_reaction import ScoredReaction
@@ -42,18 +45,37 @@ class ReactionController(BasicController):
         """
         return math.floor(min((size - 1) * 2 + 1, 21) / 2)
 
-    def __init__(self, phase_map: SolidPhaseMap, reaction_set: ScoredReactionSet, neighborhood: Neighborhood, inertia = 1, open_species = {}) -> None:
+    def __init__(self,
+        phase_map: SolidPhaseMap,
+        neighborhood: Neighborhood,
+        reaction_set: ReactionSet = None,
+        scored_rxns: ScoredReactionSet = None,
+        inertia = 1,
+        open_species = {},
+        free_species = [],
+        temperature = None,
+    ) -> None:
+
+        if scored_rxns is not None:
+            self.rxn_set = scored_rxns
+        elif reaction_set is not None:
+            if temperature is None:
+                raise ValueError("If no scored reaction set is provided, temperature is required")
+            scorer = ArrheniusScore(temperature)
+            scored_rxns = score_rxns(reaction_set, scorer)
+            self.rxn_set = ScoredReactionSet(scored_rxns)
+
+        self.temperature = temperature
         self.phase_map: SolidPhaseMap = phase_map
-        self.rxn_set: ScoredReactionSet = reaction_set
         self.neighborhood = neighborhood
-        self.nucleation_neighborhood = MooreNeighborhood(4)
+        self.nucleation_neighborhood = MooreNeighborhood(1)
         self.inertia = inertia
+        self.free_species = free_species
         # proxy for partial pressures
         self.effective_open_distances = {}
         for specie, strength in open_species.items():
             self.effective_open_distances[specie] = strength
 
-        print(self.effective_open_distances)
 
     def instantiate_result(self):
         return ReactionResult(self.rxn_set, self.phase_map)
@@ -156,7 +178,7 @@ class ReactionController(BasicController):
         if chosen_reactant == reacting_species:
             new_phase_name: str = self.choose_product_by_volume(rxn)
 
-            if new_phase_name in self.rxn_set.free_species:
+            if new_phase_name in self.free_species:
                 new_phase_name = self.phase_map.FREE_SPACE
 
         return self.phase_map.get_state_value(new_phase_name), rxn

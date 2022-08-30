@@ -39,23 +39,20 @@ class ScoredReactionSet():
     def from_dict(cls, rxn_set_dict):
         return cls(
             [ScoredReaction.from_dict(r) for r in rxn_set_dict["reactions"]],
-            rxn_set_dict["free_species"]
         )
 
-    def __init__(self, reactions: list[ScoredReaction], free_species: list[str] = [], skip_vols: bool = False):
+    def __init__(self, reactions: list[ScoredReaction], skip_vols: bool = False):
         """Initializes a SolidReactionSet object. Requires a list of possible reactions
         and the elements which should be considered available in the atmosphere of the
         simulation.
 
         Args:
             reactions (list[Reaction]):
-            free_species (list[str]), optional): A list of gaseous or liquid species which should not be represented in the grid
         """
         self.reactant_map = {}
         self.reactions = []
         self.rxn_map = {}
         self.phases = []
-        self.free_species: list[str] = list(set(free_species))
         # Replace strength of identity reaction with the depth of the hull its in
 
         for r in reactions:
@@ -75,7 +72,7 @@ class ScoredReactionSet():
     def rescore(self, scorer):
         rescored = [rxn.rescore(scorer) for rxn in self.reactions if not rxn.is_identity]
         skip_vols = bool(self.volumes)
-        return ScoredReactionSet(rescored, self.free_species, skip_vols)
+        return ScoredReactionSet(rescored, skip_vols)
 
     def add_rxn(self, rxn: ScoredReaction) -> None:
         self.reactant_map[rxn.reactant_str()] = rxn
@@ -137,7 +134,6 @@ class ScoredReactionSet():
     def as_dict(self):
         return {
             "reactions": [r.as_dict() for r in self.reactions],
-            "free_species": self.free_species,
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
         }

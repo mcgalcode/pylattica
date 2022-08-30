@@ -197,10 +197,12 @@ class DiscreteStateResult(BasicSimulationResult):
         ys = [step.phase_count for step in self.steps]
         plt.plot(xs, ys)
 
-    def to_dict(self):
+    def as_dict(self):
         return {
-            "steps": [s.to_dict() for s in self.steps],
-            "phase_map": self.phase_map.to_dict()
+            "@module": self.__class__.__module__,
+            "@class": self.__class__.__name__,
+            "steps": [s.as_dict() for s in self.steps],
+            "phase_map": self.phase_map.as_dict()
         }
 
 def get_img_parallel(step, step_kwargs):

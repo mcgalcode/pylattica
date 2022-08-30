@@ -1,3 +1,4 @@
+from copy import copy
 from pymatgen.ext.matproj import MPRester
 
 from rxn_network.enumerators.minimize import MinimizeGibbsEnumerator
@@ -13,25 +14,50 @@ from pathlib import Path
 from monty.serialization import loadfn, dumpfn
 
 class ReactionStore():
+    """
+    Stores downloaded unscored and scored reactions sorted by chemical system
+    in the filesystem.
+
+    /{repo_root}
+    -/ChemSys1
+    --/unscored_rxns
+    --/scored_rxns
+    """
 
     def __init__(self, repo_root='.'):
         self.root = repo_root
-        self.unscored_root = f'{self.root}/unscored_rxns'
-        self.scored_root = f'{self.root}/scored_rxns'
-        Path(self.unscored_root).mkdir(parents=True, exist_ok=True)
-        Path(self.scored_root).mkdir(parents=True, exist_ok=True)
 
     def get_fname_for_rxn_group(self, chem_sys, temp):
         return f'{chem_sys}-{temp}K.json'
+
+    def get_sorted_chemsys_string(self, chem_sys):
+        if type(chem_sys) is list:
+            cs_copy = copy(chem_sys)
+            cs_copy.sort()
+            return "-".join(cs_copy)
+        elif type(chem_sys) is str:
+            cs_list = chem_sys.split("-")
+            cs_list.sort()
+            return "-".join(cs_list)
+
+    def unscored_dir(self, chem_sys):
+        dir_path = f'{self.root}/{self.get_sorted_chemsys_string(chem_sys)}/unscored_rxns'
+        Path(dir_path).mkdir(parents=True, exist_ok=True)
+        return dir_path
+
+    def scored_dir(self, chem_sys):
+        dir_path = f'{self.root}/{self.get_sorted_chemsys_string(chem_sys)}/scored_rxns'
+        Path(dir_path).mkdir(parents=True, exist_ok=True)
+        return dir_path
 
     def load_rxn_set(self, chem_sys, temp):
         return loadfn(self.get_scored_path(chem_sys, temp))
 
     def get_unscored_path(self, chem_sys, temp):
-        return os.path.join(self.unscored_root, self.get_fname_for_rxn_group(chem_sys, temp))
+        return os.path.join(self.unscored_dir(chem_sys), self.get_fname_for_rxn_group(chem_sys, temp))
 
     def get_scored_path(self, chem_sys, temp):
-        return os.path.join(self.scored_root, self.get_fname_for_rxn_group(chem_sys, temp))
+        return os.path.join(self.scored_dir(chem_sys), self.get_fname_for_rxn_group(chem_sys, temp))
 
     def download_rxns(self, chem_sys, temp, stability_cutoff, open_el = None, chempot=0.0, mp_api_key = None):
 
@@ -53,11 +79,20 @@ class ReactionStore():
 
         filepath = self.get_unscored_path(chem_sys, temp)
         dumpfn(rxn_set, filepath)
+        return filepath
 
-    def score_and_write_rxns(self, chem_sys, temp, scorer, free_species = []):
+    def score_and_write_rxns(self, chem_sys, temp, scorer):
         unscored_path = self.get_unscored_path(chem_sys, temp)
         rxn_set = loadfn(unscored_path)
+        return self.score_and_write_rxns_from_obj(rxn_set, chem_sys, temp, scorer)
+
+    def score_and_write_rxns_from_path(self, rxn_fpath, chem_sys, temp, scorer):
+        rxn_set = loadfn(rxn_fpath)
+        return self.score_and_write_rxns_from_obj(rxn_set, chem_sys, temp, scorer)
+
+    def score_and_write_rxns_from_obj(self, rxn_set: ReactionSet, chem_sys, temp, scorer):
         scored_rxns = score_rxns(rxn_set, scorer)
-        scored_rxn_set = ScoredReactionSet(scored_rxns, free_species=free_species)
+        scored_rxn_set = ScoredReactionSet(scored_rxns)
         scored_path = self.get_scored_path(chem_sys, temp)
         dumpfn(scored_rxn_set, scored_path)
+        return scored_path
