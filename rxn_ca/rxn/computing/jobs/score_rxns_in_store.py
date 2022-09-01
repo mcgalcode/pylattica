@@ -27,13 +27,16 @@ class ScoreRxnsMaker(Maker):
              temp: int,
              rxns: EnumeratedRxnsModel = None,
              task_id: int = None,
-             db_connection_params: dict = {},
-             launchpad_file = None
+             db_connection_params: dict = None,
+             db_file = None
         ):
 
+        if db_connection_params is None:
+            db_connection_params = {}
+
         if rxns is None:
-            if launchpad_file is not None:
-                store = AutomatonStore.from_launchpad_file(launchpad_file)
+            if db_file is not None:
+                store = AutomatonStore.from_db_file(db_file)
             else:
                 store = AutomatonStore(**db_connection_params)
             store.connect()

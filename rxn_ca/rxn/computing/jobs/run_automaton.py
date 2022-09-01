@@ -1,3 +1,4 @@
+from typing import Optional
 from jobflow.core.maker import Maker
 from jobflow.core.job import job
 from jobflow import Response, Flow
@@ -36,6 +37,7 @@ class RunRxnAutomatonMaker(Maker):
             open_species: dict = {},
             free_species: list = [],
             parallel: bool = True,
+            db_file: Optional[str] = None,
         ):
 
         scored_rxn_set = None
@@ -44,8 +46,14 @@ class RunRxnAutomatonMaker(Maker):
             scored_rxn_set: ScoredReactionSet = ScoredReactionSet.from_dict(scored_rxns.scored_rxn_set)
 
         if scored_rxn_set is None:
-            store = AutomatonStore(**db_connection_params)
+
+            if db_file is not None:
+                store = AutomatonStore.from_db_file(db_file)
+            else:
+                store = AutomatonStore(**db_connection_params)
+
             store.connect()
+
             if scored_rxns_task_id is not None:
                 scored_rxn_set = store.get_scored_rxns_by_task_id(scored_rxns_task_id)
 
