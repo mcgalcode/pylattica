@@ -69,7 +69,9 @@ def enumerate_and_score_flow(chem_sys,
                              stability_cutoff=0.1,
                              open_element=None,
                              chempot=None,
+                             db_connection_params=None
                              ):
+    db_connection_params = db_connection_params if db_connection_params is not None else {}
     enumerate_maker = EnumerateRxnsMaker()
     score_maker = ScoreRxnsMaker()
     enumerate_job = enumerate_maker.make(
@@ -82,6 +84,7 @@ def enumerate_and_score_flow(chem_sys,
     score_job = score_maker.make(
         chem_sys=chem_sys,
         temp=temp,
-        rxns=enumerate_job.output
+        rxns=enumerate_job.output,
+        db_connection_params = db_connection_params
     )
     return Flow([enumerate_job, score_job], output=score_job.output)
