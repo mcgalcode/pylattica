@@ -12,9 +12,9 @@ from rxn_ca.rxn.reaction_result import ReactionResult
 from ....core import VonNeumannNeighborhood, Runner
 from ... import SolidPhaseMap, ReactionSetup, ReactionSetup3D, ScoredReactionSet, ReactionController
 
-from uuid import uuid4
+from .enumerate_and_score_flow import enumerate_and_score_flow
 
-from ..utils.log import get_logger
+from uuid import uuid4
 
 
 @dataclass
@@ -29,7 +29,7 @@ class RunRxnAutomatonMaker(Maker):
             setup_args: dict,
             num_steps: int,
             scored_rxns: ScoredRxnsModel = None,
-            task_id: str = None,
+            scored_rxns_task_id: str = None,
             db_connection_params: dict = {},
             dimensionality: int = 2,
             inertia: float = 1,
@@ -38,19 +38,41 @@ class RunRxnAutomatonMaker(Maker):
             parallel: bool = True,
         ):
 
-        log = get_logger()
         scored_rxn_set = None
 
         if scored_rxns is not None:
             scored_rxn_set: ScoredReactionSet = ScoredReactionSet.from_dict(scored_rxns.scored_rxn_set)
 
-        if scored_rxn_set is None and task_id is not None:
-            scored_rxn_set = store.get_scored_rxns_by_task_id(task_id)
-
         if scored_rxn_set is None:
             store = AutomatonStore(**db_connection_params)
             store.connect()
-            scored_rxn_set = store.get_scored_rxns(chem_sys, temperature=temp)
+            if scored_rxns_task_id is not None:
+                scored_rxn_set = store.get_scored_rxns_by_task_id(scored_rxns_task_id)
+
+            if scored_rxn_set is None:
+                scored_rxn_set = store.get_scored_rxns(chem_sys, temperature=temp)
+
+            if scored_rxn_set is None:
+                get_rxns_flow = enumerate_and_score_flow(
+                    chem_sys,
+                    temp
+                )
+                new_ca_job = RunRxnAutomatonMaker().make(
+                    chem_sys = chem_sys,
+                    temp = temp,
+                    setup_style = setup_style,
+                    setup_args = setup_args,
+                    num_steps = num_steps,
+                    scored_rxns = get_rxns_flow.output,
+                    dimensionality = dimensionality,
+                    inertia = inertia,
+                    open_species = open_species,
+                    free_species = free_species,
+                    parallel = parallel,
+                )
+
+                new_flow = Flow([get_rxns_flow, new_ca_job])
+                return Response(replace=new_flow, output=new_ca_job.output)
 
         assert scored_rxn_set is not None, "ScoredRxnSet not found!"
         phase_map: SolidPhaseMap = SolidPhaseMap(scored_rxn_set.phases)

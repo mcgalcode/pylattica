@@ -1,3 +1,4 @@
+from re import M
 from jobflow.core.maker import Maker
 from jobflow.core.job import job
 

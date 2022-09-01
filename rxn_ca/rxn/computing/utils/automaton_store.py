@@ -1,5 +1,6 @@
 from maggma.stores.mongolike import MongoStore
 from rxn_ca.rxn.computing.utils.functions import format_chem_sys
+from rxn_ca.rxn.reaction_result import ReactionResult
 
 from rxn_ca.rxn.scored_reaction_set import ScoredReactionSet
 
@@ -41,6 +42,16 @@ class AutomatonStore(MongoStore):
         })
         if result is not None:
             return ScoredReactionSet.from_dict(result["output"]["scored_rxn_set"])
+        else:
+            return None
+
+    def get_automaton_result_by_task(self, task_id: str):
+        result = self.query_one({
+            "output.task_id": task_id,
+            "output.job_type": JobTypes.RUN_RXN_AUTOMATON.value
+        })
+        if result is not None:
+            return ReactionResult.from_dict(result["output"]["result"])
         else:
             return None
 
