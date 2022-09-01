@@ -26,11 +26,15 @@ class ScoreRxnsMaker(Maker):
              temp: int,
              rxns: EnumeratedRxnsModel = None,
              task_id: int = None,
-             db_connection_params: dict = {}
+             db_connection_params: dict = {},
+             launchpad_file = None
         ):
 
         if rxns is None:
-            store = AutomatonStore(**db_connection_params)
+            if launchpad_file is not None:
+                store = AutomatonStore.from_launchpad_file(launchpad_file)
+            else:
+                store = AutomatonStore(**db_connection_params)
             store.connect()
             rxn_set = store.get_rxn_enumeration_by_task_id(task_id)
         else:
