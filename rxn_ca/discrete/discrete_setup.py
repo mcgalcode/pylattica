@@ -22,11 +22,15 @@ class DiscreteStateSetup():
         self.step_class = step_class
         self.phase_map: PhaseMap = phase_map
 
-    def _build_blank_state(self, size: int, fill = None) -> np.array:
+    def _build_blank_state(self, size: int, fill: int = None) -> np.array:
         state: np.array = np.ones((size, size))
         if fill is not None:
             state = state * fill
         return state
+
+    def setup_solid_phase(self, size: int, phase_name: str) -> BasicSimulationStep:
+        phase_val = self.phase_map.get_state_value(phase_name)
+        return self.step_class(self._build_blank_state(size, phase_val))
 
     def setup_interface(self, size: int, p1: str, p2: str) -> BasicSimulationStep:
         """Generates a starting state that is divided into two phases. One phase

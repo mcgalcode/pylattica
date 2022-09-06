@@ -33,3 +33,6 @@ class BasicSimulationStep():
 
     def metadata_to_dict(self):
         return self.metadata
+
+def copy_step(step: BasicSimulationStep):
+    return BasicSimulationStep(step.state.copy(), step.metadata)

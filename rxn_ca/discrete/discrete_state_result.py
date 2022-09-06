@@ -18,6 +18,15 @@ from PIL import Image
 
 _dsr_globals = {}
 
+def color_map(phases):
+    color_map: typing.Dict[str, typing.Tuple[int, int, int]] = {}
+    c_idx: int = 0
+    for p in phases:
+        color_map[p] = COLORS[c_idx]
+        c_idx += 1
+
+    return color_map
+
 class DiscreteStateResult(BasicSimulationResult):
     """A class that stores the result of running a simulation. Keeps track of all
     the steps that the simulation proceeded through, and the set of reactions that
@@ -57,13 +66,7 @@ class DiscreteStateResult(BasicSimulationResult):
             typing.Dict[str, typing.Tuple[int, int ,int]]: A mapping of phase name to RGB
             color values
         """
-        color_map: typing.Dict[str, typing.Tuple[int, int, int]] = {}
-        c_idx: int = 0
-        for p in self.all_phases:
-            color_map[p] = COLORS[c_idx]
-            c_idx += 1
-
-        return color_map
+        return color_map(self.all_phases)
 
     def _get_images(self, **kwargs):
         color_map = kwargs.get('color_map', self.phase_color_map)

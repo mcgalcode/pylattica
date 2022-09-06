@@ -1,19 +1,22 @@
 import itertools
 from random import randint
+import typing
 import numpy as np
+
+from rxn_ca.core.coordinate_utils import get_coords_in_box
 
 from .distance_map import EuclideanDistanceMap, ManhattanDistanceMap
 
 class NeighborhoodView():
 
     def __init__(self, coords, view_state, full_state, distance_map) -> None:
-        self.coords = tuple(coords)
-        self.view_state = view_state
+        self.coords: typing.Tuple[int, int] = tuple(coords)
+        self.view_state: np.array = view_state
         self.center_value = full_state[self.coords]
-        self.full_state = full_state
-        self.dimension = len(view_state.shape)
-        self.distance_map = distance_map
-        self.size = self.view_state.shape[0]
+        self.full_state: np.array = full_state
+        self.dimension: int = len(view_state.shape)
+        self.distance_map: np.array = distance_map
+        self.size: int = self.view_state.shape[0]
 
     def count_equal(self, val):
         return self.count_vals(lambda x: x == val)
@@ -35,7 +38,7 @@ class NeighborhoodView():
 
         return cells
 
-    def iterate(self, exclude_center = True):
+    def iterate(self, exclude_center = True, include_relative_coords = False):
         subcell = self.view_state
         center_coord = int(self.size / 2)
         for coords in itertools.product(range(self.size), repeat=self.dimension):
@@ -47,7 +50,34 @@ class NeighborhoodView():
                 continue
 
             distance = self.get_distance(coords)
-            yield subcell[coords], distance
+            if include_relative_coords:
+                relative_coords = (coords[0] - center_coord, coords[1] - center_coord)
+                yield subcell[coords], distance, relative_coords
+            else:
+                yield subcell[coords], distance
+
+class ViewEditor():
+
+    def __init__(self, view: NeighborhoodView):
+        self._view: NeighborhoodView = copy_view(view)
+
+    def replace_in_view(self, r_coords, new):
+        center_coord = int(self._view.size / 2)
+        exact_coords = (r_coords[0] + center_coord, r_coords[1] + center_coord)
+        self._view.view_state[exact_coords] = new
+
+    def get(self):
+        return self._view
+
+def copy_view(view: NeighborhoodView):
+    return NeighborhoodView(view.coords, view.view_state.copy(), view.full_state, view.distance_map)
+
+def replace_view_in_state(state, view: NeighborhoodView):
+    for state_val, _, r_coords in view.iterate(include_relative_coords=True):
+        exact_coords = (r_coords[0] + view.coords[0], r_coords[1] + view.coords[1])
+        transformed_coords = get_coords_in_box(state.shape[0], exact_coords)
+        state[transformed_coords] = state_val
+    return state
 
 
 class Neighborhood():

@@ -1,7 +1,8 @@
+from dataclasses import replace
 import itertools
 from random import randint, random, seed
 
-from .neighborhoods import NeighborhoodView
+from .neighborhoods import NeighborhoodView, replace_view_in_state
 from .basic_controller import BasicController
 from .basic_simulation_result import BasicSimulationResult
 from .basic_simulation_step import BasicSimulationStep
@@ -23,7 +24,7 @@ class Runner():
     and it will run a simulation for the prescribed number of steps.
     """
 
-    def __init__(self, parallel = False, workers = None, is_async = False):
+    def __init__(self, parallel = False, workers = None, is_async = False, neighborhood_replace = False):
         """Initializes a simulation Runner.
 
         Args:
@@ -33,6 +34,7 @@ class Runner():
         self.parallel = parallel
         self.workers = workers
         self.is_async = is_async
+        self.neighborhood_replace = neighborhood_replace
 
     def run(self, initial_step: BasicSimulationStep, controller: BasicController, num_steps: int, verbose = False) -> BasicSimulationResult:
         """Run the simulation for the prescribed number of steps.
@@ -56,6 +58,10 @@ class Runner():
         if self.is_async:
             for _ in tqdm(range(num_steps)):
                 step = self._take_step_async(step, controller)
+                result.add_step(step)
+        elif self.neighborhood_replace:
+            for _ in tqdm(range(num_steps)):
+                step = self._take_replace_step(step, controller)
                 result.add_step(step)
         else:
             if self.parallel:
@@ -142,6 +148,17 @@ class Runner():
         new_cell_state, step_metadata = controller.get_new_state(nb_view)
 
         new_state[rand_i, rand_j] = new_cell_state
+
+        return BasicSimulationStep(new_state, step_metadata)
+
+    def _take_replace_step(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
+        new_state = np.copy(step.state)
+
+        rand_i = randint(0,step.size - 1)
+        rand_j = randint(0,step.size - 1)
+        nb_view = controller.neighborhood.get_in_step(step, [rand_i, rand_j])
+        replace_view, step_metadata = controller.get_new_state(nb_view)
+        replace_view_in_state(new_state, replace_view)
 
         return BasicSimulationStep(new_state, step_metadata)
 
