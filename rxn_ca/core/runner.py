@@ -1,3 +1,4 @@
+import math
 from random import random
 from typing import List
 
@@ -34,7 +35,7 @@ class Runner():
         self.is_async = is_async
         self.neighborhood_replace = neighborhood_replace
 
-    def run(self, initial_step: SimulationState, controller: BasicController, num_steps: int, verbose = False) -> BasicSimulationResult:
+    def run(self, initial_state: SimulationState, controller: BasicController, num_steps: int, verbose = False) -> BasicSimulationResult:
         """Run the simulation for the prescribed number of steps.
 
         Args:
@@ -44,12 +45,11 @@ class Runner():
             BasicSimulationResult:
         """
         printif(verbose, "Initializing run")
-        result = controller.instantiate_result()
-        printif(verbose, f'Running w/ sim. size {initial_step.size}')
+        printif(verbose, f'Running w/ sim. size {initial_state.size}')
 
-        step = initial_step
+        result = controller.instantiate_result(initial_state.copy())
 
-        result.add_step(step)
+        state = initial_state
 
         global mp_globals
 
@@ -71,20 +71,22 @@ class Runner():
                     PROCESSES = self.workers
 
                 printif(verbose, f'Running in parallel using {PROCESSES} workers')
-
+                num_sites = initial_state.size
+                chunk_size = math.ceil(num_sites / PROCESSES)
+                print(f'Distributing {num_sites} update tasks to {PROCESSES} workers in chunks of {chunk_size}')
                 with mp.get_context('fork').Pool(PROCESSES) as pool:
                     for i in tqdm(range(num_steps)):
-                        step = self._take_step_parallel(step, pool)
-                        result.add_step(step)
+                        updates = self._take_step_parallel(state, pool, chunk_size = chunk_size)
+                        result.add_step(updates)
                         printif(verbose, f'Finished step {i}')
             else:
                 for _ in tqdm(range(num_steps)):
-                    step = self._take_step(step, controller)
-                    result.add_step(step)
+                    updates = self._take_step(state, controller)
+                    result.add_step(updates)
 
         return result
 
-    def _take_step_parallel(self, prev_state: SimulationState, pool) -> SimulationState:
+    def _take_step_parallel(self, state: SimulationState, pool, chunk_size) -> SimulationState:
         """Given a SimulationState, advances the system state by one time increment
         and returns a new reaction step.
 
@@ -95,36 +97,27 @@ class Runner():
             SimulationState:
         """
         params = []
-        new_state = prev_state.copy()
-        site_ids = prev_state.site_ids()
-        chunk_size = 10
-        site_batches = [site_ids[i:i + chunk_size] for i in range(0, len(site_ids), chunk_size)]
+        site_ids = state.site_ids()
+        num_sites = len(site_ids)
+        site_batches = [site_ids[i:i + chunk_size] for i in range(0, num_sites, chunk_size)]
         for batch in site_batches:
-            params.append([batch, prev_state])
+            params.append([batch, state])
 
         results = pool.starmap(step_batch_parallel, params)
 
+        all_updates = {}
         for batch_update_res in results:
-            new_state.batch_update(batch_update_res)
+            all_updates.update(batch_update_res)
 
-        return new_state
+        return all_updates
 
 
-    def _take_step(self, prev_state: SimulationState, controller: BasicController) -> SimulationState:
-        new_state = []
+    def _take_step(self, state: SimulationState, controller: BasicController) -> SimulationState:
+        site_ids = state.site_ids()
+        updates = step_batch(site_ids, state, controller)
+        state.batch_update(updates)
 
-        new_state = prev_state.copy()
-        site_ids = new_state.site_ids()
-        chunk_size = 4
-
-        # using list comprehension
-        site_batches = [site_ids[i:i + chunk_size] for i in range(0, len(site_ids), chunk_size)]
-
-        for id_batch in site_batches:
-            batch_updates = step_batch(id_batch, prev_state, controller)
-            new_state.batch_update(batch_updates)
-
-        return new_state
+        return updates
 
     def _take_step_async(self, prev_state: SimulationState, controller: BasicController) -> SimulationState:
         new_state = prev_state.copy()

@@ -81,8 +81,8 @@ class ReactionController(BasicController):
             self.effective_open_distances[specie] = strength
 
 
-    def instantiate_result(self):
-        return ReactionResult(self.rxn_set, self.phase_set)
+    def instantiate_result(self, starting_state: SimulationState):
+        return ReactionResult(starting_state, self.rxn_set, self.phase_set)
 
     def get_state_update(self, site_id: int, prev_state: SimulationState):
         np.random.seed(None)

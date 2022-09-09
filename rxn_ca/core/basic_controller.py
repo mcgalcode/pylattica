@@ -10,5 +10,5 @@ class BasicController(ABC):
     def get_state_update(self, site_id: int, prev_state: SimulationState):
         pass
 
-    def instantiate_result(self):
-        return BasicSimulationResult()
+    def instantiate_result(self, starting_state):
+        return BasicSimulationResult(starting_state = starting_state)

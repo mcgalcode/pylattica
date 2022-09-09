@@ -20,22 +20,35 @@ class BasicSimulationResult():
             res.add_step(step)
         return res
 
-    def __init__(self):
+    def __init__(self, starting_state: SimulationState):
         """Initializes a ReactionResult with the reaction set used in the simulation
 
         Args:
             rxn_set (ScoredReactionSet):
         """
-        self.steps: list[SimulationState] = []
+        self.initial_state = starting_state
+        self.steps: list[SimulationState] = [starting_state]
 
-    def add_step(self, step: SimulationState) -> None:
+    def add_step(self, updates: dict) -> None:
         """Adds a step to the reaction result. Using this method allows
         the accumulation of all the steps in a given simulation.
 
         Args:
-            step (SimulationState): _description_
+            step (dict): _description_
         """
-        self.steps.append(step)
+        new_step = self.steps[-1].copy()
+        new_step.batch_update(updates)
+        self.steps.append(new_step)
+        # self.steps.append(updates)
+
+    # def _rebuild_until(self, step_no = None):
+    #     if step_no is None:
+    #         step_no = len(self.steps)
+
+    #     rebuilt_state = self.initial_state.copy()
+    #     for i in range(step_no):
+    #         rebuilt_state.batch_update(self.steps[i])
+    #     return rebuilt_state
 
     @property
     def last_step(self):

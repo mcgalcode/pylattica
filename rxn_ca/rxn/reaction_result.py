@@ -29,13 +29,13 @@ class ReactionResult(BasicSimulationResult):
 
         return res
 
-    def __init__(self, rxn_set: ScoredReactionSet, phase_set: SolidPhaseSet):
+    def __init__(self, starting_state: SimulationState, rxn_set: ScoredReactionSet, phase_set: SolidPhaseSet):
         """Initializes a ReactionResult with the reaction set used in the simulation
 
         Args:
             rxn_set (ScoredReactionSet):
         """
-        super().__init__()
+        super().__init__(starting_state)
         self.phase_set = phase_set
         self.rxn_set: ScoredReactionSet = rxn_set
         self.analyzer = ReactionStepAnalyzer(self.rxn_set)
