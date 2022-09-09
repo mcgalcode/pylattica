@@ -3,12 +3,7 @@ import math
 import networkx as nx
 
 def get_pt_in_range(bound, pt):
-    if pt > bound:
-        return math.remainder(pt, bound)
-    elif pt < 0:
-        return bound + math.remainder(pt, bound)
-    else:
-        return pt
+    return pt % bound
 
 def get_periodic_point(bounds, pt):
     return tuple([get_pt_in_range(b, p) for b, p in zip(bounds, pt)])

@@ -8,7 +8,6 @@ from rxn_ca.discrete.phase_set import PhaseSet
 import random
 
 from rxn_ca.core.distance_map import distance
-from rxn_ca.grid2d.lattice import SquareGridLattice2D, SquareGridLattice3D
 from rxn_ca.grid2d.neighborhoods import MooreNbHoodSpec
 
 class DiscreteGridSetup():
@@ -16,7 +15,7 @@ class DiscreteGridSetup():
     states in specific shapes
     """
 
-    def __init__(self, phase_set: PhaseSet, dimension = 2):
+    def __init__(self, phase_set: PhaseSet):
         """Initializes a laboratory object by providing a reaction set that is used to
         specify cell states
 
@@ -24,10 +23,6 @@ class DiscreteGridSetup():
             rxn_set (ScoredReactionSet):
         """
         self.phase_set: PhaseSet = phase_set
-        self.dimension = dimension
-        self.site_motif = {
-            "A": tuple([0.5 for _ in range(dimension)]),
-        }
 
 
     def _build_blank_state(self, structure: PeriodicStructure, fill  = None) -> SimulationStep:
@@ -77,7 +72,7 @@ class DiscreteGridSetup():
             SimulationState:
         """
         state: SimulationState = self.setup_solid_phase(structure, bulk_phase)
-        center: typing.Tuple[int, int] = tuple([structure.size/2 for _ in range(self.dimension)])
+        center: typing.Tuple[int, int] = tuple([structure.size/2 for _ in range(structure.dim)])
         state: SimulationState = self.add_particle_to_state(state, center, radius, particle_phase)
         return state
 
@@ -97,7 +92,7 @@ class DiscreteGridSetup():
         """
         state: SimulationState = self.setup_solid_phase(structure, bulk_phase)
         for _ in range(num_particles):
-            rand_coords = tuple([np.random.choice(structure.size) for _ in range(self.dimension)])
+            rand_coords = tuple([np.random.choice(structure.size) for _ in range(structure.dim)])
             phase: str = random.choice(particle_phases)
             state: np.array = self.add_particle_to_state(structure, state, rand_coords, radius, phase)
 
@@ -165,7 +160,7 @@ class DiscreteGridSetup():
 
             rand_site = random.choice(all_sites)
             rand_site_id = rand_site['id']
-            if state.get_site_state(rand_site_id).get('_disc_occupancy') != background_spec:
+            if state.get_site_state(rand_site_id)['_disc_occupancy'] != background_spec:
                 total_attempts += 1
                 continue
 

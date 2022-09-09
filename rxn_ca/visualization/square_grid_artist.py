@@ -7,6 +7,7 @@ import numpy as np
 import io
 
 import matplotlib.pyplot as plt
+from rxn_ca.discrete.discrete_step_analyzer import DiscreteStepAnalyzer
 
 from rxn_ca.discrete.phase_set import PhaseSet
 
@@ -182,7 +183,9 @@ class DiscreteSquareGridArtist(BasicGridArtist):
 
     def get_legend(self, state):
         if self.legend is None:
-            return DiscreteSquareGridArtist.build_legend_from_phase_list(self.phase_set.phases)
+            analyzer = DiscreteStepAnalyzer()
+            phases = analyzer.phases_present(state)
+            return DiscreteSquareGridArtist.build_legend_from_phase_list(phases)
         else:
             return self.legend
 

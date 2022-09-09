@@ -12,8 +12,13 @@ class NeighborGraph():
     def __init__(self, graph: nx.Graph):
         self._graph = graph
 
-    def neighbors_of(self, site_id):
-        return self._graph.neighbors(site_id)
+    def neighbors_of(self, site_id, include_weights=False):
+        nbs = self._graph.neighbors(site_id)
+        if include_weights:
+            weighted_nbs = [(nb_id, self._graph.edges[site_id, nb_id]['weight']) for nb_id in nbs]
+            return weighted_nbs
+        else:
+            return nbs
 
 class StochasticNeighborhoodGraph():
 
@@ -68,6 +73,12 @@ class StructureNeighborhoodSpec():
 
     def __init__(self, spec):
         self._spec = spec
+        all_neighbor_vecs = []
+        for _, neighbor_vecs in spec.items():
+            all_neighbor_vecs = all_neighbor_vecs + neighbor_vecs
+
+        self.distances = EuclideanDistanceMap(all_neighbor_vecs)
+
         neighbor_locs = [loc for loclist in spec.values() for loc in loclist]
         self.distances = EuclideanDistanceMap(neighbor_locs)
 
@@ -81,8 +92,11 @@ class StructureNeighborhoodSpec():
             site_class = site["site_class"]
             location = site["location"]
             site_class_neighbors = self._spec[site_class]
-            for neigbor_vec in site_class_neighbors:
-                nb_site = struct.site_at(np.array(location) + np.array(neigbor_vec))
-                graph.add_edge(nb_site["id"], site["id"])
+            edges = []
+            for neighbor_vec in site_class_neighbors:
+                nb_site = struct.site_at(np.array(location) + np.array(neighbor_vec))
+                if nb_site['id'] != site['id']:
+                    edges.append((nb_site["id"], site["id"], self.distances.get_dist(neighbor_vec)))
+            graph.add_weighted_edges_from(edges)
 
         return NeighborGraph(graph)

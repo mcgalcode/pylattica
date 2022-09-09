@@ -1,11 +1,10 @@
 
-from rxn_ca.core.basic_simulation_step import BasicSimulationStep
 from ..grid2d import DiscreteGridSetup
 
 class ReactionSetup(DiscreteGridSetup):
 
-    def __init__(self, phase_map, volumes = None, step_class = BasicSimulationStep):
-        super().__init__(phase_map, step_class=step_class)
+    def __init__(self, phase_map, volumes = None):
+        super().__init__(phase_map)
         self.volumes = volumes
 
     def setup_random_sites(self, size, num_sites_desired, background_spec, nuc_species, nuc_ratios = None, buffer = 2):

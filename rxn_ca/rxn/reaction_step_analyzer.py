@@ -1,4 +1,4 @@
-from rxn_ca.core.basic_simulation_step import BasicSimulationStep
+from rxn_ca.core import SimulationState
 from rxn_ca.rxn.solid_phase_set import SolidPhaseSet
 from ..discrete import DiscreteStepAnalyzer
 
@@ -8,8 +8,8 @@ from pymatgen.core.composition import Composition
 
 class ReactionStepAnalyzer(DiscreteStepAnalyzer):
 
-    def __init__(self, phase_set: SolidPhaseSet, reaction_set: ScoredReactionSet) -> None:
-        super().__init__(phase_set)
+    def __init__(self, reaction_set: ScoredReactionSet) -> None:
+        super().__init__()
         self.rxn_set: ScoredReactionSet = reaction_set
 
     def summary(self, step, phases = None):
@@ -26,17 +26,15 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
         for el, amt in self.elemental_composition(step).items():
             print(f'{el} moles: ', amt)
 
-    def get_reaction_choices(self, step: BasicSimulationStep):
-        metadata = step.metadata
+    def get_reaction_choices(self, step: SimulationState):
         rxns = {}
-        for i in range(len(metadata)):
-            for j in range(len(metadata[0])):
-                rxn = metadata[i][j]
-                rxn_str = str(rxn)
-                if rxn_str in rxns:
-                    rxns[rxn_str] += 1
-                else:
-                    rxns[rxn_str] = 0
+        for site in step.all_site_states():
+            rxn = site['rxn']
+            rxn_str = str(rxn)
+            if rxn_str in rxns:
+                rxns[rxn_str] += 1
+            else:
+                rxns[rxn_str] = 0
         return rxns
 
     def mole_fraction(self, step, phase):
@@ -73,7 +71,7 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
         elemental_amounts = {}
         total = 0
         for p in phases:
-            if p is not self.phase_set.FREE_SPACE:
+            if p is not SolidPhaseSet.FREE_SPACE:
                 comp = Composition(p)
                 moles = self.moles_of(step, p)
                 for el, am in comp.as_dict().items():

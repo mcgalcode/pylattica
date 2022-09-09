@@ -105,7 +105,7 @@ class Runner():
         results = pool.starmap(step_batch_parallel, params)
 
         for batch_update_res in results:
-            new_state.batch_update(batch_update_res[0])
+            new_state.batch_update(batch_update_res)
 
         return new_state
 

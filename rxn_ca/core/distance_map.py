@@ -44,6 +44,9 @@ class DistanceMap():
 
         return distances
 
+    def get_dist(self, relative_loc):
+        return self.distances.get(relative_loc)
+
 class EuclideanDistanceMap(DistanceMap):
 
     def _distance(self, p1, p2):
