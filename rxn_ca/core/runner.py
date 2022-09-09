@@ -64,6 +64,7 @@ class Runner():
         else:
             if self.parallel:
                 mp_globals['controller'] = controller
+                mp_globals['initial_state'] = initial_state
 
                 if self.workers is None:
                     PROCESSES = mp.cpu_count()
@@ -75,9 +76,9 @@ class Runner():
                 chunk_size = math.ceil(num_sites / PROCESSES)
                 print(f'Distributing {num_sites} update tasks to {PROCESSES} workers in chunks of {chunk_size}')
                 with mp.get_context('fork').Pool(PROCESSES) as pool:
+                    updates = {}
                     for i in tqdm(range(num_steps)):
-                        updates = self._take_step_parallel(state, pool, chunk_size = chunk_size)
-                        state.batch_update(updates)
+                        updates = self._take_step_parallel(updates, pool, chunk_size = chunk_size)
                         result.add_step(updates)
                         printif(verbose, f'Finished step {i}')
             else:
@@ -88,7 +89,7 @@ class Runner():
 
         return result
 
-    def _take_step_parallel(self, state: SimulationState, pool, chunk_size) -> SimulationState:
+    def _take_step_parallel(self, updates: dict, pool, chunk_size) -> SimulationState:
         """Given a SimulationState, advances the system state by one time increment
         and returns a new reaction step.
 
@@ -99,11 +100,11 @@ class Runner():
             SimulationState:
         """
         params = []
-        site_ids = state.site_ids()
+        site_ids = mp_globals['initial_state'].site_ids()
         num_sites = len(site_ids)
         site_batches = [site_ids[i:i + chunk_size] for i in range(0, num_sites, chunk_size)]
         for batch in site_batches:
-            params.append([batch, state])
+            params.append([batch, updates])
 
         results = pool.starmap(step_batch_parallel, params)
 
@@ -129,10 +130,21 @@ class Runner():
 
         return new_state
 
-def step_batch_parallel(id_batch: List[int], previous_state: SimulationState):
+def step_batch_parallel(id_batch: List[int], last_updates: dict):
+    """Here we are in a subprodcess
+
+    Args:
+        id_batch (List[int]): _description_
+        previous_state (SimulationState): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    state = mp_globals['initial_state']
+    state.batch_update(last_updates)
     return step_batch(
         id_batch,
-        previous_state,
+        state,
         mp_globals['controller']
     )
 
