@@ -88,6 +88,7 @@ class ScoredReaction:
         self._total_product_stoich = sum(reactants.values())
         self.competitiveness: Number = competitiveness
         self.original_rxn = original_rxn
+        self._as_str = f"{stoich_map_to_str(self._reactants)}->{stoich_map_to_str(self._products)}"
 
     def rescore(self, scorer) -> ScoredReaction:
         new_score = scorer.score(self)
@@ -184,9 +185,7 @@ class ScoredReaction:
         return set(self.reactants) == set(self.products)
 
     def __str__(self):
-        return (
-            f"{stoich_map_to_str(self._reactants)}->{stoich_map_to_str(self._products)}"
-        )
+        return self._as_str
 
     def as_dict(self):
         return {
