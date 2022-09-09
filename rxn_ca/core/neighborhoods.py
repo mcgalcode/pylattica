@@ -1,32 +1,46 @@
-import itertools
-from random import randint
+import random
 import typing
 import numpy as np
+import networkx as nx
 
-from rxn_ca.core.coordinate_utils import get_coords_in_box
+from .distance_map import DistanceMap, EuclideanDistanceMap
 
-from .distance_map import EuclideanDistanceMap, ManhattanDistanceMap
+from .periodic_structure import PeriodicStructure
+
+class NeighborGraph():
+
+    def __init__(self, graph: nx.Graph):
+        self._graph = graph
+
+    def neighbors_of(self, site_id):
+        return self._graph.neighbors(site_id)
+
+class StochasticNeighborhoodGraph():
+
+    def __init__(self, graphs: typing.List[nx.Graph]):
+        self._graphs = graphs
+
+    def neighbors_of(self, site_id):
+        selected_graph = random.choice(self._graphs)
+        return selected_graph.neighbors(site_id)
 
 class NeighborhoodView():
 
-    def __init__(self, coords, view_state, full_state, distance_map) -> None:
-        self.coords: typing.Tuple[int, int] = tuple(coords)
-        self.view_state: np.array = view_state
-        self.center_value = full_state[self.coords]
+    def __init__(self, site, neighbors, site_state, full_state, distance_map) -> None:
+        self.coords: typing.Tuple[int, int] = site['location']
+        self.neighbors: np.array = neighbors
+        self.site_state = site_state
         self.full_state: np.array = full_state
-        self.dimension: int = len(view_state.shape)
-        self.distance_map: np.array = distance_map
+        self.dimension: int = len(self.coords)
+        self.distance_map: DistanceMap = distance_map
         self.size: int = self.view_state.shape[0]
 
-    def count_equal(self, val):
-        return self.count_vals(lambda x: x == val)
+    def count_equal(self, state_key, state_val):
+        return self.count_vals(lambda state: state[state_key] == state_val)
 
     def count_vals(self, val_condition):
         return sum([1 for cell, _ in self.iterate()
                    if val_condition(cell)])
-
-    def is_padding(self, state):
-        return state == Neighborhood.PADDING_VAL
 
     def get_distance(self, coords):
         return self.distance_map.distances[coords]
@@ -38,205 +52,37 @@ class NeighborhoodView():
 
         return cells
 
-    def iterate(self, exclude_center = True, include_relative_coords = False):
-        subcell = self.view_state
-        center_coord = int(self.size / 2)
-        for coords in itertools.product(range(self.size), repeat=self.dimension):
-            contents = subcell[coords]
-            if self.is_padding(contents):
-                continue
-
-            if exclude_center and all([coord == center_coord for coord in coords]):
-                continue
-
-            distance = self.get_distance(coords)
+    def iterate(self, include_relative_coords = False):
+        full_state = self.full_state
+        for nb_site in self.neighbors:
+            contents = full_state[nb_site['id']]
+            loc = nb_site['location']
+            relative_coords = (loc[0] - self.coords[0], loc[1] - self.coords[1])
+            distance = self.get_distance(relative_coords)
             if include_relative_coords:
-                relative_coords = (coords[0] - center_coord, coords[1] - center_coord)
-                yield subcell[coords], distance, relative_coords
+                yield contents, distance, relative_coords
             else:
-                yield subcell[coords], distance
+                yield contents, distance
 
-class ViewEditor():
+class StructureNeighborhoodSpec():
 
-    def __init__(self, view: NeighborhoodView):
-        self._view: NeighborhoodView = copy_view(view)
+    def __init__(self, spec):
+        self._spec = spec
+        neighbor_locs = [loc for loclist in spec.values() for loc in loclist]
+        self.distances = EuclideanDistanceMap(neighbor_locs)
 
-    def replace_in_view(self, r_coords, new):
-        center_coord = int(self._view.size / 2)
-        exact_coords = (r_coords[0] + center_coord, r_coords[1] + center_coord)
-        self._view.view_state[exact_coords] = new
+    def get(self, struct: PeriodicStructure):
+        graph = nx.Graph()
 
-    def get(self):
-        return self._view
+        for site in struct.sites():
+            graph.add_node(site["id"])
 
-def copy_view(view: NeighborhoodView):
-    return NeighborhoodView(view.coords, view.view_state.copy(), view.full_state, view.distance_map)
+        for site in struct.sites():
+            site_class = site["site_class"]
+            location = site["location"]
+            site_class_neighbors = self._spec[site_class]
+            for neigbor_vec in site_class_neighbors:
+                nb_site = struct.site_at(np.array(location) + np.array(neigbor_vec))
+                graph.add_edge(nb_site["id"], site["id"])
 
-def replace_view_in_state(state, view: NeighborhoodView):
-    for state_val, _, r_coords in view.iterate(include_relative_coords=True):
-        exact_coords = (r_coords[0] + view.coords[0], r_coords[1] + view.coords[1])
-        transformed_coords = get_coords_in_box(state.shape[0], exact_coords)
-        state[transformed_coords] = state_val
-    return state
-
-
-class Neighborhood():
-
-    PADDING_VAL = -1
-
-    def __init__(self, radius, distance_map_class = EuclideanDistanceMap):
-        self.radius = radius
-        self.distances = {
-            2: distance_map_class(radius * 2 + 1),
-            3: distance_map_class(radius * 2 + 1, dimension=3),
-        }
-
-    def pad_state(self, state):
-        return np.pad(state, self.radius, 'constant', constant_values=self.PADDING_VAL)
-
-    def get_in_step(self, step, coords):
-        return self.get(step.state, coords)
-
-    def _get_untrimmed_neighborhood(self, state, coords, overload_radius = None):
-        dimension = len(state.shape)
-        if overload_radius is not None:
-            radius = overload_radius
-        else:
-            radius = self.radius
-
-        # We are accepting coordinates that don't consider padding,
-        # So modify them to make 0,0 the first non-padding entry
-        # i = i + radius
-        # j = j + radius
-        if dimension == 2:
-            i = coords[0]
-            j = coords[1]
-
-            state_size = state.shape[0]
-
-            curr_up = state_size + i - radius
-            curr_down = state_size + i + radius + 1
-            curr_left = state_size + j - radius
-            curr_right = state_size + j + radius + 1
-
-            tiled = np.tile(state, (3,3))
-            return tiled[curr_up:curr_down, curr_left:curr_right]
-        elif dimension == 3:
-            i = coords[0]
-            j = coords[1]
-            k = coords[2]
-
-            state_size = state.shape[0]
-
-            curr_up = state_size + i - radius
-            curr_down = state_size + i + radius + 1
-            curr_left = state_size + j - radius
-            curr_right = state_size + j + radius + 1
-            curr_in = state_size + k - radius
-            curr_out = state_size + k + radius + 1
-
-            tiled = np.tile(state, (3,3,3))
-            return tiled[curr_up:curr_down, curr_left:curr_right, curr_in:curr_out]
-
-    def get(self, state, coords, overload_radius = None):
-        dim = len(state.shape)
-        untrimmed = np.copy(self._get_untrimmed_neighborhood(state, coords, overload_radius=overload_radius))
-        if dim == 2:
-            screened = self._screen_square(untrimmed)
-        elif dim == 3:
-            screened = self._screen_cube(untrimmed)
-
-        return NeighborhoodView(coords, screened, state, self.distances[dim])
-
-    def _screen_cube(self, untrimmed):
-        raise NotImplementedError("This neighborhood does not support 3-dimensional states")
-
-class MooreNeighborhood(Neighborhood):
-
-    def _screen_square(self, square):
-        return square
-
-    def _screen_cube(self, cube):
-        return cube
-
-
-class VonNeumannNeighborhood(Neighborhood):
-
-    def __init__(self, radius, distance_map_class = ManhattanDistanceMap):
-        super().__init__(radius, distance_map_class)
-
-    def _screen_square(self, square):
-        dimension = len(square.shape)
-        sl = square.shape[0]
-        for coords in itertools.product(range(sl), repeat=dimension):
-            if self.distances[dimension].distances[coords] > self.radius:
-                square[coords] = self.PADDING_VAL
-        return square
-
-    def _screen_cube(self, cube):
-        dimension = len(cube.shape)
-        sl = cube.shape[0]
-        for coords in itertools.product(range(sl), repeat=dimension):
-            if self.distances[dimension].distances[coords] > self.radius:
-                cube[coords] = self.PADDING_VAL
-        return cube
-
-class CircularNeighborhood(Neighborhood):
-
-    def __init__(self, radius, distance_map_class = EuclideanDistanceMap):
-        super().__init__(radius, distance_map_class)
-
-    def _screen_square(self, square):
-        dimension = len(square.shape)
-        sl = square.shape[0]
-        for coords in itertools.product(range(sl), repeat=dimension):
-            if self.distances[dimension].distances[coords] > self.radius:
-                square[coords] = self.PADDING_VAL
-        return square
-
-    def _screen_cube(self, cube):
-        dimension = len(cube.shape)
-        sl = cube.shape[0]
-        for coords in itertools.product(range(sl), repeat=dimension):
-            if self.distances[dimension].distances[coords] > self.radius:
-                cube[coords] = self.PADDING_VAL
-        return cube
-
-class PseudoHexagonal(Neighborhood):
-
-    def __init__(self, _ = EuclideanDistanceMap):
-        super().__init__(1)
-
-    def _screen_square(self, square):
-        sl = square.shape[0]
-        to_exclude = randint(0,1)
-        highest_idx = sl - 1
-        if to_exclude == 0:
-            square[0][0] = self.PADDING_VAL
-            square[highest_idx][highest_idx] = self.PADDING_VAL
-        else:
-            square[highest_idx][0] = self.PADDING_VAL
-            square[0][highest_idx] = self.PADDING_VAL
-
-        return square
-
-class PseudoPentagonal(Neighborhood):
-
-    def __init__(self, _ = EuclideanDistanceMap):
-        super().__init__(1)
-
-    def _screen_square(self, square):
-        sl = square.shape[0]
-        to_exclude = randint(0,3)
-        for i in range(sl):
-            for j in range(sl):
-                if to_exclude == 0 and i == 0:
-                    square[i][j] = self.PADDING_VAL
-                if to_exclude == 1 and i == 2:
-                    square[i][j] = self.PADDING_VAL
-                if to_exclude == 2 and j == 2:
-                    square[i][j] = self.PADDING_VAL
-                if to_exclude == 3 and j == 0:
-                    square[i][j] = self.PADDING_VAL
-
-        return square
+        return NeighborGraph(graph)

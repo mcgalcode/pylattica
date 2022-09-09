@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw
 
-from .neighborhoods import NeighborhoodView
-from .basic_simulation_step import BasicSimulationStep
+from rxn_ca.core import NeighborhoodView
+from rxn_ca.core import BasicSimulationStep
 import numpy as np
 import io
 

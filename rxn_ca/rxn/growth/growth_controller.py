@@ -1,44 +1,49 @@
 from rxn_ca.core import BasicController
-from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood, NeighborhoodView
-from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
-from .growth_result import GrowthResult
+from rxn_ca.core.neighborhoods import StructureNeighborhoodSpec
+from rxn_ca.core.periodic_structure import PeriodicStructure
+from rxn_ca.core.simulation_step import SimulationState
+from rxn_ca.discrete import PhaseSet
+from rxn_ca.grid2d.neighborhoods import MooreNbHoodSpec
+from rxn_ca.rxn.solid_phase_set import SolidPhaseSet
 
 class GrowthController(BasicController):
 
-    def __init__(self, phase_map: SolidPhaseMap, neighborhood: Neighborhood = None) -> None:
-        self.phase_map: SolidPhaseMap = phase_map
+    def __init__(self, phase_set: PhaseSet, periodic_struct: PeriodicStructure, neighborhood_spec: StructureNeighborhoodSpec = None) -> None:
+        self.phase_set: PhaseSet = phase_set
+        self.struct = periodic_struct
 
-        if neighborhood is None:
-            self.neighborhood = MooreNeighborhood(1)
+        if neighborhood_spec is None:
+            self.neighborhood_spec = MooreNbHoodSpec(1, dim = periodic_struct.dim)
         else:
-            self.neighborhood = neighborhood
+            self.neighborhood_spec = neighborhood_spec
 
+        self.nb_graph = self.neighborhood_spec.get(periodic_struct)
 
-    def instantiate_result(self):
-        return GrowthResult(self.phase_map)
-
-    def get_new_state(self, nb_view: NeighborhoodView):
-        if nb_view.center_value == self.phase_map.free_space_id:
+    def get_state_update(self, site_id: int, prev_state: SimulationState):
+        curr_state = prev_state.get_site_state(site_id)
+        curr_phase = prev_state.get_site_state(site_id)['_disc_occupancy']
+        if curr_state['_disc_occupancy'] == SolidPhaseSet.FREE_SPACE:
             counts = {}
-            for cell, _ in nb_view.iterate():
-                if cell != self.phase_map.free_space_id and cell != Neighborhood.PADDING_VAL:
-                    if cell not in counts:
-                        counts[cell] = 1
+            for nb_id in self.nb_graph.neighbors_of(site_id):
+                nb_phase = prev_state.get_site_state(nb_id)['_disc_occupancy']
+                if nb_phase != SolidPhaseSet.FREE_SPACE:
+                    if nb_phase not in counts:
+                        counts[nb_phase] = 1
                     else:
-                        counts[cell] += 1
+                        counts[nb_phase] += 1
 
             if len(counts) > 0:
                 max_count = 0
                 max_spec = None
-                for cell, count in counts.items():
+                for phase, count in counts.items():
                     if count > max_count:
-                        max_spec = cell
+                        max_spec = phase
                         max_count = count
 
-                return int(max_spec), None
+                return { '_disc_occupancy': max_spec }
 
             else:
-                return int(nb_view.center_value), None
+                return { '_disc_occupancy': curr_phase }
         else:
-            return int(nb_view.center_value), None
+            return { '_disc_occupancy': curr_phase }
 

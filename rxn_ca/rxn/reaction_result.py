@@ -1,11 +1,10 @@
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+from rxn_ca.core.basic_simulation_result import BasicSimulationResult
 
-from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
+from .solid_phase_set import SolidPhaseSet
 
 from ..discrete import DiscreteStepAnalyzer
-from ..discrete import DiscreteStateResult
-from ..discrete import PhaseMap
 from .reaction_step_analyzer import ReactionStepAnalyzer
 
 from .scored_reaction_set import ScoredReactionSet
@@ -13,7 +12,7 @@ from .reaction_step import ReactionStep
 
 import numpy as np
 
-class ReactionResult(DiscreteStateResult):
+class ReactionResult(BasicSimulationResult):
     """A class that stores the result of running a simulation. Keeps track of all
     the steps that the simulation proceeded through, and the set of reactions that
     was used in the simulation.
@@ -23,23 +22,23 @@ class ReactionResult(DiscreteStateResult):
     def from_dict(cls, res_dict):
         res = ReactionResult(
             ScoredReactionSet.from_dict(res_dict["rxn_set"]),
-            SolidPhaseMap.from_dict(res_dict["phase_map"])
+            SolidPhaseSet.from_dict(res_dict["phase_set"])
         )
         for step_dict in res_dict["steps"]:
             res.add_step(ReactionStep.from_dict(step_dict))
 
         return res
 
-    def __init__(self, rxn_set: ScoredReactionSet, phase_map: PhaseMap):
+    def __init__(self, rxn_set: ScoredReactionSet, phase_set: SolidPhaseSet):
         """Initializes a ReactionResult with the reaction set used in the simulation
 
         Args:
             rxn_set (ScoredReactionSet):
         """
-        super().__init__(phase_map)
+        super().__init__(phase_set)
         self.steps: list[ReactionStep] = []
         self.rxn_set: ScoredReactionSet = rxn_set
-        self.analyzer = ReactionStepAnalyzer(self.phase_map, self.rxn_set)
+        self.analyzer = ReactionStepAnalyzer(self.phase_set, self.rxn_set)
 
     def get_choices_at(self, step_no: int, top: int = None, exclude_ids = True) -> None:
 
@@ -154,5 +153,5 @@ class ReactionResult(DiscreteStateResult):
             "@class": self.__class__.__name__,
             "steps": [s.as_dict() for s in self.steps],
             "rxn_set": self.rxn_set.as_dict(),
-            "phase_map": self.phase_map.as_dict()
+            "phase_set": self.phase_map.as_dict()
         }

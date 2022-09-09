@@ -1,16 +1,13 @@
 from abc import ABC, abstractmethod
 from rxn_ca.core.basic_simulation_result import BasicSimulationResult
 
-from rxn_ca.core.neighborhoods import NeighborhoodView
+from rxn_ca.core.simulation_step import SimulationState
 
 
 class BasicController(ABC):
 
-    def instantiate_result(self):
-        pass
-
     @abstractmethod
-    def get_new_state(self, nb_view: NeighborhoodView):
+    def get_state_update(self, site_id: int, prev_state: SimulationState):
         pass
 
     def instantiate_result(self):

@@ -2,9 +2,11 @@ import math
 import numpy as np
 import typing
 
-from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood, NeighborhoodView, VonNeumannNeighborhood
+from rxn_ca.core.neighborhoods import NeighborGraph, NeighborhoodView
+from rxn_ca.core.periodic_structure import PeriodicStructure
+from rxn_ca.grid2d.neighborhoods import MooreNbHoodSpec
 from rxn_ca.rxn.scorers import ArrheniusScore, score_rxns
-from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
+from rxn_ca.rxn.solid_phase_set import SolidPhaseSet
 from ..core.basic_controller import BasicController
 
 from .reaction_result import ReactionResult
@@ -19,13 +21,13 @@ from .scored_reaction import ScoredReaction
 class ReactionController(BasicController):
 
     @classmethod
-    def get_neighborhood_from_size(cls, size, nb_type = MooreNeighborhood):
+    def get_neighborhood_from_size(cls, size, nb_spec = MooreNbHoodSpec):
         neighborhood_radius = cls.nb_radius_from_size(size)
-        return nb_type(neighborhood_radius)
+        return nb_spec(neighborhood_radius)
 
     @classmethod
-    def get_neighborhood_from_step(cls, step, nb_type = MooreNeighborhood):
-        return cls.get_neighborhood_from_size(step.size, nb_type=nb_type)
+    def get_neighborhood_from_step(cls, step, nb_spec = MooreNbHoodSpec):
+        return cls.get_neighborhood_from_size(step.size, nb_spec=nb_spec)
 
     @classmethod
     def nb_radius_from_size(cls, size: int) -> int:
@@ -46,8 +48,9 @@ class ReactionController(BasicController):
         return math.floor(min((size - 1) * 2 + 1, 21) / 2)
 
     def __init__(self,
-        phase_map: SolidPhaseMap,
-        neighborhood: Neighborhood,
+        phase_set: SolidPhaseSet,
+        structure: PeriodicStructure,
+        nb_graph: NeighborGraph,
         reaction_set: ReactionSet = None,
         scored_rxns: ScoredReactionSet = None,
         inertia = 1,
@@ -66,9 +69,9 @@ class ReactionController(BasicController):
             self.rxn_set = ScoredReactionSet(scored_rxns)
 
         self.temperature = temperature
-        self.phase_map: SolidPhaseMap = phase_map
-        self.neighborhood = neighborhood
-        self.nucleation_neighborhood = MooreNeighborhood(1)
+        self.phase_map: SolidPhaseSet = phase_set
+        self.nb_graph = nb_graph
+        self.nucleation_nb_graph = MooreNbHoodSpec(1).get(structure)
         self.inertia = inertia
         self.free_species = free_species
         # proxy for partial pressures

@@ -1,5 +1,6 @@
 from monty.serialization import dumpfn, loadfn
-from .basic_simulation_step import BasicSimulationStep
+
+from rxn_ca.core.simulation_step import SimulationState
 
 class BasicSimulationResult():
     """A class that stores the result of running a simulation. Keeps track of all
@@ -25,19 +26,16 @@ class BasicSimulationResult():
         Args:
             rxn_set (ScoredReactionSet):
         """
-        self.steps: list[BasicSimulationStep] = []
+        self.steps: list[SimulationState] = []
 
-    def add_step(self, step: BasicSimulationStep) -> None:
+    def add_step(self, step: SimulationState) -> None:
         """Adds a step to the reaction result. Using this method allows
         the accumulation of all the steps in a given simulation.
 
         Args:
-            step (BasicSimulationStep): _description_
+            step (SimulationState): _description_
         """
         self.steps.append(step)
-
-    def get_metadata_at(self, step_no: int) -> None:
-        return self.steps[step_no].metadata
 
     @property
     def last_step(self):

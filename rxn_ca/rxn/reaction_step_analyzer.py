@@ -1,7 +1,6 @@
 from rxn_ca.core.basic_simulation_step import BasicSimulationStep
-from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
+from rxn_ca.rxn.solid_phase_set import SolidPhaseSet
 from ..discrete import DiscreteStepAnalyzer
-from ..discrete import PhaseMap
 
 from .scored_reaction_set import ScoredReactionSet
 
@@ -9,8 +8,8 @@ from pymatgen.core.composition import Composition
 
 class ReactionStepAnalyzer(DiscreteStepAnalyzer):
 
-    def __init__(self, phase_map: SolidPhaseMap, reaction_set: ScoredReactionSet) -> None:
-        super().__init__(phase_map)
+    def __init__(self, phase_set: SolidPhaseSet, reaction_set: ScoredReactionSet) -> None:
+        super().__init__(phase_set)
         self.rxn_set: ScoredReactionSet = reaction_set
 
     def summary(self, step, phases = None):
@@ -43,7 +42,7 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
     def mole_fraction(self, step, phase):
         total_moles = 0
         for p in self.phases_present(step):
-            if p is not SolidPhaseMap.FREE_SPACE:
+            if p is not SolidPhaseSet.FREE_SPACE:
                 total_moles += self.moles_of(step, p)
 
         return self.moles_of(step, phase) / total_moles
@@ -74,7 +73,7 @@ class ReactionStepAnalyzer(DiscreteStepAnalyzer):
         elemental_amounts = {}
         total = 0
         for p in phases:
-            if p is not self.phase_map.FREE_SPACE:
+            if p is not self.phase_set.FREE_SPACE:
                 comp = Composition(p)
                 moles = self.moles_of(step, p)
                 for el, am in comp.as_dict().items():

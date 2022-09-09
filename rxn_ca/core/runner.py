@@ -1,13 +1,11 @@
-from dataclasses import replace
-import itertools
-from random import randint, random, seed
+from random import random
+from typing import List
 
-from .neighborhoods import NeighborhoodView, replace_view_in_state
+
 from .basic_controller import BasicController
 from .basic_simulation_result import BasicSimulationResult
-from .basic_simulation_step import BasicSimulationStep
+from .simulation_step import SimulationState
 
-import numpy as np
 from tqdm import tqdm
 
 import multiprocessing as mp
@@ -20,7 +18,7 @@ def printif(cond, statement):
 
 class Runner():
     """Class for orchestrating the running of the simulation. Provide this class a
-    set of possible reactions and a BasicSimulationStep that represents the initial system state,
+    set of possible reactions and a SimulationState that represents the initial system state,
     and it will run a simulation for the prescribed number of steps.
     """
 
@@ -36,7 +34,7 @@ class Runner():
         self.is_async = is_async
         self.neighborhood_replace = neighborhood_replace
 
-    def run(self, initial_step: BasicSimulationStep, controller: BasicController, num_steps: int, verbose = False) -> BasicSimulationResult:
+    def run(self, initial_step: SimulationState, controller: BasicController, num_steps: int, verbose = False) -> BasicSimulationResult:
         """Run the simulation for the prescribed number of steps.
 
         Args:
@@ -86,98 +84,67 @@ class Runner():
 
         return result
 
-    def _take_step_parallel(self, step: BasicSimulationStep, pool) -> BasicSimulationStep:
-        """Given a BasicSimulationStep, advances the system state by one time increment
+    def _take_step_parallel(self, prev_state: SimulationState, pool) -> SimulationState:
+        """Given a SimulationState, advances the system state by one time increment
         and returns a new reaction step.
 
         Args:
-            step (BasicSimulationStep):
+            step (SimulationState):
 
         Returns:
-            BasicSimulationStep:
+            SimulationState:
         """
         params = []
-        new_state = np.zeros(step.shape)
-        for coords in itertools.product(range(step.size), repeat = step.dim - 1):
-            params.append([step, step.size, coords])
+        new_state = prev_state.copy()
+        site_ids = prev_state.site_ids()
+        chunk_size = 10
+        site_batches = [site_ids[i:i + chunk_size] for i in range(0, len(site_ids), chunk_size)]
+        for batch in site_batches:
+            params.append([batch, prev_state])
 
-        results = pool.starmap(step_row_parallel, params)
+        results = pool.starmap(step_batch_parallel, params)
 
-        for param, result in zip(params, results):
-            new_state[param[-1]] = result[0]
+        for batch_update_res in results:
+            new_state.batch_update(batch_update_res[0])
 
-        step_metadata = list(map(lambda x: x[1], results))
-
-        return BasicSimulationStep(new_state, step_metadata)
+        return new_state
 
 
-    def _take_step(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
+    def _take_step(self, prev_state: SimulationState, controller: BasicController) -> SimulationState:
         new_state = []
-        metadata  = []
 
-        dimensionality = step.dim
+        new_state = prev_state.copy()
+        site_ids = new_state.site_ids()
+        chunk_size = 4
 
-        if dimensionality == 2:
-            for i in range(0, step.size):
-                row_state, row_metadata = step_row(step, step.size, [i], controller)
-                new_state.append(row_state)
-                metadata.append(row_metadata)
+        # using list comprehension
+        site_batches = [site_ids[i:i + chunk_size] for i in range(0, len(site_ids), chunk_size)]
 
-        if dimensionality == 3:
-            for i in range(0, step.size):
-                state_slice = []
-                metadata_slice = []
-                for j in range(0, step.size):
-                    row_coords = (i, j)
-                    row_state, row_metadata = step_row(step, step.size, row_coords, controller)
-                    state_slice.append(row_state)
-                    metadata_slice.append(row_metadata)
+        for id_batch in site_batches:
+            batch_updates = step_batch(id_batch, prev_state, controller)
+            new_state.batch_update(batch_updates)
 
-                new_state.append(state_slice)
-                metadata.append(metadata_slice)
+        return new_state
 
-        return BasicSimulationStep(np.array(new_state), metadata)
+    def _take_step_async(self, prev_state: SimulationState, controller: BasicController) -> SimulationState:
+        new_state = prev_state.copy()
 
-    def _take_step_async(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
+        random_site_id = random.choice(prev_state.site_ids())
+        state_updates = controller.get_state_update(random_site_id, prev_state)
+        new_state.batch_update(state_updates)
 
-        new_state = np.copy(step.state)
+        return new_state
 
-        rand_i = randint(0,step.size - 1)
-        rand_j = randint(0,step.size - 1)
-        nb_view = controller.neighborhood.get_in_step(step, [rand_i, rand_j])
-        new_cell_state, step_metadata = controller.get_new_state(nb_view)
-
-        new_state[rand_i, rand_j] = new_cell_state
-
-        return BasicSimulationStep(new_state, step_metadata)
-
-    def _take_replace_step(self, step: BasicSimulationStep, controller: BasicController) -> BasicSimulationStep:
-        new_state = np.copy(step.state)
-
-        rand_i = randint(0,step.size - 1)
-        rand_j = randint(0,step.size - 1)
-        nb_view = controller.neighborhood.get_in_step(step, [rand_i, rand_j])
-        replace_view, step_metadata = controller.get_new_state(nb_view)
-        replace_view_in_state(new_state, replace_view)
-
-        return BasicSimulationStep(new_state, step_metadata)
-
-def step_row_parallel(step: BasicSimulationStep, state_size: int, row_coords: tuple):
-    return step_row(
-        step,
-        state_size,
-        row_coords,
+def step_batch_parallel(id_batch: List[int], previous_state: SimulationState):
+    return step_batch(
+        id_batch,
+        previous_state,
         mp_globals['controller']
     )
 
-def step_row(step: BasicSimulationStep, state_size: int, row_coords: tuple, controller: BasicController):
-    new_row_state = np.zeros(state_size)
-    cells_metadata = []
-    for z in range(0, state_size):
-        new_coords = tuple(list(row_coords) + [z])
-        view: NeighborhoodView = controller.neighborhood.get_in_step(step, new_coords)
-        new_cell_state, cell_update_metadata = controller.get_new_state(view)
-        cells_metadata.append(cell_update_metadata)
-
-        new_row_state[z] = new_cell_state
-    return new_row_state, cells_metadata
+def step_batch(id_batch: List[int], previous_state: SimulationState, controller: BasicController):
+    batch_updates = {}
+    for site_id in id_batch:
+        state_updates = controller.get_state_update(site_id, previous_state)
+        batch_updates[site_id] = state_updates
+    return batch_updates
