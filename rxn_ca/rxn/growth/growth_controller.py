@@ -43,7 +43,7 @@ class GrowthController(BasicController):
                 return { '_disc_occupancy': max_spec }
 
             else:
-                return { '_disc_occupancy': curr_phase }
+                return {}
         else:
-            return { '_disc_occupancy': curr_phase }
+            return {}
 

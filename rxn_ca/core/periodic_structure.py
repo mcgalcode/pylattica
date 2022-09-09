@@ -1,5 +1,3 @@
-import math
-
 import networkx as nx
 
 def get_pt_in_range(bound, pt):
@@ -19,11 +17,11 @@ class PeriodicStructure():
         self._graph = nx.Graph()
         self.size = size
         self.dim = dimensionality
+        self.bounds = tuple([self.size for _ in range(dimensionality)])
 
     def periodized_coords(self, location):
         float_coords = float_loc(location)
-        bounds = tuple([self.size for _ in range(len(location))])
-        return get_periodic_point(bounds, float_coords)
+        return get_periodic_point(self.bounds, float_coords)
 
     def add_site(self, site_class, location):
         new_site_id = len(self._sites)

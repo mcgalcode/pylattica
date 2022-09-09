@@ -2,6 +2,7 @@ import random
 import typing
 import numpy as np
 import networkx as nx
+from tqdm import tqdm
 
 from .distance_map import DistanceMap, EuclideanDistanceMap
 
@@ -88,13 +89,18 @@ class StructureNeighborhoodSpec():
         for site in struct.sites():
             graph.add_node(site["id"])
 
-        for site in struct.sites():
+        all_sites = struct.sites()
+        print("Constructing neighborhood graph")
+        for i in tqdm(range(len(all_sites))):
+            site = all_sites[i]
             site_class = site["site_class"]
             location = site["location"]
             site_class_neighbors = self._spec[site_class]
             edges = []
             for neighbor_vec in site_class_neighbors:
-                nb_site = struct.site_at(np.array(location) + np.array(neighbor_vec))
+                loc = [s + n for s, n in zip(location, neighbor_vec)]
+                # loc = np.array(location) + np.array(neighbor_vec)
+                nb_site = struct.site_at(loc)
                 if nb_site['id'] != site['id']:
                     edges.append((nb_site["id"], site["id"], self.distances.get_dist(neighbor_vec)))
             graph.add_weighted_edges_from(edges)

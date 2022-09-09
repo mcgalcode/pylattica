@@ -27,7 +27,8 @@ class BasicSimulationResult():
             rxn_set (ScoredReactionSet):
         """
         self.initial_state = starting_state
-        self.steps: list[SimulationState] = [starting_state]
+        self._steps: list[SimulationState] = [starting_state]
+        self._diffs: list[dict] = []
 
     def add_step(self, updates: dict) -> None:
         """Adds a step to the reaction result. Using this method allows
@@ -36,31 +37,28 @@ class BasicSimulationResult():
         Args:
             step (dict): _description_
         """
-        new_step = self.steps[-1].copy()
+        new_step = self._steps[-1].copy()
         new_step.batch_update(updates)
-        self.steps.append(new_step)
-        # self.steps.append(updates)
+        self._steps.append(new_step)
+        self._diffs.append(updates)
 
-    # def _rebuild_until(self, step_no = None):
-    #     if step_no is None:
-    #         step_no = len(self.steps)
-
-    #     rebuilt_state = self.initial_state.copy()
-    #     for i in range(step_no):
-    #         rebuilt_state.batch_update(self.steps[i])
-    #     return rebuilt_state
+    def __len__(self) -> int:
+        return len(self._diffs) + 1
 
     @property
     def last_step(self):
-        return self.steps[-1]
+        return self.get_step(-1)
 
     @property
     def first_step(self):
-        return self.steps[0]
+        return self.get_step(0)
+
+    def get_step(self, step):
+        return self._steps[step]
 
     def as_dict(self):
         return {
-            "steps": [s.as_dict() for s in self.steps],
+            "steps": [s.as_dict() for s in self._steps],
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
         }

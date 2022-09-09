@@ -77,11 +77,13 @@ class Runner():
                 with mp.get_context('fork').Pool(PROCESSES) as pool:
                     for i in tqdm(range(num_steps)):
                         updates = self._take_step_parallel(state, pool, chunk_size = chunk_size)
+                        state.batch_update(updates)
                         result.add_step(updates)
                         printif(verbose, f'Finished step {i}')
             else:
                 for _ in tqdm(range(num_steps)):
                     updates = self._take_step(state, controller)
+                    state.batch_update(updates)
                     result.add_step(updates)
 
         return result
@@ -115,7 +117,6 @@ class Runner():
     def _take_step(self, state: SimulationState, controller: BasicController) -> SimulationState:
         site_ids = state.site_ids()
         updates = step_batch(site_ids, state, controller)
-        state.batch_update(updates)
 
         return updates
 
