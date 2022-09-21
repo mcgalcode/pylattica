@@ -8,6 +8,11 @@ from .distance_map import DistanceMap, EuclideanDistanceMap
 
 from .periodic_structure import PeriodicStructure
 
+def distance(x0, x1, dimensions):
+    delta = np.abs(x0 - x1)
+    delta = np.where(delta > 0.5 * dimensions, delta - dimensions, delta)
+    return np.sqrt((delta ** 2).sum(axis=-1))
+
 class NeighborGraph():
 
     def __init__(self, graph: nx.Graph):
@@ -19,7 +24,7 @@ class NeighborGraph():
             weighted_nbs = [(nb_id, self._graph.edges[site_id, nb_id]['weight']) for nb_id in nbs]
             return weighted_nbs
         else:
-            return nbs
+            return list(nbs)
 
 class StochasticNeighborhoodGraph():
 
@@ -28,47 +33,34 @@ class StochasticNeighborhoodGraph():
 
     def neighbors_of(self, site_id):
         selected_graph = random.choice(self._graphs)
-        return selected_graph.neighbors(site_id)
+        return list(selected_graph.neighbors(site_id))
 
-class NeighborhoodView():
+import numpy
 
-    def __init__(self, site, neighbors, site_state, full_state, distance_map) -> None:
-        self.coords: typing.Tuple[int, int] = site['location']
-        self.neighbors: np.array = neighbors
-        self.site_state = site_state
-        self.full_state: np.array = full_state
-        self.dimension: int = len(self.coords)
-        self.distance_map: DistanceMap = distance_map
-        self.size: int = self.view_state.shape[0]
+def distance(x0, x1, dimensions):
+    delta = numpy.abs(x0 - x1)
+    delta = numpy.where(delta > 0.5 * dimensions, delta - dimensions, delta)
+    return numpy.sqrt((delta ** 2).sum(axis=-1))
 
-    def count_equal(self, state_key, state_val):
-        return self.count_vals(lambda state: state[state_key] == state_val)
+class DistanceNeighborhoodSpec():
 
-    def count_vals(self, val_condition):
-        return sum([1 for cell, _ in self.iterate()
-                   if val_condition(cell)])
+    def __init__(self, cutoff):
+        self.cutoff = cutoff
 
-    def get_distance(self, coords):
-        return self.distance_map.distances[coords]
+    def get(self, struct: PeriodicStructure):
+        graph = nx.Graph()
+        dimensions = np.array(struct.bounds)
 
-    def as_list(self, exclude_center = True):
-        cells = []
-        for cell in self.iterate(exclude_center=exclude_center):
-            cells.append(cell)
+        all_sites = struct.sites()
+        for curr_site in tqdm(all_sites):
+            for other_site in struct.sites():
+                if curr_site['id'] != other_site['id']:
+                    dist = distance(np.array(other_site['location']), np.array(curr_site['location']), dimensions)
+                    if dist < self.cutoff:
+                        graph.add_edge(curr_site["id"], other_site["id"])
 
-        return cells
+        return NeighborGraph(graph)
 
-    def iterate(self, include_relative_coords = False):
-        full_state = self.full_state
-        for nb_site in self.neighbors:
-            contents = full_state[nb_site['id']]
-            loc = nb_site['location']
-            relative_coords = (loc[0] - self.coords[0], loc[1] - self.coords[1])
-            distance = self.get_distance(relative_coords)
-            if include_relative_coords:
-                yield contents, distance, relative_coords
-            else:
-                yield contents, distance
 
 class StructureNeighborhoodSpec():
 
@@ -106,3 +98,4 @@ class StructureNeighborhoodSpec():
             graph.add_weighted_edges_from(edges)
 
         return NeighborGraph(graph)
+

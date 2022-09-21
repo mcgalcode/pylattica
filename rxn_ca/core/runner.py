@@ -1,6 +1,9 @@
+from collections import deque
 import math
-from random import random
+from random import random, choice
 from typing import List
+
+from .utils import printif
 
 
 from .basic_controller import BasicController
@@ -12,10 +15,6 @@ from tqdm import tqdm
 import multiprocessing as mp
 
 mp_globals = {}
-
-def printif(cond, statement):
-    if cond:
-        print(statement)
 
 class Runner():
     """Class for orchestrating the running of the simulation. Provide this class a
@@ -49,18 +48,36 @@ class Runner():
 
         result = controller.instantiate_result(initial_state.copy())
 
-        state = initial_state
+        state = initial_state.copy()
 
         global mp_globals
 
         if self.is_async:
-            for _ in tqdm(range(num_steps)):
-                step = self._take_step_async(step, controller)
-                result.add_step(step)
-        elif self.neighborhood_replace:
-            for _ in tqdm(range(num_steps)):
-                step = self._take_replace_step(step, controller)
-                result.add_step(step)
+            site_queue = deque()
+            site_queue.append(controller.get_random_site())
+            important_steps = []
+            for idx in tqdm(range(num_steps)):
+                site_id = site_queue.popleft()
+
+                updates = controller.get_state_update(site_id, state)
+                next_sites = []
+                if len(updates) == 2:
+                    updates, next_sites = updates
+
+                state.batch_update(updates)
+                for next_site_id in next_sites:
+                    site_queue.append(next_site_id)
+
+                result.add_step(updates)
+
+                if len(updates) > 0:
+                    important_steps.append(idx)
+
+                if len(site_queue) == 0:
+                    site_queue.append(controller.get_random_site())
+
+                # print(site_queue)
+            print(important_steps)
         else:
             if self.parallel:
                 mp_globals['controller'] = controller
@@ -121,14 +138,9 @@ class Runner():
 
         return updates
 
-    def _take_step_async(self, prev_state: SimulationState, controller: BasicController) -> SimulationState:
-        new_state = prev_state.copy()
+    # def _take_step_async(self, prev_state: SimulationState, controller: BasicController) -> SimulationState:
 
-        random_site_id = random.choice(prev_state.site_ids())
-        state_updates = controller.get_state_update(random_site_id, prev_state)
-        new_state.batch_update(state_updates)
 
-        return new_state
 
 def step_batch_parallel(id_batch: List[int], last_updates: dict):
     """Here we are in a subprodcess

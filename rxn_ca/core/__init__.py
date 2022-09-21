@@ -5,4 +5,4 @@ from .runner import Runner
 from .colors import COLORS
 from .simulation_step import SimulationState
 
-from .neighborhoods import NeighborGraph, NeighborhoodView, StochasticNeighborhoodGraph, StructureNeighborhoodSpec
+from .neighborhoods import NeighborGraph, StochasticNeighborhoodGraph, StructureNeighborhoodSpec

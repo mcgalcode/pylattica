@@ -1,4 +1,5 @@
-import networkx as nx
+import numpy as np
+from pymatgen.core import Structure
 
 def get_pt_in_range(bound, pt):
     return pt % bound
@@ -9,15 +10,17 @@ def get_periodic_point(bounds, pt):
 def float_loc(loc):
     return tuple([float(coord) for coord in loc])
 
+Vacant = "Vacant"
+occupancy = 'occupancy'
+
 class PeriodicStructure():
 
-    def __init__(self, size, dimensionality):
+    def __init__(self, bounds, size, dimensionality):
+        self.bounds = bounds
         self._sites = {}
         self._location_lookup = {}
-        self._graph = nx.Graph()
         self.size = size
         self.dim = dimensionality
-        self.bounds = tuple([self.size for _ in range(dimensionality)])
 
     def periodized_coords(self, location):
         float_coords = float_loc(location)
@@ -26,6 +29,8 @@ class PeriodicStructure():
     def add_site(self, site_class, location):
         new_site_id = len(self._sites)
         periodized_coords = self.periodized_coords(location)
+        # print(periodized_coords)
+
         assert self._location_lookup.get(periodized_coords, None) is None, "That site is already occupied"
 
         self._sites[new_site_id] = {
@@ -57,3 +62,32 @@ class PeriodicStructure():
             return all_sites
         else:
             return [site for site in all_sites if site['site_class'] == site_class]
+
+    def to_pymatgen(self, state):
+
+        lattice_vecs = []
+        for idx, b in enumerate(self.bounds):
+            vec = []
+            for i in range(idx):
+                vec.append(0)
+            vec.append(b)
+            for i in range(idx, len(self.bounds) - 1):
+                vec.append(0)
+            lattice_vecs.append(vec)
+
+        lattice_vecs = np.array(lattice_vecs)
+
+        species = []
+        sites = []
+
+        for site in self.sites():
+            site_state = state.get_site_state(site["id"])
+            occ = site_state[occupancy]
+            if occ is not Vacant:
+                species.append(occ)
+                frac_loc = [loc / b for loc, b in zip(site['location'], self.bounds)]
+                sites.append(np.array(frac_loc))
+
+        sites = np.array(sites)
+
+        return Structure(lattice_vecs, species, sites)

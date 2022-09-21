@@ -1,6 +1,8 @@
 import copy
 from rxn_ca.core.periodic_structure import PeriodicStructure
 
+GENERAL = "GENERAL"
+
 class SimulationState():
 
     def as_dict(self):
@@ -28,6 +30,16 @@ class SimulationState():
 
     def get_site_state(self, site_id: int):
         return self._state.get(site_id)
+
+    def get_general_state(self):
+        return self._state.get(GENERAL)
+
+    def set_general_state(self, updates):
+        old_state = self.get_general_state()
+        if old_state is None:
+            old_state = {}
+
+        self._state[GENERAL] = { **old_state, **updates }
 
     def set_site_state(self, site_id: int, updates: dict):
         old_state = self._state.get(site_id)
