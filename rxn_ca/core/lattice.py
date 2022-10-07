@@ -24,12 +24,10 @@ class Lattice():
                 point = point + (vec_coeff * np_vec)
             point = point + vec_offset
 
-            # print(point)
             for site_class, basis_vecs in site_motif.items():
                 for vec in basis_vecs:
 
                     site_loc = tuple(point + np.array(vec))
-                    # print(site_loc)
                     struct.add_site(site_class, site_loc)
-            # print("----")
+
         return struct
