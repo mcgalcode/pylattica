@@ -1,5 +1,6 @@
 from monty.serialization import dumpfn, loadfn
-from .basic_simulation_step import BasicSimulationStep
+
+from rxn_ca.core.simulation_step import SimulationState
 
 class BasicSimulationResult():
     """A class that stores the result of running a simulation. Keeps track of all
@@ -19,37 +20,45 @@ class BasicSimulationResult():
             res.add_step(step)
         return res
 
-    def __init__(self):
+    def __init__(self, starting_state: SimulationState):
         """Initializes a ReactionResult with the reaction set used in the simulation
 
         Args:
             rxn_set (ScoredReactionSet):
         """
-        self.steps: list[BasicSimulationStep] = []
+        self.initial_state = starting_state
+        self._steps: list[SimulationState] = [starting_state]
+        self._diffs: list[dict] = []
 
-    def add_step(self, step: BasicSimulationStep) -> None:
+    def add_step(self, updates: dict) -> None:
         """Adds a step to the reaction result. Using this method allows
         the accumulation of all the steps in a given simulation.
 
         Args:
-            step (BasicSimulationStep): _description_
+            step (dict): _description_
         """
-        self.steps.append(step)
+        new_step = self._steps[-1].copy()
+        new_step.batch_update(updates)
+        self._steps.append(new_step)
+        self._diffs.append(updates)
 
-    def get_metadata_at(self, step_no: int) -> None:
-        return self.steps[step_no].metadata
+    def __len__(self) -> int:
+        return len(self._diffs) + 1
 
     @property
     def last_step(self):
-        return self.steps[-1]
+        return self.get_step(-1)
 
     @property
     def first_step(self):
-        return self.steps[0]
+        return self.get_step(0)
+
+    def get_step(self, step):
+        return self._steps[step]
 
     def as_dict(self):
         return {
-            "steps": [s.as_dict() for s in self.steps],
+            "steps": [s.as_dict() for s in self._steps],
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
         }

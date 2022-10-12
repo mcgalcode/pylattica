@@ -1,19 +1,18 @@
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+from rxn_ca.core.basic_simulation_result import BasicSimulationResult
 
-from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
+from .solid_phase_set import SolidPhaseSet
 
 from ..discrete import DiscreteStepAnalyzer
-from ..discrete import DiscreteStateResult
-from ..discrete import PhaseMap
 from .reaction_step_analyzer import ReactionStepAnalyzer
 
 from .scored_reaction_set import ScoredReactionSet
-from .reaction_step import ReactionStep
+from ..core import SimulationState
 
 import numpy as np
 
-class ReactionResult(DiscreteStateResult):
+class ReactionResult(BasicSimulationResult):
     """A class that stores the result of running a simulation. Keeps track of all
     the steps that the simulation proceeded through, and the set of reactions that
     was used in the simulation.
@@ -23,23 +22,23 @@ class ReactionResult(DiscreteStateResult):
     def from_dict(cls, res_dict):
         res = ReactionResult(
             ScoredReactionSet.from_dict(res_dict["rxn_set"]),
-            SolidPhaseMap.from_dict(res_dict["phase_map"])
+            SolidPhaseSet.from_dict(res_dict["phase_set"])
         )
         for step_dict in res_dict["steps"]:
-            res.add_step(ReactionStep.from_dict(step_dict))
+            res.add_step(SimulationState.from_dict(step_dict))
 
         return res
 
-    def __init__(self, rxn_set: ScoredReactionSet, phase_map: PhaseMap):
+    def __init__(self, starting_state: SimulationState, rxn_set: ScoredReactionSet, phase_set: SolidPhaseSet):
         """Initializes a ReactionResult with the reaction set used in the simulation
 
         Args:
             rxn_set (ScoredReactionSet):
         """
-        super().__init__(phase_map)
-        self.steps: list[ReactionStep] = []
+        super().__init__(starting_state)
+        self.phase_set = phase_set
         self.rxn_set: ScoredReactionSet = rxn_set
-        self.analyzer = ReactionStepAnalyzer(self.phase_map, self.rxn_set)
+        self.analyzer = ReactionStepAnalyzer(self.rxn_set)
 
     def get_choices_at(self, step_no: int, top: int = None, exclude_ids = True) -> None:
 
@@ -87,7 +86,7 @@ class ReactionResult(DiscreteStateResult):
         fig.update_yaxes(title="Relative Prevalence")
         fig.update_xaxes(title="Simulation Step")
 
-        analyzer = ReactionStepAnalyzer(self.phase_map, self.rxn_set)
+        analyzer = ReactionStepAnalyzer(self.phase_set, self.rxn_set)
         elements = list(analyzer.elemental_composition(self.steps[0]).keys())
         traces = []
         amounts = [analyzer.elemental_composition(s) for s in self.steps]
@@ -116,10 +115,10 @@ class ReactionResult(DiscreteStateResult):
         fig.update_yaxes(range=[-0.05,1.05], title="Mole Fraction")
         fig.update_xaxes(range=[0, len(self.steps) - 1], title="Simulation Step")
 
-        analyzer = ReactionStepAnalyzer(self.phase_map, self.rxn_set)
+        analyzer = ReactionStepAnalyzer(self.phase_set, self.rxn_set)
         traces = []
         for phase in self.all_phases:
-            if phase != self.phase_map.FREE_SPACE:
+            if phase != self.phase_set.FREE_SPACE:
                 xs = np.arange(len(self.steps))
                 ys = [analyzer.mole_fraction(step, phase) for step in self.steps]
                 traces.append((xs, ys, phase))
@@ -132,10 +131,10 @@ class ReactionResult(DiscreteStateResult):
         fig.show()
 
     def final_phase_fractions(self):
-        analyzer = DiscreteStepAnalyzer(self.phase_map)
+        analyzer = DiscreteStepAnalyzer(self.phase_set)
         fracs = {}
         for phase in self.all_phases:
-            if phase != self.phase_map.FREE_SPACE:
+            if phase != self.phase_set.FREE_SPACE:
                 fracs[phase] = analyzer.cell_fraction(self.steps[-1], phase)
 
         return fracs
@@ -145,7 +144,7 @@ class ReactionResult(DiscreteStateResult):
             print(f'{phase}: {frac}')
 
     def phase_fraction_at(self, step, phase):
-        analyzer = DiscreteStepAnalyzer(self.phase_map)
+        analyzer = DiscreteStepAnalyzer(self.phase_set)
         return analyzer.cell_fraction(self.steps[step - 1], phase)
 
     def as_dict(self):
@@ -154,5 +153,5 @@ class ReactionResult(DiscreteStateResult):
             "@class": self.__class__.__name__,
             "steps": [s.as_dict() for s in self.steps],
             "rxn_set": self.rxn_set.as_dict(),
-            "phase_map": self.phase_map.as_dict()
+            "phase_set": self.phase_set.as_dict()
         }

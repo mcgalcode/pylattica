@@ -10,8 +10,8 @@ from rxn_ca.rxn.computing.schemas.scored_rxns_schema import ScoredRxnsModel
 from rxn_ca.rxn.computing.utils.automaton_store import AutomatonStore
 from rxn_ca.rxn.reaction_result import ReactionResult
 
-from ....core import VonNeumannNeighborhood, Runner
-from ... import SolidPhaseMap, ReactionSetup, ReactionSetup3D, ScoredReactionSet, ReactionController
+from ....core import Runner
+from ... import SolidPhaseSet, ReactionSetup, ScoredReactionSet, ReactionController
 
 from .enumerate_and_score_flow import enumerate_and_score_flow
 
@@ -83,12 +83,9 @@ class RunRxnAutomatonMaker(Maker):
                 return Response(replace=new_flow, output=new_ca_job.output)
 
         assert scored_rxn_set is not None, "ScoredRxnSet not found!"
-        phase_map: SolidPhaseMap = SolidPhaseMap(scored_rxn_set.phases)
+        phase_map: SolidPhaseSet = SolidPhaseSet(scored_rxn_set.phases)
 
-        if dimensionality == 2:
-            setup = ReactionSetup(phase_map, volumes = scored_rxn_set.volumes)
-        else:
-            setup = ReactionSetup3D(phase_map, volumes = scored_rxn_set.volumes)
+        setup = ReactionSetup(phase_map, volumes = scored_rxn_set.volumes)
 
 
         if setup_style == "random_mixture":
@@ -96,7 +93,7 @@ class RunRxnAutomatonMaker(Maker):
         elif setup_style == "interface":
             initial_state = setup.setup_interface(**setup_args)
 
-        nb = ReactionController.get_neighborhood_from_step(initial_state, nb_type = VonNeumannNeighborhood)
+        nb = ReactionController.get_neighborhood_from_step(initial_state)
         controller = ReactionController(
             phase_map=phase_map,
             neighborhood=nb,

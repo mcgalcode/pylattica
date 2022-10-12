@@ -26,13 +26,6 @@ class BasicSimulationStep():
     def as_dict(self):
         return {
             "state": self.state.tolist(),
-            "metadata": self.metadata_to_dict(),
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
         }
-
-    def metadata_to_dict(self):
-        return self.metadata
-
-def copy_step(step: BasicSimulationStep):
-    return BasicSimulationStep(step.state.copy(), step.metadata)

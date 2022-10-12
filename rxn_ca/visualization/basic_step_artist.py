@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw
 
-from .neighborhoods import NeighborhoodView
-from .basic_simulation_step import BasicSimulationStep
+from rxn_ca.core import SimulationState
 import numpy as np
 import io
 
@@ -16,19 +15,19 @@ class BasicStepArtist():
         img = self._draw_image(state, **kwargs)
         display(img)
 
-    def jupyter_show_view(self, view: NeighborhoodView, **kwargs):
-        img = self._draw_image(view.view_state, **kwargs)
-        display(img)
+    # def jupyter_show_view(self, view: NeighborhoodView, **kwargs):
+    #     img = self._draw_image(view.view_state, **kwargs)
+    #     display(img)
 
     def get_img_state(self, state: np.array, **kwargs):
         return self._draw_image(state, **kwargs)
 
-    def jupyter_show(self, simulation_step: BasicSimulationStep, **kwargs):
-        img = self.get_img(simulation_step, **kwargs)
+    def jupyter_show(self, state: SimulationState, **kwargs):
+        img = self.get_img(state, **kwargs)
         display(img)
 
-    def get_img(self, simulation_step: BasicSimulationStep, **kwargs):
-        return self._draw_image(simulation_step.state, **kwargs)
+    def get_img(self, state: SimulationState, **kwargs):
+        return self._draw_image(state.state, **kwargs)
 
     def _draw_image(self, state, **kwargs):
         dim = len(state.shape)

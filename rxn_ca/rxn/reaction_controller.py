@@ -2,13 +2,15 @@ import math
 import numpy as np
 import typing
 
-from rxn_ca.core.neighborhoods import MooreNeighborhood, Neighborhood, NeighborhoodView, VonNeumannNeighborhood
+from rxn_ca.core.neighborhoods import StructureNeighborhoodSpec
+from rxn_ca.core.periodic_structure import PeriodicStructure
+from rxn_ca.core.simulation_step import SimulationState
+from rxn_ca.grid2d.neighborhoods import MooreNbHoodSpec
 from rxn_ca.rxn.scorers import ArrheniusScore, score_rxns
-from rxn_ca.rxn.solid_phase_map import SolidPhaseMap
+from rxn_ca.rxn.solid_phase_set import SolidPhaseSet
 from ..core.basic_controller import BasicController
 
 from .reaction_result import ReactionResult
-from .reaction_step import ReactionStep
 from .normalizers import normalize
 
 from rxn_network.reactions.reaction_set import ReactionSet
@@ -19,13 +21,13 @@ from .scored_reaction import ScoredReaction
 class ReactionController(BasicController):
 
     @classmethod
-    def get_neighborhood_from_size(cls, size, nb_type = MooreNeighborhood):
+    def get_neighborhood_from_size(cls, size, nb_spec = MooreNbHoodSpec):
         neighborhood_radius = cls.nb_radius_from_size(size)
-        return nb_type(neighborhood_radius)
+        return nb_spec(neighborhood_radius)
 
     @classmethod
-    def get_neighborhood_from_step(cls, step, nb_type = MooreNeighborhood):
-        return cls.get_neighborhood_from_size(step.size, nb_type=nb_type)
+    def get_neighborhood_from_structure(cls, structure: PeriodicStructure, nb_spec = MooreNbHoodSpec):
+        return cls.get_neighborhood_from_size(structure.size, nb_spec=nb_spec)
 
     @classmethod
     def nb_radius_from_size(cls, size: int) -> int:
@@ -46,8 +48,9 @@ class ReactionController(BasicController):
         return math.floor(min((size - 1) * 2 + 1, 21) / 2)
 
     def __init__(self,
-        phase_map: SolidPhaseMap,
-        neighborhood: Neighborhood,
+        phase_set: SolidPhaseSet,
+        structure: PeriodicStructure,
+        nb_spec: StructureNeighborhoodSpec,
         reaction_set: ReactionSet = None,
         scored_rxns: ScoredReactionSet = None,
         inertia = 1,
@@ -65,10 +68,11 @@ class ReactionController(BasicController):
             scored_rxns = score_rxns(reaction_set, scorer)
             self.rxn_set = ScoredReactionSet(scored_rxns)
 
+        self.structure = structure
         self.temperature = temperature
-        self.phase_map: SolidPhaseMap = phase_map
-        self.neighborhood = neighborhood
-        self.nucleation_neighborhood = MooreNeighborhood(1)
+        self.phase_set: SolidPhaseSet = phase_set
+        self.nb_graph = nb_spec.get(structure)
+        self.nucleation_nb_graph = MooreNbHoodSpec(1).get(structure)
         self.inertia = inertia
         self.free_species = free_species
         # proxy for partial pressures
@@ -77,41 +81,49 @@ class ReactionController(BasicController):
             self.effective_open_distances[specie] = strength
 
 
-    def instantiate_result(self):
-        return ReactionResult(self.rxn_set, self.phase_map)
+    def instantiate_result(self, starting_state: SimulationState):
+        return ReactionResult(starting_state, self.rxn_set, self.phase_set)
 
-    def get_new_state(self, nb_view: NeighborhoodView):
+    def get_state_update(self, site_id: int, prev_state: SimulationState):
         np.random.seed(None)
-        curr_species = self.phase_map.get_state_name(nb_view.center_value)
-        if curr_species == self.phase_map.FREE_SPACE:
-            return nb_view.center_value, None
+
+        curr_state = prev_state.get_site_state(site_id)
+
+        curr_species = curr_state['_disc_occupancy']
+        if curr_species == self.phase_set.FREE_SPACE:
+            return {}
         else:
-            possible_reactions = self.rxns_from_view(nb_view)
+            possible_reactions = self.rxns_at_site(site_id, prev_state)
             chosen_rxn = self.choose_reaction(possible_reactions)
             new_phase, chosen_rxn = self.get_product_from_rxn(chosen_rxn, curr_species)
-            return new_phase, chosen_rxn
+            return { '_disc_occupancy': new_phase, 'rxn': chosen_rxn }
 
-    def immediate_neighbors(self, state, coords):
+    def immediate_neighbors(self, site_id: int, state: SimulationState):
         neighbor_phases = []
-        view = self.nucleation_neighborhood.get(state, coords)
-        for cell, _ in view.iterate(exclude_center=True):
-            neighbor_phases.append(self.phase_map.get_state_name(cell))
+        for nb_id in self.nucleation_nb_graph.neighbors_of(site_id):
+            nb_state = state.get_site_state(nb_id)
+            neighbor_phases.append(nb_state['_disc_occupancy'])
 
         return neighbor_phases
 
-    def get_rxns_from_step(self, step: ReactionStep, coords):
-        view = self.neighborhood.get_in_step(step, coords)
-        return self.rxns_from_view(view)
+    def get_rxns_from_step(self, simulation_state, coords):
+        site_id = self.structure.site_at(coords)['id']
+        return self.rxns_at_site(site_id, simulation_state)
 
-    def rxns_from_view(self, nb_view: NeighborhoodView):
-        this_phase = self.phase_map.get_state_name(nb_view.center_value)
-        neighbor_phases = self.immediate_neighbors(nb_view.full_state, nb_view.coords)
+    def rxns_at_site(self, site_id: int, state: SimulationState):
+        curr_state = state.get_site_state(site_id)
+        this_phase = curr_state['_disc_occupancy']
+
+        neighbor_phases = self.immediate_neighbors(site_id, state)
 
         # Look through neighborhood, enumerate possible reactions
         rxns = {}
-        for other_cell, distance in nb_view.iterate(exclude_center=True):
-            other_phase = self.phase_map.get_state_name(other_cell)
-            rxn, score = self.get_rxn_and_score([other_phase, this_phase], distance, neighbor_phases, this_phase)
+
+        for nb_id, distance in self.nb_graph.neighbors_of(site_id, include_weights=True):
+            assert distance != 0, "DISTANCE IS 0"
+
+            neighbor_phase = state.get_site_state(nb_id)['_disc_occupancy']
+            rxn, score = self.get_rxn_and_score([neighbor_phase, this_phase], distance, neighbor_phases, this_phase)
             if str(rxn) in rxns:
                 rxns[str(rxn)]['score'] += score
             else:
@@ -179,9 +191,9 @@ class ReactionController(BasicController):
             new_phase_name: str = self.choose_product_by_volume(rxn)
 
             if new_phase_name in self.free_species:
-                new_phase_name = self.phase_map.FREE_SPACE
+                new_phase_name = self.phase_set.FREE_SPACE
 
-        return self.phase_map.get_state_value(new_phase_name), rxn
+        return new_phase_name, rxn
 
     def choose_product_by_volume(self, rxn):
         product_stoichs = [rxn.product_stoich(p) for p in rxn.products]
@@ -199,6 +211,7 @@ class ReactionController(BasicController):
 
 
     def get_rxn_and_score(self, reactants, distance, neighbor_phases, replaced_phase):
+
         possible_reaction = self.rxn_set.get_reaction(reactants)
 
         if possible_reaction is not None:
@@ -234,4 +247,4 @@ class ReactionController(BasicController):
             return score
 
     def get_score_contribution(self, weight, distance):
-        return weight * 5 / (distance)
+        return weight * 5 / distance

@@ -1,3 +1,4 @@
+from typing import List, Tuple
 import numpy as np
 
 def distance(arr1: np.array, arr2: np.array) -> float:
@@ -14,49 +15,37 @@ def distance(arr1: np.array, arr2: np.array) -> float:
     return np.sqrt(np.square(arr1 - arr2).sum())
 
 class DistanceMap():
+    """
+    The DistanceMap is a dictionary containing the distance from the center point to every
+    other point in a list of relative neighbor locations.
+    """
 
-    def __init__(self, side_length: int, dimension = 2):
+    def __init__(self, relative_neighbor_locs: List[Tuple]):
         """Intializes a DistanceMap.
 
         Args:
             side_length (int): The size of the distance map to create
         """
-        if side_length % 2 != 1:
-            print("Warning: distance map initialized with even side length has an ambiguous center point")
-        self.dimension = dimension
-        self.distances: np.array = self.find_distances(side_length)
 
-    def find_distances(self, side_length: int) -> np.array:
-        """Generates a side_length x side_length grid where each cell contains it's distance
-        from the central cell
+        self.distances: np.array = self.find_distances(relative_neighbor_locs)
+
+    def find_distances(self, relative_neighbor_locs: List[Tuple]) -> dict[Tuple, float]:
+        """Generates a map of relative locations to their distance from the center cell
 
         Args:
-            side_length (int): _description_
+            relative_neighbor_locs (list[Tuple]): A list of these locations
 
         Returns:
             np.array: _description_
         """
-        if self.dimension == 2:
-            distances: np.array = np.zeros((side_length, side_length))
-            cell_center: np.array = np.array([int(distances.shape[0] / 2), int(distances.shape[1] / 2)])
+        distances = {}
+        for loc in relative_neighbor_locs:
+            distances[loc] = self._distance(np.zeros(len(loc)), np.array(loc))
 
-            for i in range(side_length):
-                for j in range(side_length):
-                    curr_loc = np.array([i, j])
-                    distances[(i, j)] = self._distance(cell_center, curr_loc)
+        return distances
 
-            return distances
-        elif self.dimension == 3:
-            distances: np.array = np.zeros((side_length, side_length, side_length))
-            cell_center: np.array = np.array([int(distances.shape[0] / 2), int(distances.shape[1] / 2), int(distances.shape[1] / 2)])
-
-            for i in range(side_length):
-                for j in range(side_length):
-                    for k in range(side_length):
-                        curr_loc = np.array([i, j, k])
-                        distances[(i, j, k)] = self._distance(cell_center, curr_loc)
-
-            return distances
+    def get_dist(self, relative_loc):
+        return self.distances.get(relative_loc)
 
 class EuclideanDistanceMap(DistanceMap):
 
