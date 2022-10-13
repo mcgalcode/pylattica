@@ -1,4 +1,3 @@
-from unittest import result
 from jobflow.core.maker import Maker
 from jobflow.core.job import job
 
@@ -10,7 +9,7 @@ from rxn_network.reactions.reaction_set import ReactionSet
 
 from dataclasses import dataclass
 
-from rxn_ca.rxn.computing.schemas.enumerated_rxns_schema import EnumeratedRxnsModel
+from ..schemas.enumerated_rxns_schema import EnumeratedRxnsModel
 
 
 @dataclass

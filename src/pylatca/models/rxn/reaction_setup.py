@@ -1,5 +1,5 @@
 
-from ..grid2d import DiscreteGridSetup
+from ...grid2d import DiscreteGridSetup
 
 class ReactionSetup(DiscreteGridSetup):
 

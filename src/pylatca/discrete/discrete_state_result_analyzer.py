@@ -1,8 +1,8 @@
 import os
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-from rxn_ca.core import BasicSimulationResult
 
+from ..core import SimulationResult
 from .discrete_step_analyzer import DiscreteStepAnalyzer
 
 import numpy as np
@@ -13,7 +13,7 @@ class DiscreteResultAnalyzer():
     was used in the simulation.
     """
 
-    def __init__(self, result: BasicSimulationResult):
+    def __init__(self, result: SimulationResult):
         self._result = result
 
     def all_phases(self):

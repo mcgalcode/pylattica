@@ -4,17 +4,17 @@ from jobflow.core.job import job
 
 from dataclasses import dataclass
 
-from rxn_ca.rxn.computing.schemas.enumerated_rxns_schema import EnumeratedRxnsModel
-from rxn_ca.rxn.computing.schemas.scored_rxns_schema import ScoredRxnsModel
+from ..schemas.enumerated_rxns_schema import EnumeratedRxnsModel
+from ..schemas.scored_rxns_schema import ScoredRxnsModel
 from ..schemas.job_types import JobTypes
 
-from ...scored_reaction_set import ScoredReactionSet
+from ..utils.automaton_store import AutomatonStore
 
+from ...scored_reaction_set import ScoredReactionSet
 from ...scorers import ArrheniusScore, score_rxns
 
 from rxn_network.reactions.reaction_set import ReactionSet
 
-from ..utils.automaton_store import AutomatonStore
 
 @dataclass
 class ScoreRxnsMaker(Maker):

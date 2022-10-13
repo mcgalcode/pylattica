@@ -1,8 +1,9 @@
-from .scored_reaction import ScoredReaction, phases_to_str
 from pymatgen.core.composition import Composition
 from pymatgen.ext.matproj import MPRester
 
 import json
+
+from .scored_reaction import ScoredReaction, phases_to_str
 
 def get_phase_vols(phases):
 

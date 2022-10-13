@@ -5,12 +5,12 @@ from jobflow import Response, Flow
 
 from dataclasses import dataclass
 
-from rxn_ca.rxn.computing.schemas.ca_result_schema import RxnCAResultModel
-from rxn_ca.rxn.computing.schemas.scored_rxns_schema import ScoredRxnsModel
-from rxn_ca.rxn.computing.utils.automaton_store import AutomatonStore
-from rxn_ca.rxn.reaction_result import ReactionResult
+from ..schemas.ca_result_schema import RxnCAResultModel
+from ..schemas.scored_rxns_schema import ScoredRxnsModel
+from ..utils.automaton_store import AutomatonStore
+from ...reaction_result import ReactionResult
 
-from ....core import Runner
+from .....core import Runner
 from ... import SolidPhaseSet, ReactionSetup, ScoredReactionSet, ReactionController
 
 from .enumerate_and_score_flow import enumerate_and_score_flow

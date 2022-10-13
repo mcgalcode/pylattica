@@ -1,4 +1,4 @@
-from ..core.analyzer import StateAnalyzer
+from ...core.analyzer import StateAnalyzer
 
 from .consts import OCT_SITE, TET_SITE, Occupancy, Vacant
 

@@ -1,5 +1,4 @@
 from pymatgen.ext.matproj import MPRester
-
 from rxn_network.enumerators.minimize import MinimizeGibbsEnumerator
 from rxn_network.entries.entry_set import GibbsEntrySet
 from rxn_network.reactions.reaction_set import ReactionSet

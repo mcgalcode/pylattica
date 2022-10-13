@@ -1,16 +1,5 @@
 from setuptools import setup, find_packages
 
-setup(
-    name='rxn_ca',
-    version='1.0.0',
-    url='https://github.com/mypackage.git',
-    author='Max Gallant',
-    author_email='maxg@lbl.gov',
-    description='A cellular automaton for solid state reactions',
-    packages=find_packages(),
-
-)
-
 from pathlib import Path
 
 from setuptools import find_packages, setup
@@ -42,7 +31,17 @@ setup(
         'reaction-network @ git+https://git@github.com/GENESIS-EFRC/reaction-network@dev#egg=reaction-network',
         'pymatgen >= 2022.3.29',
         'plotly >= 5.6.0',
-        'jobflow >= 0.1.8'
+        'jobflow >= 0.1.8',
+        'monty',
+        'networkx',
+        'pymatgen',
+        'tqdm',
+        'plotly',
+        'matplotlib',
+        'jobflow',
+        'pydantic',
+        'maggma',
+        'Pillow >= 9.0'
     ],
     extras_require={
         "docs": [
@@ -57,9 +56,7 @@ setup(
         "tests": [
             "pytest==7.1.3",
             "pytest-cov==4.0.0",
-            "matplotlib==3.6.1",
             "pydot==1.4.2",
-            "moto==4.0.7",
         ],
         "dev": ["pre-commit>=2.12.1"],
         "vis": ["matplotlib", "pydot"],

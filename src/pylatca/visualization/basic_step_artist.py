@@ -1,10 +1,12 @@
 from PIL import Image, ImageDraw
 
-from rxn_ca.core import SimulationState
 import numpy as np
 import io
 
 import matplotlib.pyplot as plt
+
+from ..core import SimulationState
+
 
 class BasicStepArtist():
 

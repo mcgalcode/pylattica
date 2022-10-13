@@ -1,4 +1,4 @@
-from rxn_ca.discrete.phase_set import PhaseSet
+from ...discrete.phase_set import PhaseSet
 
 class SolidPhaseSet(PhaseSet):
 

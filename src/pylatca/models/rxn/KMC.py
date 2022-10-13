@@ -3,7 +3,6 @@ from math import comb
 import math
 import random
 import tqdm
-import matplotlib
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
@@ -12,8 +11,7 @@ import plotly.graph_objects as go
 import numpy as np
 
 from pymatgen.core.composition import Composition
-
-from rxn_ca.rxn.scored_reaction_set import ScoredReactionSet
+from .scored_reaction_set import ScoredReactionSet
 
 
 class CompletionError(BaseException):

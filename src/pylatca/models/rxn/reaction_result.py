@@ -1,18 +1,16 @@
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-from rxn_ca.core.basic_simulation_result import BasicSimulationResult
-
-from .solid_phase_set import SolidPhaseSet
-
-from ..discrete import DiscreteStepAnalyzer
-from .reaction_step_analyzer import ReactionStepAnalyzer
-
-from .scored_reaction_set import ScoredReactionSet
-from ..core import SimulationState
-
 import numpy as np
 
-class ReactionResult(BasicSimulationResult):
+from ...core import SimulationState, SimulationResult
+from ...discrete import DiscreteStepAnalyzer
+from .solid_phase_set import SolidPhaseSet
+from .reaction_step_analyzer import ReactionStepAnalyzer
+from .scored_reaction_set import ScoredReactionSet
+
+
+
+class ReactionResult(SimulationResult):
     """A class that stores the result of running a simulation. Keeps track of all
     the steps that the simulation proceeded through, and the set of reactions that
     was used in the simulation.

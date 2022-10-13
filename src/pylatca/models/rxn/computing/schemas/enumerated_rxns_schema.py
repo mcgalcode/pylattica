@@ -5,7 +5,7 @@ from typing import Optional, Any
 
 from rxn_network.reactions.reaction_set import ReactionSet
 
-from rxn_ca.rxn.computing.utils.functions import format_chem_sys
+from ..utils.functions import format_chem_sys
 
 from .job_types import JobTypes
 

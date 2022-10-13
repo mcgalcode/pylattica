@@ -1,8 +1,6 @@
 import numpy as np
 
-from rxn_ca.core.simulation_step import SimulationState
-from .phase_set import PhaseSet
-
+from ..core.simulation_state import SimulationState
 
 class DiscreteStepAnalyzer():
 

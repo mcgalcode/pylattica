@@ -1,4 +1,4 @@
-from rxn_ca.core.lattice import Lattice
+from ..core.lattice import Lattice
 
 
 class SquareGridLattice2D(Lattice):

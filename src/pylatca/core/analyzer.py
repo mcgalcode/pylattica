@@ -1,5 +1,5 @@
 from .periodic_structure import PeriodicStructure
-from .simulation_step import SimulationState
+from .simulation_state import SimulationState
 
 class StateAnalyzer():
 

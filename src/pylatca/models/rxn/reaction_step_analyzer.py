@@ -1,10 +1,11 @@
-from rxn_ca.core import SimulationState
-from rxn_ca.rxn.solid_phase_set import SolidPhaseSet
-from ..discrete import DiscreteStepAnalyzer
-
-from .scored_reaction_set import ScoredReactionSet
 
 from pymatgen.core.composition import Composition
+
+from ...core import SimulationState
+from ...discrete import DiscreteStepAnalyzer
+from .solid_phase_set import SolidPhaseSet
+from .scored_reaction_set import ScoredReactionSet
+
 
 class ReactionStepAnalyzer(DiscreteStepAnalyzer):
 

@@ -1,4 +1,4 @@
-from rxn_ca.core.lattice import Lattice
+from ...core.lattice import Lattice
 from .consts import TET_SITE, OCT_SITE
 
 class DeltaLattice(Lattice):

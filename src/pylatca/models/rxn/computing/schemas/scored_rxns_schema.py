@@ -1,12 +1,11 @@
 from pydantic import BaseModel, Field
-from rxn_ca.rxn.computing.utils.functions import format_chem_sys
-
 from typing import Any
-
-from rxn_ca.rxn.scored_reaction_set import ScoredReactionSet
 from uuid import uuid4
 
 from .job_types import JobTypes
+from ..utils.functions import format_chem_sys
+from ....rxn.scored_reaction_set import ScoredReactionSet
+
 
 class ScoredRxnsModel(BaseModel):
 

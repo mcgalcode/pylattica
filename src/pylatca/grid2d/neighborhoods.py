@@ -1,9 +1,8 @@
-from rxn_ca.core.coordinate_utils import get_points_in_box
-from rxn_ca.core.neighborhoods import StructureNeighborhoodSpec
+from ..core.coordinate_utils import get_points_in_box
+from ..core.neighborhoods import StructureNeighborhoodBuilder
 from .structures import SimpleSquare2DStructureBuilder
-import itertools
 
-class VonNeumannNbHood2DSpec(StructureNeighborhoodSpec):
+class VonNeumannNbHood2DSpec(StructureNeighborhoodBuilder):
 
     def __init__(self):
         super().__init__({
@@ -15,7 +14,7 @@ class VonNeumannNbHood2DSpec(StructureNeighborhoodSpec):
             ]
         })
 
-class MooreNbHoodSpec(StructureNeighborhoodSpec):
+class MooreNbHoodSpec(StructureNeighborhoodBuilder):
 
     def __init__(self, size = 1, dim = 2):
         points = get_points_in_box(-size, size + 1, dim)

@@ -1,14 +1,14 @@
 from PIL import Image, ImageDraw
 
-from rxn_ca.core.periodic_structure import PeriodicStructure
-from rxn_ca.core.simulation_step import SimulationState
+from ..core.periodic_structure import PeriodicStructure
+from ..core.simulation_state import SimulationState
 import numpy as np
 import io
 
 import matplotlib.pyplot as plt
-from rxn_ca.discrete.discrete_step_analyzer import DiscreteStepAnalyzer
+from ..discrete.discrete_step_analyzer import DiscreteStepAnalyzer
 
-from rxn_ca.discrete.phase_set import PhaseSet
+from ..discrete.phase_set import PhaseSet
 
 class BasicGridArtist():
 
@@ -147,7 +147,7 @@ class BasicGridArtist():
 import typing
 import numpy as np
 
-from rxn_ca.core import COLORS
+from pylatca.core import COLORS
 
 class DiscreteSquareGridArtist(BasicGridArtist):
 

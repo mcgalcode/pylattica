@@ -1,22 +1,21 @@
 import math
 import numpy as np
 import typing
-
-from rxn_ca.core.neighborhoods import StructureNeighborhoodSpec
-from rxn_ca.core.periodic_structure import PeriodicStructure
-from rxn_ca.core.simulation_step import SimulationState
-from rxn_ca.grid2d.neighborhoods import MooreNbHoodSpec
-from rxn_ca.rxn.scorers import ArrheniusScore, score_rxns
-from rxn_ca.rxn.solid_phase_set import SolidPhaseSet
-from ..core.basic_controller import BasicController
-
-from .reaction_result import ReactionResult
-from .normalizers import normalize
-
 from rxn_network.reactions.reaction_set import ReactionSet
 
+from ...core.neighborhoods import StructureNeighborhoodBuilder
+from ...core.periodic_structure import PeriodicStructure
+from ...core.simulation_state import SimulationState
+from ...grid2d.neighborhoods import MooreNbHoodSpec
+from ...core.basic_controller import BasicController
+
+from .scorers import ArrheniusScore, score_rxns
+from .solid_phase_set import SolidPhaseSet
+from .reaction_result import ReactionResult
+from .normalizers import normalize
 from .scored_reaction_set import ScoredReactionSet
 from .scored_reaction import ScoredReaction
+
 
 class ReactionController(BasicController):
 
@@ -50,7 +49,7 @@ class ReactionController(BasicController):
     def __init__(self,
         phase_set: SolidPhaseSet,
         structure: PeriodicStructure,
-        nb_spec: StructureNeighborhoodSpec,
+        nb_spec: StructureNeighborhoodBuilder,
         reaction_set: ReactionSet = None,
         scored_rxns: ScoredReactionSet = None,
         inertia = 1,

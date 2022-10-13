@@ -1,14 +1,14 @@
 import typing
 import numpy as np
 
-from rxn_ca.core.neighborhoods import NeighborGraph
-from rxn_ca.core.periodic_structure import PeriodicStructure
-from rxn_ca.core.simulation_step import SimulationState, SimulationStep
-from rxn_ca.discrete.phase_set import PhaseSet
+from ..core.neighborhoods import NeighborGraph
+from ..core.periodic_structure import PeriodicStructure
+from ..core.simulation_state import SimulationState, SimulationStep
+from ..discrete.phase_set import PhaseSet
 import random
 
-from rxn_ca.core.distance_map import distance
-from rxn_ca.grid2d.neighborhoods import MooreNbHoodSpec
+from ..core.distance_map import distance
+from .neighborhoods import MooreNbHoodSpec
 
 class DiscreteGridSetup():
     """A class for setting up states. Provides helper methods for creating starting
@@ -55,7 +55,7 @@ class DiscreteGridSetup():
             if site['location'][0] <= half:
                 state.set_site_state(site["id"], { '_disc_occupancy': p1 })
             else:
-                state.set_site_state(site["id"], { '_disc_occupancy': p1 })
+                state.set_site_state(site["id"], { '_disc_occupancy': p2 })
         return state
 
     def setup_particle(self, structure: PeriodicStructure, radius: int, bulk_phase: str, particle_phase: str) -> SimulationState:
@@ -72,7 +72,7 @@ class DiscreteGridSetup():
             SimulationState:
         """
         state: SimulationState = self.setup_solid_phase(structure, bulk_phase)
-        center: typing.Tuple[int, int] = tuple([structure.size/2 for _ in range(structure.dim)])
+        center: typing.Tuple[int, int] = tuple([structure.size / 2 for _ in range(structure.dim)])
         state: SimulationState = self.add_particle_to_state(state, center, radius, particle_phase)
         return state
 

@@ -1,15 +1,11 @@
-from rxn_ca.core import BasicController, NeighborGraph, SimulationState
-from rxn_ca.core.periodic_structure import PeriodicStructure
 import random
-from rxn_ca.core.simulation_step import GENERAL
 
-from rxn_ca.delta.analyzer import DeltaAnalyzer
+from ...core import BasicController, NeighborGraph, SimulationState
+from ...core.periodic_structure import PeriodicStructure
+from ...core.simulation_state import GENERAL
+from ...core.utils import printif
 
 from .consts import TET_SITE, InitialAtomCount, InitialLiCount, Mn2Count, Occupancy, RemovedLiCount, Vacant, Li, Mn, Ti, OCT_SITE
-
-from rxn_ca.core.utils import printif
-
-from collections import deque
 
 class ChargeController(BasicController):
 

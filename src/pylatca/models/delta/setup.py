@@ -1,10 +1,9 @@
 from collections import deque
 from math import ceil
-from rxn_ca.core import SimulationState
-
 import numpy as np
 
-from rxn_ca.delta.analyzer import DeltaAnalyzer
+from ...core import SimulationState
+from .analyzer import DeltaAnalyzer
 from .consts import InitialAtomCount, InitialLiCount, Li, Mn, Mn2Count, RemovedLiCount, Ti, Vacant, Occupancy, OCT_SITE, TET_SITE
 
 class DeltaSetup():

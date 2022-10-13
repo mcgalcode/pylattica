@@ -1,5 +1,5 @@
 import copy
-from rxn_ca.core.periodic_structure import PeriodicStructure
+from .periodic_structure import PeriodicStructure
 
 GENERAL = "GENERAL"
 

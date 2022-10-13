@@ -1,14 +1,14 @@
-from rxn_ca.core import BasicController
-from rxn_ca.core.neighborhoods import StructureNeighborhoodSpec
-from rxn_ca.core.periodic_structure import PeriodicStructure
-from rxn_ca.core.simulation_step import SimulationState
-from rxn_ca.discrete import PhaseSet
-from rxn_ca.grid2d.neighborhoods import MooreNbHoodSpec
-from rxn_ca.rxn.solid_phase_set import SolidPhaseSet
+from ...core import BasicController
+from ...core.neighborhoods import StructureNeighborhoodBuilder
+from ...core.periodic_structure import PeriodicStructure
+from ...core.simulation_state import SimulationState
+from ...discrete import PhaseSet
+from ...grid2d.neighborhoods import MooreNbHoodSpec
+from ..rxn.solid_phase_set import SolidPhaseSet
 
 class GrowthController(BasicController):
 
-    def __init__(self, phase_set: PhaseSet, periodic_struct: PeriodicStructure, neighborhood_spec: StructureNeighborhoodSpec = None) -> None:
+    def __init__(self, phase_set: PhaseSet, periodic_struct: PeriodicStructure, neighborhood_spec: StructureNeighborhoodBuilder = None) -> None:
         self.phase_set: PhaseSet = phase_set
         self.struct = periodic_struct
 

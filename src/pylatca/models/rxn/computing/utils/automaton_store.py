@@ -1,12 +1,10 @@
 from maggma.stores.mongolike import MongoStore
-from rxn_ca.rxn.computing.utils.functions import format_chem_sys
-from rxn_ca.rxn.reaction_result import ReactionResult
-
-from rxn_ca.rxn.scored_reaction_set import ScoredReactionSet
+from rxn_network.reactions.reaction_set import ReactionSet
 
 from ..schemas.job_types import JobTypes
-
-from rxn_network.reactions.reaction_set import ReactionSet
+from ...computing.utils.functions import format_chem_sys
+from ...reaction_result import ReactionResult
+from ...scored_reaction_set import ScoredReactionSet
 
 
 class AutomatonStore(MongoStore):

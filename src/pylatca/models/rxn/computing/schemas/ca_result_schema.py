@@ -1,7 +1,7 @@
 from typing import Any
 from pydantic import BaseModel, Field
 
-from rxn_ca.rxn.computing.utils.functions import format_chem_sys
+from ..utils.functions import format_chem_sys
 from .job_types import JobTypes
 
 class RxnCAResultModel(BaseModel):
