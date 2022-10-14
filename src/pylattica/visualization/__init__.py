@@ -1,3 +1,2 @@
-from .basic_step_artist import BasicStepArtist
 from .square_grid_artist import DiscreteSquareGridArtist
 from .square_grid_result_artist import DiscreteSquareGridResultArtist

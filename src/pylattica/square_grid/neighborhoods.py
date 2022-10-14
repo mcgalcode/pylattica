@@ -1,6 +1,6 @@
 from ..core.coordinate_utils import get_points_in_cube
 from ..core.neighborhoods import StructureNeighborhoodBuilder
-from .structures import SimpleSquare2DStructureBuilder
+from .structure_builders import SimpleSquare2DStructureBuilder
 
 class VonNeumannNbHood2DSpec(StructureNeighborhoodBuilder):
 

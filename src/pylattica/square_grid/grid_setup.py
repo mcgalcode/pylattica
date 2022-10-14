@@ -3,7 +3,7 @@ import numpy as np
 
 from ..core.neighborhoods import NeighborGraph
 from ..core.periodic_structure import PeriodicStructure
-from ..core.simulation_state import SimulationState, SimulationStep
+from ..core.simulation_state import SimulationState
 from ..core.constants import SITE_ID, LOCATION
 from ..discrete.phase_set import PhaseSet
 from ..discrete.state_constants import DISCRETE_OCCUPANCY, VACANT
@@ -27,7 +27,7 @@ class DiscreteGridSetup():
         self.phase_set: PhaseSet = phase_set
 
 
-    def _build_blank_state(self, structure: PeriodicStructure, fill  = None) -> SimulationStep:
+    def _build_blank_state(self, structure: PeriodicStructure, fill  = None) -> SimulationState:
         state = SimulationState()
         for site in structure.sites():
             state.set_site_state(site[SITE_ID], {
@@ -39,7 +39,7 @@ class DiscreteGridSetup():
         state = self._build_blank_state(structure, phase_name)
         return state
 
-    def setup_interface(self, structure: PeriodicStructure, p1: str, p2: str) -> SimulationStep:
+    def setup_interface(self, structure: PeriodicStructure, p1: str, p2: str) -> SimulationState:
         """Generates a starting state that is divided into two phases. One phase
         occupies the left half of the state, and one phase occupies the right half of the state
 
@@ -54,7 +54,7 @@ class DiscreteGridSetup():
         state: SimulationState = self._build_blank_state(structure)
         half: int = int(structure.bounds[0] / 2)
         for site in structure.sites():
-            if site[LOCATION][0] <= half:
+            if site[LOCATION][0] < half:
                 state.set_site_state(site[SITE_ID], { DISCRETE_OCCUPANCY: p1 })
             else:
                 state.set_site_state(site[SITE_ID], { DISCRETE_OCCUPANCY: p2 })
@@ -108,10 +108,11 @@ class DiscreteGridSetup():
 
     def setup_coords(self, structure: PeriodicStructure, background_state: str, coordinates: dict):
         state: np.array = self.setup_solid_phase(structure, background_state)
-        for phase, coord_list in coordinates:
+        for phase, coord_list in coordinates.items():
             for coords in coord_list:
-                site_id = structure.site_at(coords)
+                site_id = structure.site_at(coords)[SITE_ID]
                 state.set_site_state(site_id, { DISCRETE_OCCUPANCY: phase })
+        return state
 
     def setup_noise(self, structure: PeriodicStructure, phases: typing.List[str]):
         state: SimulationState = self._build_blank_state(structure)

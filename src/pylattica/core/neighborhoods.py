@@ -194,7 +194,6 @@ class StructureNeighborhoodBuilder():
             edges = []
             for neighbor_vec in site_class_neighbors:
                 loc = [s + n for s, n in zip(location, neighbor_vec)]
-                # loc = np.array(location) + np.array(neighbor_vec)
                 nb_site = struct.site_at(loc)
                 if nb_site[SITE_ID] != site[SITE_ID]:
                     edges.append((nb_site[SITE_ID], site[SITE_ID], self.distances.get_dist(neighbor_vec)))

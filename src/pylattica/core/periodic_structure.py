@@ -1,6 +1,6 @@
 from numbers import Number
 from typing import Dict, Iterable, List, Tuple
-
+import numpy as np
 from .constants import LOCATION, SITE_CLASS, SITE_ID
 
 def get_pt_in_range(bound: float, pt: float) -> float:
@@ -17,7 +17,7 @@ def get_pt_in_range(bound: float, pt: float) -> float:
     -------
     float
         The transformed value
-    """    
+    """
     return pt % bound
 
 def get_periodic_point(bounds: Iterable[Number], pt: Iterable[Number]) -> tuple[Number]:
@@ -56,8 +56,11 @@ def float_loc(loc: Iterable[Number]) -> Tuple[float]:
     -------
     Tuple[float]
         The same location represented as a tuple of floats
-    """    
-    return tuple([round(float(coord), 3) for coord in loc])
+    """
+    return tuple([round(float(coord), OFFSET_PRECISION) for coord in loc])
+
+OFFSET_PRECISION = 3
+VEC_OFFSET = 0.001
 
 class PeriodicStructure():
     """
@@ -74,32 +77,26 @@ class PeriodicStructure():
         each direction would have bounds of (2, 2, 2)
     dim : int
         The dimensionality of the structure
-    unit_cell_size : Iterable[int]
-        The extent of this structure in each dimension in unit cell counts. For instance,
-        a structure that stretches for 3 unit cells in the x and y directions, and 2 unit
-        cells in the z direction would have unit_cell_size of (3, 3, 2)
     """
 
-    def __init__(self, bounds: Iterable[Number], unit_cell_size: Iterable[Number]):
-        """Instantiates a structure with the specified bounds and unit_cell_size.
-        The dimensionaliity is inferred by the dimensionality of the two parameters.
+    def __init__(self, bounds: Iterable[Number]):
+        """Instantiates a structure with the specified bounds.
+        The dimensionaliity is inferred by the dimensionality of the bounds.
 
         Parameters
         ----------
         bounds : Iterable[Number]
             _description_
-        unit_cell_size : Iterable[Number]
-            _description_
-        """        
+        """
         self.bounds = bounds
-        self.unit_cell_size = unit_cell_size
         self.dim = len(bounds)
         self._sites = {}
         self._location_lookup = {}
+        self._offset_vector = np.array([VEC_OFFSET for _ in range(self.dim)])
 
 
     def periodized_coords(self, location: Tuple[float]) -> Tuple[float]:
-        """Returns the periodic image of a point within this 
+        """Returns the periodic image of a point within this structure.
 
         Parameters
         ----------
@@ -110,9 +107,17 @@ class PeriodicStructure():
         -------
         Tuple[float]
             The periodized point
-        """        
+        """
         float_coords = float_loc(location)
         return float_loc(get_periodic_point(self.bounds, float_coords))
+
+    def _coords_with_offset(self, location: Iterable[float]) -> Iterable[float]:
+        return tuple(self._offset_vector + np.array(location))
+
+    def _transformed_coords(self, location: Iterable[float]) -> Iterable[float]:
+        periodized_coords = self.periodized_coords(location)
+        offset_periodized_coords = self._coords_with_offset(periodized_coords)
+        return offset_periodized_coords
 
     def add_site(self, site_class: str, location: Tuple[float]) -> int:
         """Adds a new site to the structure.
@@ -129,11 +134,13 @@ class PeriodicStructure():
         -------
         int
             The ID of the site. This can be used to retrieve the site later
-        """        
+        """
         new_site_id = len(self._sites)
         periodized_coords = self.periodized_coords(location)
+        
+        offset_periodized_coords = self._coords_with_offset(periodized_coords)
 
-        assert self._location_lookup.get(periodized_coords, None) is None, "That site is already occupied"
+        assert self._location_lookup.get(offset_periodized_coords, None) is None, "That site is already occupied"
 
         self._sites[new_site_id] = {
             SITE_CLASS: site_class,
@@ -141,10 +148,10 @@ class PeriodicStructure():
             SITE_ID: new_site_id,
         }
 
-        self._location_lookup[periodized_coords] = new_site_id
+        self._location_lookup[offset_periodized_coords] = new_site_id
         return new_site_id
 
-    def site_at(self, location: Tuple[float]) -> int:
+    def site_at(self, location: Tuple[float]) -> Dict:
         """Retrieves the site at a particular location. Uses float equality to check.
 
         Parameters
@@ -155,10 +162,10 @@ class PeriodicStructure():
         Returns
         -------
         int
-            The ID of the new site.
-        """        
-        periodized_coords = self.periodized_coords(location)
-        site_id = self._location_lookup.get(periodized_coords)
+            A dictionary with keys "site_class", "location", and "id" representing the site.
+        """
+        _transformed_coords = self._transformed_coords(location)
+        site_id = self._location_lookup.get(_transformed_coords)
         if site_id is not None:
             return self.get_site(site_id)
         else:
@@ -176,7 +183,7 @@ class PeriodicStructure():
         -------
         Dict
             A dictionary with keys "site_class", "location", and "id" representing the site.
-        """        
+        """
         return self._sites.get(site_id)
 
     def sites(self, site_class: str = None) -> List[Dict]:
@@ -191,7 +198,7 @@ class PeriodicStructure():
         -------
         List[Dict]
             A list of the sites matching that site class.
-        """        
+        """
         all_sites = list(self._sites.values())
         if site_class is None:
             return all_sites

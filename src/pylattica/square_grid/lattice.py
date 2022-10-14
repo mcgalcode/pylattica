@@ -1,5 +1,4 @@
-from ..core.lattice import Lattice
-
+from ..core import Lattice
 
 class SquareGridLattice2D(Lattice):
 

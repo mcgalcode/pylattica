@@ -1,10 +1,7 @@
-
-
 from abc import abstractmethod
-
 from .lattice import SquareGridLattice2D, SquareGridLattice3D
 
-SITE_POSITION = 0.5
+SITE_POSITION = 0
 
 class StructureBuilder():
 
@@ -37,4 +34,4 @@ class SimpleSquare3DStructureBuilder(StructureBuilder):
         }
 
     def build(self, size):
-        return self.lattice.build_from(size, self._motif)
+        return self.lattice.build_from((size, size, size), self._motif)

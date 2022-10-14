@@ -6,7 +6,7 @@ from rxn_network.reactions.reaction_set import ReactionSet
 from ...core.neighborhoods import StructureNeighborhoodBuilder
 from ...core.periodic_structure import PeriodicStructure
 from ...core.simulation_state import SimulationState
-from ...grid2d.neighborhoods import MooreNbHoodSpec
+from ...square_grid.neighborhoods import MooreNbHoodSpec
 from ...core.basic_controller import BasicController
 
 from .scorers import ArrheniusScore, score_rxns

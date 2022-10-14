@@ -3,8 +3,6 @@ from .coordinate_utils import get_points_in_box
 from .periodic_structure import PeriodicStructure
 import numpy as np
 
-VEC_OFFSET = 0.01
-
 class Lattice():
     """A lattice is specified by it's lattice vectors. This class can then
     be used to create PeriodicStructure instances which are filled with
@@ -77,22 +75,15 @@ class Lattice():
             The structure resulting from the lattice tiling and motif filling specified.
         """        
         bounds = np.array([l * n for n, l in zip(num_cells, self._vec_lengths)])
-        struct = PeriodicStructure(bounds, self.dim)
+        struct = self.initialize_structure(bounds)
 
         vec_coeffs = get_points_in_box([0 for _ in range(self.dim)], num_cells)
-
-        _vec_offset = np.array([VEC_OFFSET for _ in range(self.dim)])
-
         
         for vec_coeff_set in vec_coeffs:
             point = np.zeros(self.dim)
 
             for vec_coeff, vec in zip(vec_coeff_set, self.vecs):
                 point = point + (vec_coeff * vec)
-            
-            # We cannot place sites directly on the simulation state boundary,
-            # so we offset every point by a small amount.
-            point = point + _vec_offset
 
             for site_class, basis_vecs in site_motif.items():
                 for vec in basis_vecs:
@@ -101,3 +92,18 @@ class Lattice():
                     struct.add_site(site_class, site_loc)
 
         return struct
+
+    def initialize_structure(self, bounds: np.ndarray) -> PeriodicStructure:
+        """Instantiates the structure that is being built and filled out by this lattice.
+
+        Parameters
+        ----------
+        bounds : np.ndarray
+            The extent of the structure along each direction
+
+        Returns
+        -------
+        PeriodicStructure
+            The correctly sized (but as of yet unfilled) resulting structure.
+        """        
+        return PeriodicStructure(bounds)

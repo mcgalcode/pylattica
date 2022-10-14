@@ -3,7 +3,7 @@ from ...core.neighborhoods import StructureNeighborhoodBuilder
 from ...core.periodic_structure import PeriodicStructure
 from ...core.simulation_state import SimulationState
 from ...discrete import PhaseSet
-from ...grid2d.neighborhoods import MooreNbHoodSpec
+from ...square_grid.neighborhoods import MooreNbHoodSpec
 from ..rxn.solid_phase_set import SolidPhaseSet
 
 class GrowthController(BasicController):

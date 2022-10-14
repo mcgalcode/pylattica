@@ -1,13 +1,10 @@
 from PIL import Image, ImageDraw
 
-from pylattica.core.lattice import VEC_OFFSET
 from pylattica.visualization.helpers import color_map
 
 from ..core.periodic_structure import PeriodicStructure
 from ..core.simulation_state import SimulationState
 from ..core.constants import LOCATION, SITE_ID
-
-from ..grid2d.structures import SITE_POSITION
 
 from ..discrete.state_constants import DISCRETE_OCCUPANCY
 import numpy as np
@@ -53,10 +50,8 @@ class SquareGridArtist():
             return self._draw_image_3D(state, **kwargs)
 
     def _draw_image_2D(self, state: SimulationState, **kwargs):
-        print("WHAT")
         label = kwargs.get('label', None)
         cell_size = kwargs.get('cell_size', 20)
-        print(self.legend)
 
         legend = self.get_legend(state)
         state_size = int(self._struct.bounds[0])
@@ -72,8 +67,8 @@ class SquareGridArtist():
             loc = site[LOCATION]
             cell_state = state.get_site_state(site[SITE_ID])
 
-            p_x_start = int((loc[0] - VEC_OFFSET - SITE_POSITION) * cell_size)
-            p_y_start = int((loc[1] - VEC_OFFSET - SITE_POSITION) * cell_size)
+            p_x_start = int((loc[0]) * cell_size)
+            p_y_start = int((state_size - 1 - loc[1]) * cell_size)
             for p_x in range(p_x_start, p_x_start + cell_size):
                 for p_y in range(p_y_start, p_y_start + cell_size):
                     pixels[p_x, p_y] = legend[cell_state[DISCRETE_OCCUPANCY]]
@@ -120,7 +115,7 @@ class SquareGridArtist():
             phase_data = np.zeros(shape)
             for site in self._struct.sites():
                 loc = site[LOCATION]
-                if not shell_only or (loc[1] == SITE_POSITION - VEC_OFFSET or loc[0] == (size - SITE_POSITION - VEC_OFFSET) or loc[2] == (size - magic_offset)):
+                if not shell_only or (loc[1] == SITE_POSITION or loc[0] == (size - SITE_POSITION) or loc[2] == (size - magic_offset)):
                     if state.get_site_state(site[SITE_ID])[DISCRETE_OCCUPANCY] == phase:
                         shifted_loc = tuple(int(i - SITE_POSITION) for i in loc)
                         phase_data[shifted_loc] = 1
@@ -181,24 +176,17 @@ class DiscreteSquareGridArtist(SquareGridArtist):
         self.legend = legend
         self._struct = struct
 
-    def set_legend(self, new_leg):
-        self.legend = new_leg
-
     def get_color_by_cell_state(self, cell_state):
         phase_name = cell_state[DISCRETE_OCCUPANCY]
         return self.get_legend()[phase_name]
 
     def get_legend(self, state):
-        print("YOOO")
-
         if self.legend is None:
             analyzer = DiscreteStepAnalyzer()
             phases = analyzer.phases_present(state)
-            print(phases)
             return DiscreteSquareGridArtist.build_legend_from_phase_list(phases)
         else:
             return self.legend
 
     def _draw_image(self, state: SimulationState, **kwargs):
-        self.legend = self.get_legend(state)
         return super()._draw_image(state, **kwargs)
