@@ -1,5 +1,4 @@
 from pylattica.core.analyzer import StateAnalyzer
-from pylattica.core.constants import SITE_CLASS
 from pylattica.core.periodic_state import PeriodicState
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 from pylattica.core.periodic_structure import PeriodicStructure
@@ -44,7 +43,8 @@ def test_setup_random_sites(square_grid_2D_4x4: PeriodicStructure, grid_setup: D
         num_sites_desired = num_sites,
         background_spec='A',
         nuc_species = ['B', 'C'],
-        buffer=1)
+        buffer=1
+    )
 
     analyzer = StateAnalyzer(square_grid_2D_4x4)
 
