@@ -1,4 +1,4 @@
-# Contributing to pylatca
+# Contributing to pylattica
 
 We love your input! We want to make contributing to as easy and
 transparent as possible, whether it's:
@@ -11,10 +11,10 @@ transparent as possible, whether it's:
 
 ## Reporting bugs, getting help, and discussion
 
-pylatca is still in development, so at the moment we
+pylattica is still in development, so at the moment we
 do not have a dedicated help forum. For the time being, please
 submit questions and bugs to the
-[GitHub issues page](https://github.com/mcgalcode/pylatca/issues).
+[GitHub issues page](https://github.com/mcgalcode/pylattica/issues).
 
 If you are making a bug report, incorporate as many elements of the
 following as possible to ensure a timely response and avoid the

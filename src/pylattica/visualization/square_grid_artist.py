@@ -147,7 +147,7 @@ class BasicGridArtist():
 import typing
 import numpy as np
 
-from pylatca.core import COLORS
+from pylattica.core import COLORS
 
 class DiscreteSquareGridArtist(BasicGridArtist):
 

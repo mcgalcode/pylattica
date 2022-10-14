@@ -1,8 +1,7 @@
-from pylatca.discrete.state_constants import DISCRETE_OCCUPANCY, VACANT
+from ..discrete.state_constants import DISCRETE_OCCUPANCY, VACANT
 from ..core.simulation_state import SimulationState
 from ..core.periodic_structure import PeriodicStructure
-
-from pylatca.core.simulation_state import SimulationState
+from ..core.simulation_state import SimulationState
 
 import numpy as np
 

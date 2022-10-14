@@ -10,7 +10,7 @@ with open(module_dir / "README.md") as f:
     long_desc = f.read()
 
 setup(
-    name="pylatca",
+    name="pylattica",
     description="A library for implementing lattice automata",
     use_scm_version={"version_scheme": "python-simplified-semver"},
     setup_requires=["setuptools_scm"],
