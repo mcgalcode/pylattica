@@ -57,7 +57,7 @@ def float_loc(loc: Iterable[Number]) -> Tuple[float]:
     Tuple[float]
         The same location represented as a tuple of floats
     """    
-    return tuple([float(coord) for coord in loc])
+    return tuple([round(float(coord), 3) for coord in loc])
 
 class PeriodicStructure():
     """
@@ -112,7 +112,7 @@ class PeriodicStructure():
             The periodized point
         """        
         float_coords = float_loc(location)
-        return get_periodic_point(self.bounds, float_coords)
+        return float_loc(get_periodic_point(self.bounds, float_coords))
 
     def add_site(self, site_class: str, location: Tuple[float]) -> int:
         """Adds a new site to the structure.
@@ -139,12 +139,9 @@ class PeriodicStructure():
             SITE_CLASS: site_class,
             LOCATION: periodized_coords,
             SITE_ID: new_site_id,
-            "state": {}
         }
 
-        self._location_lookup[periodized_coords] = {
-            "id": new_site_id
-        }
+        self._location_lookup[periodized_coords] = new_site_id
         return new_site_id
 
     def site_at(self, location: Tuple[float]) -> int:
@@ -161,9 +158,9 @@ class PeriodicStructure():
             The ID of the new site.
         """        
         periodized_coords = self.periodized_coords(location)
-        record = self._location_lookup.get(periodized_coords)
-        if record is not None:
-            return self.get_site(record[SITE_ID])
+        site_id = self._location_lookup.get(periodized_coords)
+        if site_id is not None:
+            return self.get_site(site_id)
         else:
             return None
 

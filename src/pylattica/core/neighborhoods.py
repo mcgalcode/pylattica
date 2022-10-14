@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 from .distance_map import EuclideanDistanceMap
 from .periodic_structure import PeriodicStructure
+from .constants import SITE_ID, SITE_CLASS, LOCATION
 
 def distance(x0: np.ndarray, x1: np.ndarray, dimensions: np.ndarray) -> float:
     """Returns the distance between two points under periodic boundary
@@ -118,10 +119,10 @@ class DistanceNeighborhoodBuilder():
         all_sites = struct.sites()
         for curr_site in tqdm(all_sites):
             for other_site in struct.sites():
-                if curr_site['id'] != other_site['id']:
+                if curr_site[SITE_ID] != other_site[SITE_ID]:
                     dist = distance(np.array(other_site['location']), np.array(curr_site['location']), dimensions)
                     if dist < self.cutoff:
-                        graph.add_edge(curr_site["id"], other_site["id"])
+                        graph.add_edge(curr_site[SITE_ID], other_site[SITE_ID])
 
         return NeighborGraph(graph)
 
@@ -181,22 +182,22 @@ class StructureNeighborhoodBuilder():
         graph = nx.Graph()
 
         for site in struct.sites():
-            graph.add_node(site["id"])
+            graph.add_node(site[SITE_ID])
 
         all_sites = struct.sites()
         print("Constructing neighborhood graph")
         for i in tqdm(range(len(all_sites))):
             site = all_sites[i]
-            site_class = site["site_class"]
-            location = site["location"]
+            site_class = site[SITE_CLASS]
+            location = site[LOCATION]
             site_class_neighbors = self._spec[site_class]
             edges = []
             for neighbor_vec in site_class_neighbors:
                 loc = [s + n for s, n in zip(location, neighbor_vec)]
                 # loc = np.array(location) + np.array(neighbor_vec)
                 nb_site = struct.site_at(loc)
-                if nb_site['id'] != site['id']:
-                    edges.append((nb_site["id"], site["id"], self.distances.get_dist(neighbor_vec)))
+                if nb_site[SITE_ID] != site[SITE_ID]:
+                    edges.append((nb_site[SITE_ID], site[SITE_ID], self.distances.get_dist(neighbor_vec)))
             graph.add_weighted_edges_from(edges)
 
         return NeighborGraph(graph)

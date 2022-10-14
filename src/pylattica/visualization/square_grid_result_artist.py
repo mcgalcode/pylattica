@@ -1,7 +1,8 @@
 import os
+
+from .helpers import color_map
 from ..discrete.discrete_state_result_analyzer import DiscreteResultAnalyzer
 
-from ..core import COLORS
 import time
 import typing
 import multiprocessing as mp
@@ -10,15 +11,6 @@ from PIL import Image
 
 
 _dsr_globals = {}
-
-def color_map(phases):
-    color_map: typing.Dict[str, typing.Tuple[int, int, int]] = {}
-    c_idx: int = 0
-    for p in phases:
-        color_map[p] = COLORS[c_idx]
-        c_idx += 1
-
-    return color_map
 
 class DiscreteSquareGridResultArtist():
     """A class that stores the result of running a simulation. Keeps track of all

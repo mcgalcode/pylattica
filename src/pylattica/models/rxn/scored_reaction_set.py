@@ -1,3 +1,4 @@
+from typing import Dict
 from pymatgen.core.composition import Composition
 from pymatgen.ext.matproj import MPRester
 
@@ -10,17 +11,14 @@ def get_phase_vols(phases):
     volumes = {}
 
     with MPRester() as mpr:
-        res = mpr.query(criteria={
-            "pretty_formula": {
-                "$in": phases,
-            },
-            "e_above_hull": {
-                "$lt": 0.1
-            },
-        }, properties=["structure", "full_formula", "task_id"])
+        res = mpr.summary.search(
+            formula = phases,
+            energy_above_hull = (None, 0.1),
+            fields=["structure", "composition", "task_id"]
+        )
         for item in res:
-            struct = item["structure"]
-            comp = Composition(item["full_formula"])
+            struct = item.structure
+            comp = item.composition
             volumes[comp.reduced_formula] = struct.volume / comp.get_reduced_composition_and_factor()[1]
 
     return volumes
@@ -40,9 +38,10 @@ class ScoredReactionSet():
     def from_dict(cls, rxn_set_dict):
         return cls(
             [ScoredReaction.from_dict(r) for r in rxn_set_dict["reactions"]],
+            volumes = rxn_set_dict.get('volumes'),
         )
 
-    def __init__(self, reactions: list[ScoredReaction], skip_vols: bool = False):
+    def __init__(self, reactions: list[ScoredReaction], skip_vols: bool = False, volumes: Dict[str, float] = None):
         """Initializes a SolidReactionSet object. Requires a list of possible reactions
         and the elements which should be considered available in the atmosphere of the
         simulation.
@@ -67,7 +66,9 @@ class ScoredReactionSet():
             elif existing is None:
                 self.add_rxn(self_rxn)
 
-        if not skip_vols:
+        if volumes is not None:
+            self.volumes = volumes
+        elif not skip_vols:
             self.volumes = get_phase_vols(self.phases)
 
     def rescore(self, scorer):
@@ -135,6 +136,7 @@ class ScoredReactionSet():
     def as_dict(self):
         return {
             "reactions": [r.as_dict() for r in self.reactions],
+            "volumes": self.volumes,
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
         }

@@ -24,4 +24,6 @@ class DiscreteStepAnalyzer():
         return len(np.unique(step.state)) - 1
 
     def phases_present(self, state: SimulationState):
+        print("YOLO")
+        print(set([site_state[DISCRETE_OCCUPANCY] for site_state in state.all_site_states()]))
         return list(set([site_state[DISCRETE_OCCUPANCY] for site_state in state.all_site_states()]))

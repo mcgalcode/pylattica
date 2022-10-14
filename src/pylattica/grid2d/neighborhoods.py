@@ -1,4 +1,4 @@
-from ..core.coordinate_utils import get_points_in_box
+from ..core.coordinate_utils import get_points_in_cube
 from ..core.neighborhoods import StructureNeighborhoodBuilder
 from .structures import SimpleSquare2DStructureBuilder
 
@@ -17,7 +17,7 @@ class VonNeumannNbHood2DSpec(StructureNeighborhoodBuilder):
 class MooreNbHoodSpec(StructureNeighborhoodBuilder):
 
     def __init__(self, size = 1, dim = 2):
-        points = get_points_in_box(-size, size + 1, dim)
+        points = get_points_in_cube(-size, size + 1, dim)
         super().__init__({
             SimpleSquare2DStructureBuilder.SITE_CLASS: points
         })

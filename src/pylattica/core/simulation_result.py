@@ -36,7 +36,7 @@ class SimulationResult():
         self._steps: list[SimulationState] = [starting_state]
         self._diffs: list[dict] = []
 
-    def add_step(self, updates: Dict[int: Dict]) -> None:
+    def add_step(self, updates: Dict[int, Dict]) -> None:
         """Takes a set of updates as a dictionary mapping site IDs
         to the new values for various state parameters. For instance, if at the
         new step, my_state_attribute at site 23 changed to 12, updates would look

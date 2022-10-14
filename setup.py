@@ -20,7 +20,7 @@ setup(
     license="modified BSD",
     packages=find_packages("src"),
     package_dir={"": "src"},
-    package_data={"jobflow": ["py.typed"]},
+    package_data={"pylattica": ["py.typed"]},
     zip_safe=False,
     include_package_data=True,
     install_requires=[
@@ -28,7 +28,7 @@ setup(
         'matplotlib >= 3.5.1',
         'scipy >= 1.8.0',
         'tqdm >= 4.63.0',
-        'reaction-network @ git+https://git@github.com/GENESIS-EFRC/reaction-network@dev#egg=reaction-network',
+        'reaction-network',
         'pymatgen >= 2022.3.29',
         'plotly >= 5.6.0',
         'jobflow >= 0.1.8',

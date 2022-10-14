@@ -3,8 +3,7 @@ from .coordinate_utils import get_points_in_box
 from .periodic_structure import PeriodicStructure
 import numpy as np
 
-_vec_offset = np.array([0.1, 0.1, 0.1])
-
+VEC_OFFSET = 0.01
 
 class Lattice():
     """A lattice is specified by it's lattice vectors. This class can then
@@ -78,9 +77,11 @@ class Lattice():
             The structure resulting from the lattice tiling and motif filling specified.
         """        
         bounds = np.array([l * n for n, l in zip(num_cells, self._vec_lengths)])
-        struct = PeriodicStructure(bounds, num_cells, self.dim)
+        struct = PeriodicStructure(bounds, self.dim)
 
-        vec_coeffs = get_points_in_box([0, 0, 0], num_cells)
+        vec_coeffs = get_points_in_box([0 for _ in range(self.dim)], num_cells)
+
+        _vec_offset = np.array([VEC_OFFSET for _ in range(self.dim)])
 
         
         for vec_coeff_set in vec_coeffs:

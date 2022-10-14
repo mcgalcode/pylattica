@@ -1,7 +1,15 @@
 from PIL import Image, ImageDraw
 
+from pylattica.core.lattice import VEC_OFFSET
+from pylattica.visualization.helpers import color_map
+
 from ..core.periodic_structure import PeriodicStructure
 from ..core.simulation_state import SimulationState
+from ..core.constants import LOCATION, SITE_ID
+
+from ..grid2d.structures import SITE_POSITION
+
+from ..discrete.state_constants import DISCRETE_OCCUPANCY
 import numpy as np
 import io
 
@@ -10,7 +18,7 @@ from ..discrete.discrete_step_analyzer import DiscreteStepAnalyzer
 
 from ..discrete.phase_set import PhaseSet
 
-class BasicGridArtist():
+class SquareGridArtist():
 
     def __init__(self, phase_set: PhaseSet, struct: PeriodicStructure, legend = None):
         self.phase_set = phase_set
@@ -45,11 +53,13 @@ class BasicGridArtist():
             return self._draw_image_3D(state, **kwargs)
 
     def _draw_image_2D(self, state: SimulationState, **kwargs):
+        print("WHAT")
         label = kwargs.get('label', None)
         cell_size = kwargs.get('cell_size', 20)
+        print(self.legend)
 
         legend = self.get_legend(state)
-        state_size = self._struct.size
+        state_size = int(self._struct.bounds[0])
         width = state_size + 6
 
         legend_border_width = 5
@@ -59,14 +69,14 @@ class BasicGridArtist():
         draw = ImageDraw.Draw(img)
 
         for site in self._struct.sites():
-            loc = site['location']
-            cell_state = state.get_site_state(site['id'])
+            loc = site[LOCATION]
+            cell_state = state.get_site_state(site[SITE_ID])
 
-            p_x_start = int((loc[0] - 0.5) * cell_size)
-            p_y_start = int((loc[1] - 0.5) * cell_size)
+            p_x_start = int((loc[0] - VEC_OFFSET - SITE_POSITION) * cell_size)
+            p_y_start = int((loc[1] - VEC_OFFSET - SITE_POSITION) * cell_size)
             for p_x in range(p_x_start, p_x_start + cell_size):
                 for p_y in range(p_y_start, p_y_start + cell_size):
-                    pixels[p_x, p_y] = self.get_color_by_cell_state(cell_state)
+                    pixels[p_x, p_y] = legend[cell_state[DISCRETE_OCCUPANCY]]
 
         count = 0
         legend_hoffset = int(cell_size / 4)
@@ -105,16 +115,14 @@ class BasicGridArtist():
         if include_phases is None:
             include_phases = self.phase_set.phases
 
-        magic_offset = 0.5
-
         dataset['empty'] = np.ones(shape)
         for phase in include_phases:
             phase_data = np.zeros(shape)
             for site in self._struct.sites():
-                loc = site['location']
-                if not shell_only or (loc[1] == magic_offset or loc[0] == (size - magic_offset) or loc[2] == (size - magic_offset)):
-                    if state.get_site_state(site['id'])['_disc_occupancy'] == phase:
-                        shifted_loc = tuple(int(i - magic_offset) for i in loc)
+                loc = site[LOCATION]
+                if not shell_only or (loc[1] == SITE_POSITION - VEC_OFFSET or loc[0] == (size - SITE_POSITION - VEC_OFFSET) or loc[2] == (size - magic_offset)):
+                    if state.get_site_state(site[SITE_ID])[DISCRETE_OCCUPANCY] == phase:
+                        shifted_loc = tuple(int(i - SITE_POSITION) for i in loc)
                         phase_data[shifted_loc] = 1
                         dataset['empty'][shifted_loc] = 0
             if phase_data.sum() > 0:
@@ -149,7 +157,7 @@ import numpy as np
 
 from pylattica.core import COLORS
 
-class DiscreteSquareGridArtist(BasicGridArtist):
+class DiscreteSquareGridArtist(SquareGridArtist):
 
     @classmethod
     def build_legend_from_phase_list(cls, phases):
@@ -177,13 +185,16 @@ class DiscreteSquareGridArtist(BasicGridArtist):
         self.legend = new_leg
 
     def get_color_by_cell_state(self, cell_state):
-        phase_name = cell_state['_disc_occupancy']
-        return self.legend[phase_name]
+        phase_name = cell_state[DISCRETE_OCCUPANCY]
+        return self.get_legend()[phase_name]
 
     def get_legend(self, state):
+        print("YOOO")
+
         if self.legend is None:
             analyzer = DiscreteStepAnalyzer()
             phases = analyzer.phases_present(state)
+            print(phases)
             return DiscreteSquareGridArtist.build_legend_from_phase_list(phases)
         else:
             return self.legend
