@@ -18,6 +18,25 @@ from typing import Iterable
 #     highest_val = size - 1
 #     return tuple([get_in_range(highest_val, c) for c in coords])
 
+def get_points_in_cube(lb: int, ub: int, dim: int) -> list[list[int]]:
+    """Returns the list of all integer separated points in a box of dimension
+    dim with lower bound and upper bounds in each direction specified by
+    lb and ub. 
+
+    Parameters
+    ----------
+    lb : int
+        the lower bound of the cube
+    ub : int
+        the uppwer bound of the cube
+
+    Returns
+    -------
+    list[list[int]]
+        A list of points in the cube
+    """    
+    return get_points_in_box([lb for _ in range(dim)], [ub for _ in range(dim)])
+
 def get_points_in_box(lbs: Iterable[int], ubs: Iterable[int]) -> list[list[int]]:
     """Using a Cartesian product, returns a list of integer points in some region.
     
