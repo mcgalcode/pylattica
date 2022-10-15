@@ -8,4 +8,5 @@ from .periodic_state import PeriodicState
 from .lattice import Lattice
 from .analyzer import StateAnalyzer
 
-from .neighborhoods import NeighborGraph, StochasticNeighborhoodGraph, StructureNeighborhoodBuilder
+from .neighborhoods import Neighborhood, StochasticNeighborhood
+from .neighborhood_builders import DistanceNeighborhoodBuilder, StructureNeighborhoodBuilder

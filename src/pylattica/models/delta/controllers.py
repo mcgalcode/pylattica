@@ -1,6 +1,6 @@
 import random
 
-from ...core import BasicController, NeighborGraph, SimulationState
+from ...core import BasicController, Neighborhood, SimulationState
 from ...core.periodic_structure import PeriodicStructure
 from ...core.simulation_state import GENERAL
 from ...core.utils import printif
@@ -9,7 +9,7 @@ from .consts import TET_SITE, InitialAtomCount, InitialLiCount, Mn2Count, Occupa
 
 class ChargeController(BasicController):
 
-    def __init__(self, nb_graph: NeighborGraph, structure: PeriodicStructure, verbose = False):
+    def __init__(self, nb_graph: Neighborhood, structure: PeriodicStructure, verbose = False):
         self.nbs = nb_graph
         self.struct = structure
         self.verbose = verbose
@@ -110,7 +110,7 @@ class ChargeController(BasicController):
 
 class DischargeController(BasicController):
 
-    def __init__(self, nb_graph: NeighborGraph, structure: PeriodicStructure, verbose = False):
+    def __init__(self, nb_graph: Neighborhood, structure: PeriodicStructure, verbose = False):
         self.nbs = nb_graph
         self.struct = structure
         self.verbose = verbose

@@ -1,7 +1,7 @@
 import typing
 import numpy as np
 
-from ..core.neighborhoods import NeighborGraph
+from ..core.neighborhoods import Neighborhood
 from ..core.periodic_structure import PeriodicStructure
 from ..core.simulation_state import SimulationState
 from ..core.constants import SITE_ID, LOCATION
@@ -10,7 +10,7 @@ from ..discrete.state_constants import DISCRETE_OCCUPANCY, VACANT
 import random
 
 from ..core.distance_map import distance
-from .neighborhoods import MooreNbHoodSpec
+from .neighborhoods import MooreNbHoodBuilder
 
 class DiscreteGridSetup():
     """A class for setting up states. Provides helper methods for creating starting
@@ -144,8 +144,8 @@ class DiscreteGridSetup():
             _type_: _description_
         """
         state = self.setup_solid_phase(structure, background_spec)
-        nb_spec: MooreNbHoodSpec = MooreNbHoodSpec(buffer, dim = structure.dim)
-        nb_graph: NeighborGraph = nb_spec.get(structure)
+        nb_spec: MooreNbHoodBuilder = MooreNbHoodBuilder(buffer, dim = structure.dim)
+        nb_graph: Neighborhood = nb_spec.get(structure)
         all_sites = structure.sites()
 
         if nuc_ratios is None:

@@ -3,10 +3,10 @@ import numpy as np
 import typing
 from rxn_network.reactions.reaction_set import ReactionSet
 
-from ...core.neighborhoods import StructureNeighborhoodBuilder
+from ...core.neighborhood_builders import StructureNeighborhoodBuilder
 from ...core.periodic_structure import PeriodicStructure
 from ...core.simulation_state import SimulationState
-from ...square_grid.neighborhoods import MooreNbHoodSpec
+from ...square_grid.neighborhoods import MooreNbHoodBuilder
 from ...core.basic_controller import BasicController
 
 from .scorers import ArrheniusScore, score_rxns
@@ -20,12 +20,12 @@ from .scored_reaction import ScoredReaction
 class ReactionController(BasicController):
 
     @classmethod
-    def get_neighborhood_from_size(cls, size, nb_spec = MooreNbHoodSpec):
+    def get_neighborhood_from_size(cls, size, nb_spec = MooreNbHoodBuilder):
         neighborhood_radius = cls.nb_radius_from_size(size)
         return nb_spec(neighborhood_radius)
 
     @classmethod
-    def get_neighborhood_from_structure(cls, structure: PeriodicStructure, nb_spec = MooreNbHoodSpec):
+    def get_neighborhood_from_structure(cls, structure: PeriodicStructure, nb_spec = MooreNbHoodBuilder):
         return cls.get_neighborhood_from_size(structure.size, nb_spec=nb_spec)
 
     @classmethod
@@ -71,7 +71,7 @@ class ReactionController(BasicController):
         self.temperature = temperature
         self.phase_set: SolidPhaseSet = phase_set
         self.nb_graph = nb_spec.get(structure)
-        self.nucleation_nb_graph = MooreNbHoodSpec(1).get(structure)
+        self.nucleation_nb_graph = MooreNbHoodBuilder(1).get(structure)
         self.inertia = inertia
         self.free_species = free_species
         # proxy for partial pressures

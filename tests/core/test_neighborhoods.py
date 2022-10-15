@@ -1,1 +1,1 @@
-from pylattica.core import NeighborGraph
+from pylattica.core import Neighborhood

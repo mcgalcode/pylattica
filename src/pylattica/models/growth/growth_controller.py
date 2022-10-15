@@ -1,16 +1,21 @@
 from ...core import BasicController
-from ...core.neighborhoods import StructureNeighborhoodBuilder
+from ...core.neighborhood_builders import NeighborhoodBuilder
 from ...core.periodic_structure import PeriodicStructure
 from ...core.simulation_state import SimulationState
 from ...discrete import PhaseSet
-from ...square_grid.neighborhoods import MooreNbHoodSpec
+from ...discrete.state_constants import DISCRETE_OCCUPANCY
+from ...square_grid.neighborhoods import MooreNbHoodBuilder
 from ..rxn.solid_phase_set import SolidPhaseSet
 
 class GrowthController(BasicController):
 
-    def __init__(self, phase_set: PhaseSet, periodic_struct: PeriodicStructure, neighborhood_spec: StructureNeighborhoodBuilder = None) -> None:
+    def __init__(self, phase_set: PhaseSet, 
+                       periodic_struct: PeriodicStructure,
+                       neighborhood_spec: NeighborhoodBuilder = None,
+                       background_phase: str = SolidPhaseSet.FREE_SPACE
+    ) -> None:
+        self.background_phase = background_phase
         self.phase_set: PhaseSet = phase_set
-        self.struct = periodic_struct
 
         if neighborhood_spec is None:
             self.neighborhood_spec = MooreNbHoodSpec(1, dim = periodic_struct.dim)
@@ -21,12 +26,11 @@ class GrowthController(BasicController):
 
     def get_state_update(self, site_id: int, prev_state: SimulationState):
         curr_state = prev_state.get_site_state(site_id)
-        curr_phase = prev_state.get_site_state(site_id)['_disc_occupancy']
-        if curr_state['_disc_occupancy'] == SolidPhaseSet.FREE_SPACE:
+        if curr_state[DISCRETE_OCCUPANCY] == self.background_phase:
             counts = {}
             for nb_id in self.nb_graph.neighbors_of(site_id):
-                nb_phase = prev_state.get_site_state(nb_id)['_disc_occupancy']
-                if nb_phase != SolidPhaseSet.FREE_SPACE:
+                nb_phase = prev_state.get_site_state(nb_id)[DISCRETE_OCCUPANCY]
+                if nb_phase != self.background_phase:
                     if nb_phase not in counts:
                         counts[nb_phase] = 1
                     else:
@@ -40,7 +44,7 @@ class GrowthController(BasicController):
                         max_spec = phase
                         max_count = count
 
-                return { '_disc_occupancy': max_spec }
+                return { DISCRETE_OCCUPANCY: max_spec }
 
             else:
                 return {}

@@ -1,8 +1,10 @@
+from pylattica.core import periodic_structure
+from pylattica.core.neighborhoods import Neighborhood, StochasticNeighborhood
 from ..core.coordinate_utils import get_points_in_cube
-from ..core.neighborhoods import StructureNeighborhoodBuilder
+from ..core.neighborhood_builders import NeighborhoodBuilder, StructureNeighborhoodBuilder, DistanceNeighborhoodBuilder
 from .structure_builders import SimpleSquare2DStructureBuilder
 
-class VonNeumannNbHood2DSpec(StructureNeighborhoodBuilder):
+class VonNeumannNbHood2DBuilder(StructureNeighborhoodBuilder):
 
     def __init__(self):
         super().__init__({
@@ -14,7 +16,19 @@ class VonNeumannNbHood2DSpec(StructureNeighborhoodBuilder):
             ]
         })
 
-class MooreNbHoodSpec(StructureNeighborhoodBuilder):
+class VonNeumannNbHood2DBuilder(StructureNeighborhoodBuilder):
+
+    def __init__(self):
+        super().__init__({
+            SimpleSquare2DStructureBuilder.SITE_CLASS: [
+                (1,0),
+                (0, 1),
+                (-1, 0),
+                (0, -1)
+            ]
+        })
+
+class MooreNbHoodBuilder(StructureNeighborhoodBuilder):
 
     def __init__(self, size = 1, dim = 2):
         points = get_points_in_cube(-size, size + 1, dim)
@@ -22,62 +36,82 @@ class MooreNbHoodSpec(StructureNeighborhoodBuilder):
             SimpleSquare2DStructureBuilder.SITE_CLASS: points
         })
 
-# class CircularNeighborhood(Neighborhood):
+class CircularNeighborhoodBuilder(DistanceNeighborhoodBuilder):
 
-#     def __init__(self, radius, distance_map_class = EuclideanDistanceMap):
-#         super().__init__(radius, distance_map_class)
+    pass
 
-#     def _screen_square(self, square):
-#         dimension = len(square.shape)
-#         sl = square.shape[0]
-#         for coords in itertools.product(range(sl), repeat=dimension):
-#             if self.distances[dimension].distances[coords] > self.radius:
-#                 square[coords] = self.PADDING_VAL
-#         return square
+class PseudoHexagonalNeighborhoodBuilder(NeighborhoodBuilder):
 
-#     def _screen_cube(self, cube):
-#         dimension = len(cube.shape)
-#         sl = cube.shape[0]
-#         for coords in itertools.product(range(sl), repeat=dimension):
-#             if self.distances[dimension].distances[coords] > self.radius:
-#                 cube[coords] = self.PADDING_VAL
-#         return cube
+    def __init__(self):
+        motif_one = {
+            SimpleSquare2DStructureBuilder.SITE_CLASS: [
+                (1,0),
+                (0, 1),
+                (-1, 0),
+                (0, -1),
+                (1, 1),
+                (-1, -1)
+            ]
+        }
 
-# class PseudoHexagonal(Neighborhood):
+        motif_two = {
+            SimpleSquare2DStructureBuilder.SITE_CLASS: [
+                (1,0),
+                (0, 1),
+                (-1, 0),
+                (0, -1),
+                (-1, 1),
+                (1, -1)
+            ]
+        }
+        self.builder_one = StructureNeighborhoodBuilder(motif_one)
+        self.builder_two = StructureNeighborhoodBuilder(motif_two)
 
-#     def __init__(self, _ = EuclideanDistanceMap):
-#         super().__init__(1)
+    def get(self, struct: periodic_structure) -> Neighborhood:
+        return StochasticNeighborhood([
+            self.builder_one.get(struct),
+            self.builder_two.get(struct)
+        ])
 
-#     def _screen_square(self, square):
-#         sl = square.shape[0]
-#         to_exclude = randint(0,1)
-#         highest_idx = sl - 1
-#         if to_exclude == 0:
-#             square[0][0] = self.PADDING_VAL
-#             square[highest_idx][highest_idx] = self.PADDING_VAL
-#         else:
-#             square[highest_idx][0] = self.PADDING_VAL
-#             square[0][highest_idx] = self.PADDING_VAL
+class PseudoPentagonalNeighborhoodBuilder(Neighborhood):
 
-#         return square
+    def __init__(self):
+        motifs = [{
+            SimpleSquare2DStructureBuilder.SITE_CLASS: [
+                (-1, 0),
+                (1, 0),
+                (-1, -1),
+                (0, -1),
+                (1, -1)
+            ]
+        }, {
+            SimpleSquare2DStructureBuilder.SITE_CLASS: [
+                (-1, 1),
+                (0, 1),
+                (1, 1),
+                (-1, 0),
+                (1, 0),
+            ]
+        }, {
+            SimpleSquare2DStructureBuilder.SITE_CLASS: [
+                (0, 1),
+                (1, 1),
+                (1, 0),
+                (0, -1),
+                (1, -1)
+            ]
+        }, {
+            SimpleSquare2DStructureBuilder.SITE_CLASS: [
+                (-1, 1),
+                (0, 1),
+                (-1, 0),
+                (-1, -1),
+                (0, -1),
+            ]
+        }]
+        self.builders = [StructureNeighborhoodBuilder(m) for m in motifs]
 
-# class PseudoPentagonal(Neighborhood):
-
-#     def __init__(self, _ = EuclideanDistanceMap):
-#         super().__init__(1)
-
-#     def _screen_square(self, square):
-#         sl = square.shape[0]
-#         to_exclude = randint(0,3)
-#         for i in range(sl):
-#             for j in range(sl):
-#                 if to_exclude == 0 and i == 0:
-#                     square[i][j] = self.PADDING_VAL
-#                 if to_exclude == 1 and i == 2:
-#                     square[i][j] = self.PADDING_VAL
-#                 if to_exclude == 2 and j == 2:
-#                     square[i][j] = self.PADDING_VAL
-#                 if to_exclude == 3 and j == 0:
-#                     square[i][j] = self.PADDING_VAL
-
-#         return square
+    def get(self, struct: periodic_structure) -> Neighborhood:
+        return StochasticNeighborhood([
+            b.get(struct) for b in self.builders
+        ])

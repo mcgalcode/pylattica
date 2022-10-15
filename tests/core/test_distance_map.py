@@ -1,4 +1,3 @@
-import math
 from pylattica.core.distance_map import EuclideanDistanceMap
 
 def test_distance_map_basics():
