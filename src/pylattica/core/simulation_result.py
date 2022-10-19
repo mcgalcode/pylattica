@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 from monty.serialization import dumpfn, loadfn
 
 from .simulation_state import SimulationState
@@ -62,6 +62,17 @@ class SimulationResult():
         return len(self._diffs) + 1
 
     @property
+    def steps(self) -> List[SimulationState]:
+        """Returns a list of all the steps from this simulation.
+
+        Returns
+        -------
+        List[SimulationState]
+            The list of steps
+        """        
+        return self._steps
+
+    @property
     def last_step(self) -> SimulationState:
         """The last step of the simulation.
 
@@ -70,11 +81,14 @@ class SimulationResult():
         SimulationState
             The last step of the simulation
         """        
-        return self.get_step(-1)
+        return self.get_step(len(self))
 
     @property
     def first_step(self):
-        return self.get_step(0)
+        return self.get_step(1)
+
+    def __len__(self):
+        return len(self._steps)
 
     def get_step(self, step_no) -> SimulationState:
         """Retrieves the step at the provided number.

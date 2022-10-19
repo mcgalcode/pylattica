@@ -23,7 +23,16 @@ class DiscreteResultAnalyzer():
             curr_phases = analyzer.phases_present(step)
             phases = phases + curr_phases
 
-        return phases
+        return list(set(phases))
+
+    def _get_steps_to_plot(self):
+        num_points = 10
+        if len(self._result) > num_points:
+            step_size = round(len(self._result) / num_points)
+            step_idxs = list(range(1, len(self._result), step_size))
+        else:
+            step_idxs = list(range(1, len(self._result)))
+        return step_idxs, [self._result.get_step(step_idx) for step_idx in step_idxs]
 
     def plot_phase_fractions(self, min_prevalence=0.01) -> None:
         """In a Jupyter Notebook environment, plots the phase prevalence traces for the simulation.
@@ -35,15 +44,16 @@ class DiscreteResultAnalyzer():
         fig = go.Figure()
         fig.update_layout(width=800, height=800)
         fig.update_yaxes(range=[-0.05,1.05], title="Volume Fraction")
-        fig.update_xaxes(range=[0, len(self.steps) - 1], title="Simulation Step")
 
-        analyzer = DiscreteStepAnalyzer(self.phase_set)
+        analyzer = DiscreteStepAnalyzer()
         traces = []
+
+        step_idxs, steps = self._get_steps_to_plot()
+        fig.update_xaxes(range=[0, step_idxs[-1]], title="Simulation Step")
+
         for phase in self.all_phases():
-            if phase != self.phase_set.FREE_SPACE:
-                xs = np.arange(len(self.steps))
-                ys = [analyzer.cell_fraction(step, phase) for step in self.steps]
-                traces.append((xs, ys, phase))
+            ys = [analyzer.cell_fraction(step, phase) for step in steps]
+            traces.append((step_idxs, ys, phase))
 
         filtered_traces = [t for t in traces if max(t[1]) > min_prevalence]
 
@@ -53,11 +63,10 @@ class DiscreteResultAnalyzer():
         fig.show()
 
     def final_phase_fractions(self):
-        analyzer = DiscreteStepAnalyzer(self.phase_set)
+        analyzer = DiscreteStepAnalyzer()
         fracs = {}
         for phase in self.all_phases():
-            if phase != self.phase_set.FREE_SPACE:
-                fracs[phase] = analyzer.cell_fraction(self.steps[-1], phase)
+            fracs[phase] = analyzer.cell_fraction(self._result.last_step, phase)
 
         return fracs
 
@@ -66,8 +75,8 @@ class DiscreteResultAnalyzer():
             print(f'{phase}: {frac}')
 
     def phase_fraction_at(self, step, phase):
-        analyzer = DiscreteStepAnalyzer(self.phase_set)
-        return analyzer.cell_fraction(self.steps[step - 1], phase)
+        analyzer = DiscreteStepAnalyzer()
+        return analyzer.cell_fraction(self._result.get_step(step), phase)
 
     def plot_phase_counts(self):
         """In a jupyter notebook environment, plots the number of phases at each

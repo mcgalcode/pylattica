@@ -91,6 +91,7 @@ class PeriodicStructure():
         self.bounds = bounds
         self.dim = len(bounds)
         self._sites = {}
+        self.site_ids = []
         self._location_lookup = {}
         self._offset_vector = np.array([VEC_OFFSET for _ in range(self.dim)])
 
@@ -149,6 +150,7 @@ class PeriodicStructure():
         }
 
         self._location_lookup[offset_periodized_coords] = new_site_id
+        self.site_ids.append(new_site_id)
         return new_site_id
 
     def site_at(self, location: Tuple[float]) -> Dict:

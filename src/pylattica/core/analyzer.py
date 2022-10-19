@@ -40,7 +40,11 @@ class StateAnalyzer():
         if state_criteria is None:
             state_criteria = []
         
-        sites = self._structure.sites(site_class)
+        if self._structure is not None:
+            sites = self._structure.sites(site_class)
+            sites = [state.get_site_state(site[SITE_ID]) for site in sites]
+        else:
+            sites = state.all_site_states()
 
         matching_sites = []
         for site in sites:

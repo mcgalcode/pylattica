@@ -1,5 +1,7 @@
 import typing
 import numpy as np
+from pylattica.core.periodic_state import PeriodicState
+from pylattica.square_grid.structure_builders import SimpleSquare2DStructureBuilder, SimpleSquare3DStructureBuilder
 
 from ..core.neighborhoods import Neighborhood
 from ..core.periodic_structure import PeriodicStructure
@@ -17,13 +19,17 @@ class DiscreteGridSetup():
     states in specific shapes
     """
 
-    def __init__(self, phase_set: PhaseSet):
+    def __init__(self, phase_set: PhaseSet, dim: int = 2):
         """Initializes a laboratory object by providing a reaction set that is used to
         specify cell states
 
         Args:
             rxn_set (ScoredReactionSet):
         """
+        if dim == 2:
+            self._builder = SimpleSquare2DStructureBuilder()
+        elif dim == 3:
+            self._builder = SimpleSquare3DStructureBuilder()
         self.phase_set: PhaseSet = phase_set
 
 
@@ -39,7 +45,7 @@ class DiscreteGridSetup():
         state = self._build_blank_state(structure, phase_name)
         return state
 
-    def setup_interface(self, structure: PeriodicStructure, p1: str, p2: str) -> SimulationState:
+    def setup_interface(self, size: int, p1: str, p2: str) -> PeriodicState:
         """Generates a starting state that is divided into two phases. One phase
         occupies the left half of the state, and one phase occupies the right half of the state
 
@@ -51,6 +57,7 @@ class DiscreteGridSetup():
         Returns:
             SimulationState:
         """
+        structure = self._builder.build(size=size)
         state: SimulationState = self._build_blank_state(structure)
         half: int = int(structure.bounds[0] / 2)
         for site in structure.sites():
@@ -58,9 +65,9 @@ class DiscreteGridSetup():
                 state.set_site_state(site[SITE_ID], { DISCRETE_OCCUPANCY: p1 })
             else:
                 state.set_site_state(site[SITE_ID], { DISCRETE_OCCUPANCY: p2 })
-        return state
+        return PeriodicState(state, structure)
 
-    def setup_particle(self, structure: PeriodicStructure, radius: int, bulk_phase: str, particle_phase: str) -> SimulationState:
+    def setup_particle(self, size: int, radius: int, bulk_phase: str, particle_phase: str) -> PeriodicState:
         """Generates a starting state with a bulk phase surrounding a particle in the
         center of the state.
 
@@ -73,12 +80,13 @@ class DiscreteGridSetup():
         Returns:
             SimulationState:
         """
+        structure = self._builder.build(size=size)
         state: SimulationState = self.setup_solid_phase(structure, bulk_phase)
         center: typing.Tuple[int, int] = tuple([structure.bounds[0] / 2 for _ in range(structure.dim)])
         state: SimulationState = self.add_particle_to_state(structure, state, center, radius, particle_phase)
-        return state
+        return PeriodicState(state, structure)
 
-    def setup_random_particles(self, structure: PeriodicStructure, radius: int, num_particles: int, bulk_phase: str, particle_phases: str) -> SimulationState:
+    def setup_random_particles(self, size: int, radius: int, num_particles: int, bulk_phase: str, particle_phases: str) -> PeriodicState:
         """Generates a starting state with a one phase in the background and num_particles particles distributed
         onto it randomly
 
@@ -92,13 +100,14 @@ class DiscreteGridSetup():
         Returns:
             SimulationState:
         """
+        structure = self._builder.build(size)
         state: SimulationState = self.setup_solid_phase(structure, bulk_phase)
         for _ in range(num_particles):
             rand_coords = tuple([np.random.choice(int(structure.bounds[0])) for _ in range(structure.dim)])
             phase: str = random.choice(particle_phases)
             state: np.array = self.add_particle_to_state(structure, state, rand_coords, radius, phase)
 
-        return state
+        return PeriodicState(state, structure)
 
     def add_particle_to_state(self, structure: PeriodicStructure, state: SimulationState, center: tuple, radius: int, particle_phase: str) -> np.array:
         for site in structure.sites():
@@ -106,27 +115,29 @@ class DiscreteGridSetup():
                 state.set_site_state(site[SITE_ID], {DISCRETE_OCCUPANCY: particle_phase})
         return state
 
-    def setup_coords(self, structure: PeriodicStructure, background_state: str, coordinates: dict):
+    def setup_coords(self, size: int, background_state: str, coordinates: dict):
+        structure = self._builder.build(size)
         state: np.array = self.setup_solid_phase(structure, background_state)
         for phase, coord_list in coordinates.items():
             for coords in coord_list:
                 site_id = structure.site_at(coords)[SITE_ID]
                 state.set_site_state(site_id, { DISCRETE_OCCUPANCY: phase })
-        return state
+        return PeriodicState(state, structure)
 
-    def setup_noise(self, structure: PeriodicStructure, phases: typing.List[str]):
+    def setup_noise(self, size: int, phases: typing.List[str]) -> PeriodicState:
+        structure = self._builder.build(size)
         state: SimulationState = self._build_blank_state(structure)
         for site in structure.sites():
             state.set_site_state(site[SITE_ID], { DISCRETE_OCCUPANCY: random.choice(phases) })
-        return state
+        return PeriodicState(state, structure)
 
     def setup_random_sites(self,
-                           structure: PeriodicStructure,
+                           size: int,
                            num_sites_desired: int,
                            background_spec: str,
                            nuc_species: typing.List[str],
                            nuc_ratios: typing.List[float] = None,
-                           buffer: int = 2):
+                           buffer: int = 2) -> PeriodicState:
         """_summary_
 
         Args:
@@ -143,6 +154,7 @@ class DiscreteGridSetup():
         Returns:
             _type_: _description_
         """
+        structure = self._builder.build(size)
         state = self.setup_solid_phase(structure, background_spec)
         nb_spec: MooreNbHoodBuilder = MooreNbHoodBuilder(buffer, dim = structure.dim)
         nb_graph: Neighborhood = nb_spec.get(structure)
@@ -179,4 +191,4 @@ class DiscreteGridSetup():
 
             total_attempts += 1
 
-        return state
+        return PeriodicState(state, structure)

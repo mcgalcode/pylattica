@@ -3,22 +3,21 @@ from ...core.neighborhood_builders import NeighborhoodBuilder
 from ...core.periodic_structure import PeriodicStructure
 from ...core.simulation_state import SimulationState
 from ...discrete import PhaseSet
-from ...discrete.state_constants import DISCRETE_OCCUPANCY
+from ...discrete.state_constants import DISCRETE_OCCUPANCY, VACANT
 from ...square_grid.neighborhoods import MooreNbHoodBuilder
-from ..rxn.solid_phase_set import SolidPhaseSet
 
 class GrowthController(BasicController):
 
     def __init__(self, phase_set: PhaseSet, 
                        periodic_struct: PeriodicStructure,
-                       neighborhood_spec: NeighborhoodBuilder = None,
-                       background_phase: str = SolidPhaseSet.FREE_SPACE
+                       background_phase: str = VACANT,
+                       neighborhood_spec: NeighborhoodBuilder = None
     ) -> None:
         self.background_phase = background_phase
         self.phase_set: PhaseSet = phase_set
 
         if neighborhood_spec is None:
-            self.neighborhood_spec = MooreNbHoodSpec(1, dim = periodic_struct.dim)
+            self.neighborhood_spec = MooreNbHoodBuilder(1, dim = periodic_struct.dim)
         else:
             self.neighborhood_spec = neighborhood_spec
 

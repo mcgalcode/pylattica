@@ -1,14 +1,19 @@
+import math
 from PIL import Image, ImageDraw
+from pylattica.square_grid.structure_builders import SimpleSquare2DStructureBuilder, SimpleSquare3DStructureBuilder
 
 from pylattica.visualization.helpers import color_map
 
-from ..core.periodic_structure import PeriodicStructure
 from ..core.simulation_state import SimulationState
 from ..core.constants import LOCATION, SITE_ID
 
 from ..discrete.state_constants import DISCRETE_OCCUPANCY
 import numpy as np
 import io
+
+import typing
+
+from pylattica.core import COLORS
 
 import matplotlib.pyplot as plt
 from ..discrete.discrete_step_analyzer import DiscreteStepAnalyzer
@@ -17,10 +22,8 @@ from ..discrete.phase_set import PhaseSet
 
 class SquareGridArtist():
 
-    def __init__(self, phase_set: PhaseSet, struct: PeriodicStructure, legend = None):
-        self.phase_set = phase_set
+    def __init__(self, legend = None):
         self.legend = legend
-        self._struct = struct
 
     def get_legend(self, state: SimulationState):
         return {}
@@ -28,10 +31,6 @@ class SquareGridArtist():
     def jupyter_show_state(self, state: SimulationState, **kwargs):
         img = self._draw_image(state, **kwargs)
         display(img)
-
-    # def jupyter_show_view(self, view: NeighborhoodView, **kwargs):
-    #     img = self._draw_image(view.view_state, **kwargs)
-    #     display(img)
 
     def get_img_state(self, state: SimulationState, **kwargs):
         return self._draw_image(state, **kwargs)
@@ -43,18 +42,51 @@ class SquareGridArtist():
     def get_img(self, state: SimulationState, **kwargs):
         return self._draw_image(state, **kwargs)
 
-    def _draw_image(self, state: SimulationState, **kwargs):
-        if self._struct.dim == 2:
-            return self._draw_image_2D(state, **kwargs)
-        else:
-            return self._draw_image_3D(state, **kwargs)
+class DiscreteSquareGridArtist(SquareGridArtist):
 
-    def _draw_image_2D(self, state: SimulationState, **kwargs):
+    @classmethod
+    def build_legend_from_phase_list(cls, phases):
+        """Returns a map of phases to colors that can be used to visualize the phases
+
+        Returns:
+            typing.Dict[str, typing.Tuple[int, int ,int]]: A mapping of phase name to RGB
+            color values
+        """
+        display_phases: typing.Dict[str, typing.Tuple[int, int, int]] = {}
+        c_idx: int = 0
+
+        for p in phases:
+            display_phases[p] = COLORS[c_idx % len(COLORS)]
+            c_idx += 1
+
+        return display_phases
+
+    def __init__(self, legend = None):
+        self.legend = legend
+
+    def get_color_by_cell_state(self, cell_state):
+        phase_name = cell_state[DISCRETE_OCCUPANCY]
+        return self.get_legend()[phase_name]
+
+    def get_legend(self, state):
+        if self.legend is None:
+            analyzer = DiscreteStepAnalyzer()
+            phases = analyzer.phases_present(state)
+            return DiscreteSquareGridArtist.build_legend_from_phase_list(phases)
+        else:
+            return self.legend
+
+class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
+
+    def _draw_image(self, state: SimulationState, **kwargs):
         label = kwargs.get('label', None)
         cell_size = kwargs.get('cell_size', 20)
+        
+        size = int(math.sqrt(state.size))
+        struct = SimpleSquare2DStructureBuilder().build(size)
 
         legend = self.get_legend(state)
-        state_size = int(self._struct.bounds[0])
+        state_size = int(struct.bounds[0])
         width = state_size + 6
 
         legend_border_width = 5
@@ -63,7 +95,7 @@ class SquareGridArtist():
         pixels = img.load()
         draw = ImageDraw.Draw(img)
 
-        for site in self._struct.sites():
+        for site in struct.sites():
             loc = site[LOCATION]
             cell_state = state.get_site_state(site[SITE_ID])
 
@@ -98,28 +130,37 @@ class SquareGridArtist():
 
         return img
 
-    def _draw_image_3D(self, state: SimulationState, **kwargs):
+class DiscreteSquareGridArtist3D(DiscreteSquareGridArtist):
+
+    def _draw_image(self, state: SimulationState, **kwargs):
         shell_only = kwargs.get('shell_only', False)
         include_phases = kwargs.get('include_phases', None)
 
+        size = round(state.size ** (1/3))
+        struct = SimpleSquare3DStructureBuilder().build(size)
+
         legend = self.get_legend(state)
-        shape = [self._struct.size for _ in range(self._struct.dim)]
-        size = self._struct.size
+
+        shape = [size for _ in range(struct.dim)]
         dataset = {}
 
         if include_phases is None:
-            include_phases = self.phase_set.phases
+            analyzer = DiscreteStepAnalyzer(struct)
+            include_phases = analyzer.phases_present(state)
 
         dataset['empty'] = np.ones(shape)
         for phase in include_phases:
             phase_data = np.zeros(shape)
-            for site in self._struct.sites():
+            for site in struct.sites():
                 loc = site[LOCATION]
-                if not shell_only or (loc[1] == SITE_POSITION or loc[0] == (size - SITE_POSITION) or loc[2] == (size - magic_offset)):
-                    if state.get_site_state(site[SITE_ID])[DISCRETE_OCCUPANCY] == phase:
-                        shifted_loc = tuple(int(i - SITE_POSITION) for i in loc)
+                if not shell_only or (loc[1] == 0 or loc[0] == size or loc[2] == size):
+                    site_id = site[SITE_ID]
+                    site_state = state.get_site_state(site_id)
+                    if site_state[DISCRETE_OCCUPANCY] == phase:
+                        shifted_loc = tuple(int(i) for i in loc)
                         phase_data[shifted_loc] = 1
                         dataset['empty'][shifted_loc] = 0
+    
             if phase_data.sum() > 0:
                 dataset[phase] = phase_data
 
@@ -142,51 +183,3 @@ class SquareGridArtist():
         buf.seek(0)
         img = Image.open(buf)
         return img
-
-    def draw_step_3D(self, step, legend, shell_only = False, include_phases = None):
-        self._draw_image_3D(step.state, legend, shell_only = shell_only, include_phases = include_phases)
-
-
-import typing
-import numpy as np
-
-from pylattica.core import COLORS
-
-class DiscreteSquareGridArtist(SquareGridArtist):
-
-    @classmethod
-    def build_legend_from_phase_list(cls, phases):
-        """Returns a map of phases to colors that can be used to visualize the phases
-
-        Returns:
-            typing.Dict[str, typing.Tuple[int, int ,int]]: A mapping of phase name to RGB
-            color values
-        """
-        display_phases: typing.Dict[str, typing.Tuple[int, int, int]] = {}
-        c_idx: int = 0
-
-        for p in phases:
-            display_phases[p] = COLORS[c_idx % len(COLORS)]
-            c_idx += 1
-
-        return display_phases
-
-    def __init__(self, phase_set: PhaseSet, struct: PeriodicStructure, legend = None):
-        self.phase_set = phase_set
-        self.legend = legend
-        self._struct = struct
-
-    def get_color_by_cell_state(self, cell_state):
-        phase_name = cell_state[DISCRETE_OCCUPANCY]
-        return self.get_legend()[phase_name]
-
-    def get_legend(self, state):
-        if self.legend is None:
-            analyzer = DiscreteStepAnalyzer()
-            phases = analyzer.phases_present(state)
-            return DiscreteSquareGridArtist.build_legend_from_phase_list(phases)
-        else:
-            return self.legend
-
-    def _draw_image(self, state: SimulationState, **kwargs):
-        return super()._draw_image(state, **kwargs)

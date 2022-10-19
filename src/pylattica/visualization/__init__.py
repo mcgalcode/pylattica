@@ -1,2 +1,2 @@
-from .square_grid_artist import DiscreteSquareGridArtist
+from .square_grid_artist import DiscreteSquareGridArtist2D, DiscreteSquareGridArtist3D
 from .square_grid_result_artist import DiscreteSquareGridResultArtist

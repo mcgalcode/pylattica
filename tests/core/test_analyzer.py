@@ -23,55 +23,55 @@ def test_analyze_get_sites_arb_criteria(square_grid_2D_4x4: PeriodicStructure):
     assert len(sites) == 4
         
 
-def test_analyze_count_equal(grid_setup: DiscreteGridSetup, square_grid_2D_4x4: PeriodicStructure):
-    state = grid_setup.setup_interface(square_grid_2D_4x4, 'A', 'B')
-    analyzer = StateAnalyzer(square_grid_2D_4x4)
+def test_analyze_count_equal(grid_setup: DiscreteGridSetup):
+    periodic_state = grid_setup.setup_interface(4, 'A', 'B')
+    analyzer = StateAnalyzer(periodic_state.structure)
 
-    assert analyzer.get_site_count_where_equal(state, 
+    assert analyzer.get_site_count_where_equal(periodic_state.state, 
         {
             DISCRETE_OCCUPANCY: "A"
         }
     ) == 8
 
-    assert analyzer.get_site_count_where_equal(state, 
+    assert analyzer.get_site_count_where_equal(periodic_state.state, 
         {
             DISCRETE_OCCUPANCY: "B"
         }
     ) == 8
 
-    assert analyzer.get_site_count_where_equal(state, 
+    assert analyzer.get_site_count_where_equal(periodic_state.state, 
         {
             DISCRETE_OCCUPANCY: "C"
         }
     ) == 0
 
-def test_analyze_get_sites_where_equal(grid_setup: DiscreteGridSetup, square_grid_2D_4x4: PeriodicStructure):
-    state = grid_setup.setup_interface(square_grid_2D_4x4, 'A', 'B')
+def test_analyze_get_sites_where_equal(grid_setup: DiscreteGridSetup):
+    periodic_state = grid_setup.setup_interface(4, 'A', 'B')
 
-    analyzer = StateAnalyzer(square_grid_2D_4x4)
+    analyzer = StateAnalyzer(periodic_state.structure)
 
-    a_site_ids = analyzer.get_sites_where_equal(state,
+    a_site_ids = analyzer.get_sites_where_equal(periodic_state.state,
         {
             DISCRETE_OCCUPANCY: "A"
         }
     )
 
     for site_id in a_site_ids:
-        reretrieved_site = state.get_site_state(site_id)
+        reretrieved_site = periodic_state.state.get_site_state(site_id)
         assert reretrieved_site[DISCRETE_OCCUPANCY] == "A"
 
-        a_site_ids = analyzer.get_sites_where_equal(state,
+        a_site_ids = analyzer.get_sites_where_equal(periodic_state.state,
         {
             DISCRETE_OCCUPANCY: "A"
         }
     )
 
-    b_site_ids = analyzer.get_sites_where_equal(state,
+    b_site_ids = analyzer.get_sites_where_equal(periodic_state.state,
         {
             DISCRETE_OCCUPANCY: "B"
         }
     )
 
     for site_id in b_site_ids:
-        reretrieved_site = state.get_site_state(site_id)
+        reretrieved_site = periodic_state.state.get_site_state(site_id)
         assert reretrieved_site[DISCRETE_OCCUPANCY] == "B"

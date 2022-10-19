@@ -1,12 +1,14 @@
 from collections import deque
 import math
+from mimetypes import init
+from random import random, randint
 from typing import List
 
 from .utils import printif
 
 from .basic_controller import BasicController
 from .simulation_result import SimulationResult
-from .simulation_state import SimulationState
+from .simulation_state import GENERAL, SITES, SimulationState
 
 from tqdm import tqdm
 
@@ -111,15 +113,18 @@ class Runner():
                 controller_response = controller.get_state_update(site_id, state)
                 next_sites = []
                 # See if controller is specifying which sites to visit next
-                if len(controller_response) == 2:
+                if type(controller_response) is tuple:
                     state_updates, next_sites = controller_response
+                else:
+                    state_updates = controller_response
 
                 state.batch_update(state_updates)
                 site_queue.extend(next_sites)
                 result.add_step(state_updates)
 
                 if len(site_queue) == 0:
-                    site_queue.append(controller.get_random_site())
+                    site = randint(0, initial_state.size)
+                    site_queue.append(site)
 
         elif self.parallel:
             mp_globals['controller'] = controller
@@ -164,12 +169,14 @@ class Runner():
         site_batches = [site_ids[i:i + chunk_size] for i in range(0, num_sites, chunk_size)]
         for batch in site_batches:
             params.append([batch, updates])
-
         results = pool.starmap(_step_batch_parallel, params)
-
-        all_updates = {}
+        all_updates = {
+            SITES: {},
+            GENERAL: {}
+        }
         for batch_update_res in results:
-            all_updates.update(batch_update_res)
+            all_updates[SITES].update(batch_update_res.get(SITES, {}))
+            all_updates[GENERAL].update(batch_update_res.get(GENERAL, {}))
 
         return all_updates
 
@@ -200,8 +207,11 @@ def _step_batch_parallel(id_batch: List[int], last_updates: dict):
     )
 
 def _step_batch(id_batch: List[int], previous_state: SimulationState, controller: BasicController):
-    batch_updates = {}
+    batch_updates = {
+        SITES: {}
+    }
     for site_id in id_batch:
         state_updates = controller.get_state_update(site_id, previous_state)
-        batch_updates[site_id] = state_updates
+        batch_updates[SITES][site_id] = state_updates
+
     return batch_updates
