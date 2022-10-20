@@ -123,7 +123,7 @@ class Runner():
                 result.add_step(state_updates)
 
                 if len(site_queue) == 0:
-                    site = randint(0, initial_state.size)
+                    site = controller.get_random_site()
                     site_queue.append(site)
 
         elif self.parallel:

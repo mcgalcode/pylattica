@@ -24,6 +24,7 @@ class ReactionController(BasicController):
     @classmethod
     def get_neighborhood_from_size(cls, size, nb_builder = VonNeumannNbHood2DBuilder):
         neighborhood_radius = cls.nb_radius_from_size(size)
+        print(f'Using neighborhood of size {neighborhood_radius}')
         return nb_builder(neighborhood_radius)
 
     @classmethod
@@ -82,7 +83,7 @@ class ReactionController(BasicController):
             self.effective_open_distances[specie] = strength
     
     def get_random_site(self):
-        return random.randint(0,len(self.structure.site_ids))
+        return random.randint(0,len(self.structure.site_ids) - 1)
 
     def instantiate_result(self, starting_state: SimulationState):
         return ReactionResult(starting_state, self.rxn_set, self.phase_set)
