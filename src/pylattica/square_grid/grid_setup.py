@@ -24,7 +24,7 @@ class DiscreteGridSetup():
         specify cell states
 
         Args:
-            rxn_set (ScoredReactionSet):
+            phase_set (PhaseSet):
         """
         if dim == 2:
             self._builder = SimpleSquare2DStructureBuilder()
