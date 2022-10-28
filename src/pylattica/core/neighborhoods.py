@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 import random
 from typing import List
-import networkx as nx
+# import networkx as nx
+import rustworkx as rx
 
 class AbstractNeighborhood(ABC):
 
@@ -15,7 +16,7 @@ class Neighborhood(AbstractNeighborhood):
     in the SimulationState to the IDs of the sites which are it's neighbors.
     """    
 
-    def __init__(self, graph: nx.Graph):
+    def __init__(self, graph: rx.PyGraph):
         """Instantiates a NeighborhoodGraph."""        
         self._graph = graph
 

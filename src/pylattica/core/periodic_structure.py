@@ -2,7 +2,9 @@ from numbers import Number
 from typing import Dict, Iterable, List, Tuple
 import numpy as np
 from .constants import LOCATION, SITE_CLASS, SITE_ID
+from functools import cache
 
+@cache
 def get_pt_in_range(bound: float, pt: float) -> float:
     """Returns the periodic image of a 1D value.
 
@@ -20,6 +22,7 @@ def get_pt_in_range(bound: float, pt: float) -> float:
     """
     return pt % bound
 
+@cache
 def get_periodic_point(bounds: Iterable[Number], pt: Iterable[Number]) -> tuple[Number]:
     """Given a point and a list of upper bounds (assuming zero lower bounds),
     returns the point, unchanged, if it lies inside the two or three
@@ -57,7 +60,7 @@ def float_loc(loc: Iterable[Number]) -> Tuple[float]:
     Tuple[float]
         The same location represented as a tuple of floats
     """
-    return tuple([round(float(coord), OFFSET_PRECISION) for coord in loc])
+    return tuple(loc)
 
 OFFSET_PRECISION = 3
 VEC_OFFSET = 0.001
@@ -88,7 +91,7 @@ class PeriodicStructure():
         bounds : Iterable[Number]
             _description_
         """
-        self.bounds = bounds
+        self.bounds = tuple(bounds)
         self.dim = len(bounds)
         self._sites = {}
         self.site_ids = []
@@ -109,11 +112,11 @@ class PeriodicStructure():
         Tuple[float]
             The periodized point
         """
-        float_coords = float_loc(location)
-        return float_loc(get_periodic_point(self.bounds, float_coords))
+        periodic_point = get_periodic_point(self.bounds, location)
+        return periodic_point
 
     def _coords_with_offset(self, location: Iterable[float]) -> Iterable[float]:
-        return tuple(self._offset_vector + np.array(location))
+        return tuple([s + VEC_OFFSET for s in location])
 
     def _transformed_coords(self, location: Iterable[float]) -> Iterable[float]:
         periodized_coords = self.periodized_coords(location)

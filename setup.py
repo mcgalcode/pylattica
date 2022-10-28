@@ -33,7 +33,7 @@ setup(
         'plotly >= 5.6.0',
         'jobflow >= 0.1.8',
         'monty',
-        'networkx',
+        'rustworkx',
         'pymatgen',
         'tqdm',
         'plotly',

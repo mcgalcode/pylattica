@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List
 import numpy as np
-import networkx as nx
+# import networkx as nx
+import rustworkx as rx
 from tqdm import tqdm
 
 from .coordinate_utils import periodic_distance
@@ -45,16 +46,22 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         NeighborGraph
             The resulting NeighborGraph
         """        
-        graph = nx.Graph()
+        # graph = nx.Graph()
+        graph = rx.PyGraph()
         dimensions = np.array(struct.bounds)
 
         all_sites = struct.sites()
+
+        for site in struct.sites():
+            graph.add_node(site[SITE_ID])
+
+                  
         for curr_site in tqdm(all_sites):
             for other_site in struct.sites():
                 if curr_site[SITE_ID] != other_site[SITE_ID]:
                     dist = periodic_distance(np.array(other_site[LOCATION]), np.array(curr_site[LOCATION]), dimensions)
                     if dist < self.cutoff:
-                        graph.add_edge(curr_site[SITE_ID], other_site[SITE_ID])
+                        graph.add_edge(curr_site[SITE_ID], other_site[SITE_ID], dist)
 
         return Neighborhood(graph)
 
@@ -111,7 +118,8 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
         NeighborGraph
             The resulting NeighborGraph.
         """        
-        graph = nx.Graph()
+        # graph = nx.Graph()
+        graph = rx.PyGraph()
 
         for site in struct.sites():
             graph.add_node(site[SITE_ID])
@@ -125,11 +133,11 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
             site_class_neighbors = self._spec[site_class]
             edges = []
             for neighbor_vec in site_class_neighbors:
-                loc = [s + n for s, n in zip(location, neighbor_vec)]
+                loc = tuple([s + n for s, n in zip(location, neighbor_vec)])
                 nb_site = struct.site_at(loc)
                 if nb_site[SITE_ID] != site[SITE_ID]:
                     edges.append((nb_site[SITE_ID], site[SITE_ID], self.distances.get_dist(neighbor_vec)))
-            graph.add_weighted_edges_from(edges)
+            graph.add_edges_from(edges)
 
         return Neighborhood(graph)
 
