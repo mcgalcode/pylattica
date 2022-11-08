@@ -98,9 +98,6 @@ class DiscreteStepAnalyzer(StateAnalyzer):
         """
         return list(
             set(
-                [
-                    site_state[DISCRETE_OCCUPANCY]
-                    for site_state in state.all_site_states()
-                ]
+                site_state[DISCRETE_OCCUPANCY] for site_state in state.all_site_states()
             )
         )

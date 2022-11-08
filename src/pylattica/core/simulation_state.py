@@ -68,7 +68,7 @@ class SimulationState:
         List[Dict]
             The state dictionaries for every site in this state.
         """
-        return [site_state for site_state in self._state[SITES].values()]
+        return list(self._state[SITES].values())
 
     def get_site_state(self, site_id: int) -> Dict:
         """Returns the state stored for the specified site ID, if any.

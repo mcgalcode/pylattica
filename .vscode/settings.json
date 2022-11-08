@@ -1,8 +1,4 @@
 {
   "python.formatting.provider": "black",
-  "autoDocstring.docstringFormat": "numpy",
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": true,
-    "source.fixAll": true
-  }
+  "autoDocstring.docstringFormat": "numpy"
 }

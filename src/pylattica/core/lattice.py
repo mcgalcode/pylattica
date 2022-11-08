@@ -37,7 +37,7 @@ class Lattice:
         self.dim = len(vecs[0])
         self._vec_lengths = [np.linalg.norm(np.array(vec)) for vec in vecs]
         assert (
-            len(list(set([len(v) for v in vecs]))) == 1
+            len(list(set(len(v) for v in vecs))) == 1
         ), "Lattice instantiated with vectors of unequal dimension"
 
     def build_from(self, num_cells: List[int], site_motif: dict) -> PeriodicStructure:

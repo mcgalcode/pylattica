@@ -135,7 +135,7 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
             site_class_neighbors = self._spec[site_class]
             edges = []
             for neighbor_vec in site_class_neighbors:
-                loc = tuple([s + n for s, n in zip(location, neighbor_vec)])
+                loc = tuple(s + n for s, n in zip(location, neighbor_vec))
                 nb_site = struct.site_at(loc)
                 if nb_site[SITE_ID] != site[SITE_ID]:
                     edges.append(

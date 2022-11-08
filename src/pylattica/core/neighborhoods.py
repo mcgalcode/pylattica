@@ -46,8 +46,8 @@ class Neighborhood(AbstractNeighborhood):
                 (nb_id, self._graph.edges[site_id, nb_id]["weight"]) for nb_id in nbs
             ]
             return weighted_nbs
-        else:
-            return list(nbs)
+        
+        return list(nbs)
 
 
 class StochasticNeighborhood(AbstractNeighborhood):

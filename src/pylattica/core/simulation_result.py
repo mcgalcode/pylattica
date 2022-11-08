@@ -21,7 +21,7 @@ class SimulationResult:
     @classmethod
     def from_dict(cls, res_dict):
         steps = res_dict["steps"]
-        res = cls()
+        res = cls({})
         for step in steps:
             res.add_step(step)
         return res
@@ -88,9 +88,6 @@ class SimulationResult:
     @property
     def first_step(self):
         return self.get_step(1)
-
-    def __len__(self):
-        return len(self._steps)
 
     def get_step(self, step_no) -> SimulationState:
         """Retrieves the step at the provided number.

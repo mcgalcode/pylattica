@@ -1,3 +1,4 @@
+# fmt: off
 from .lattice import SquareGridLattice2D
 from .neighborhoods import (
     MooreNbHoodBuilder,

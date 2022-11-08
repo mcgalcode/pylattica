@@ -48,7 +48,7 @@ def get_periodic_point(bounds: Iterable[Number], pt: Iterable[Number]) -> tuple[
     tuple[Number]
         The transformed point
     """
-    return tuple([get_pt_in_range(b, p) for b, p in zip(bounds, pt)])
+    return tuple(get_pt_in_range(b, p) for b, p in zip(bounds, pt))
 
 
 def float_loc(loc: Iterable[Number]) -> Tuple[float]:
@@ -122,7 +122,7 @@ class PeriodicStructure:
         return periodic_point
 
     def _coords_with_offset(self, location: Iterable[float]) -> Iterable[float]:
-        return tuple([s + VEC_OFFSET for s in location])
+        return tuple(s + VEC_OFFSET for s in location)
 
     def _transformed_coords(self, location: Iterable[float]) -> Iterable[float]:
         periodized_coords = self.periodized_coords(location)
@@ -180,10 +180,11 @@ class PeriodicStructure:
         location = tuple(location)
         _transformed_coords = self._transformed_coords(location)
         site_id = self._location_lookup.get(_transformed_coords)
+        
         if site_id is not None:
             return self.get_site(site_id)
-        else:
-            return None
+        
+        return None
 
     def get_site(self, site_id: int) -> Dict:
         """Returns the site with the specified ID.
@@ -216,5 +217,5 @@ class PeriodicStructure:
         all_sites = list(self._sites.values())
         if site_class is None:
             return all_sites
-        else:
-            return [site for site in all_sites if site[SITE_ID] == site_class]
+
+        return [site for site in all_sites if site[SITE_ID] == site_class]

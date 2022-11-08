@@ -21,19 +21,19 @@ class SquareGridArtist:
     def __init__(self, legend=None):
         self.legend = legend
 
-    def get_legend(self, state: SimulationState):
+    def get_legend(self, _=None):
         return {}
 
     def jupyter_show_state(self, state: SimulationState, **kwargs):
         img = self._draw_image(state, **kwargs)
-        display(img)
+        display(img)  # pylint: disable=undefined-variable
 
     def get_img_state(self, state: SimulationState, **kwargs):
         return self._draw_image(state, **kwargs)
 
     def jupyter_show(self, state: SimulationState, **kwargs):
         img = self.get_img(state, **kwargs)
-        display(img)
+        display(img)  # pylint: disable=undefined-variable
 
     def get_img(self, state: SimulationState, **kwargs):
         return self._draw_image(state, **kwargs)
@@ -64,13 +64,13 @@ class DiscreteSquareGridArtist(SquareGridArtist):
         phase_name = cell_state[DISCRETE_OCCUPANCY]
         return self.get_legend()[phase_name]
 
-    def get_legend(self, state):
+    def get_legend(self, state = None):
         if self.legend is None:
             analyzer = DiscreteStepAnalyzer()
             phases = analyzer.phases_present(state)
             return DiscreteSquareGridArtist.build_legend_from_phase_list(phases)
-        else:
-            return self.legend
+
+        return self.legend
 
 
 class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):

@@ -60,13 +60,6 @@ class Runner:
             Whether or not the simulation should be run asynchrounously. If this is true
             then parallel and workers is ignored., by default False
         """
-
-        """Initializes a simulation Runner.
-
-        Args:
-            parallel (Boolean): Whether or not this simulation should be run in parallel
-            workers (int): The number of workers to use in the parallel version of the simulation
-        """
         self.parallel = parallel
         self.workers = workers
         self.is_async = is_async
@@ -105,7 +98,7 @@ class Runner:
 
         state = initial_state.copy()
 
-        global mp_globals
+        global mp_globals # pylint: disable=global-variable-not-assigned
 
         if self.is_async:
             site_queue = deque()
@@ -117,7 +110,7 @@ class Runner:
                 controller_response = controller.get_state_update(site_id, state)
                 next_sites = []
                 # See if controller is specifying which sites to visit next
-                if type(controller_response) is tuple:
+                if isinstance(controller_response, tuple):
                     state_updates, next_sites = controller_response
                 else:
                     state_updates = controller_response

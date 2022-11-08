@@ -1,7 +1,6 @@
 from ..discrete.state_constants import DISCRETE_OCCUPANCY, VACANT
 from ..core.simulation_state import SimulationState
 from ..core.periodic_structure import PeriodicStructure
-from ..core.simulation_state import SimulationState
 
 import numpy as np
 
@@ -33,10 +32,10 @@ class AtomicStructure(PeriodicStructure):
         lattice_vecs = []
         for idx, b in enumerate(self.bounds):
             vec = []
-            for i in range(idx):
+            for _ in range(idx):
                 vec.append(0)
             vec.append(b)
-            for i in range(idx, len(self.bounds) - 1):
+            for _ in range(idx, len(self.bounds) - 1):
                 vec.append(0)
             lattice_vecs.append(vec)
 
