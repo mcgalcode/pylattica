@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from .simulation_result import SimulationResult
 from .simulation_state import SimulationState
 

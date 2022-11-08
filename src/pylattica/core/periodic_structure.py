@@ -1,8 +1,11 @@
+from functools import cache
 from numbers import Number
 from typing import Dict, Iterable, List, Tuple
+
 import numpy as np
+
 from .constants import LOCATION, SITE_CLASS, SITE_ID
-from functools import cache
+
 
 @cache
 def get_pt_in_range(bound: float, pt: float) -> float:
@@ -169,6 +172,7 @@ class PeriodicStructure():
         int
             A dictionary with keys "site_class", "location", and "id" representing the site.
         """
+        location = tuple(location)
         _transformed_coords = self._transformed_coords(location)
         site_id = self._location_lookup.get(_transformed_coords)
         if site_id is not None:

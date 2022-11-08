@@ -1,6 +1,12 @@
+import pytest
+
 from pylattica.core.periodic_structure import PeriodicStructure
-from pylattica.square_grid.neighborhoods import CircularNeighborhoodBuilder, MooreNbHoodBuilder
+from pylattica.square_grid.neighborhoods import (
+    CircularNeighborhoodBuilder,
+    MooreNbHoodBuilder,
+)
 from pylattica.square_grid.structure_builders import SimpleSquare2DStructureBuilder
+
 
 def test_moore_neighborhood(square_grid_2D_2x2: PeriodicStructure):
     spec = MooreNbHoodBuilder()

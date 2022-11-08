@@ -1,7 +1,9 @@
 from typing import Callable, Dict, List
+
+from .constants import SITE_ID
 from .periodic_structure import PeriodicStructure
 from .simulation_state import SimulationState
-from .constants import SITE_ID
+
 
 class StateAnalyzer():
     """Provides basic functionality for analyzing a SimulationState object.

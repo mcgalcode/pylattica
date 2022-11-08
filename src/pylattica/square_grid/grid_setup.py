@@ -1,18 +1,22 @@
+import random
 import typing
-import numpy as np
-from pylattica.core.periodic_state import PeriodicState
-from pylattica.square_grid.structure_builders import SimpleSquare2DStructureBuilder, SimpleSquare3DStructureBuilder
 
+import numpy as np
+
+from ..core.constants import LOCATION, SITE_ID
+from ..core.distance_map import distance
 from ..core.neighborhoods import Neighborhood
+from ..core.periodic_state import PeriodicState
 from ..core.periodic_structure import PeriodicStructure
 from ..core.simulation_state import SimulationState
-from ..core.constants import SITE_ID, LOCATION
 from ..discrete.phase_set import PhaseSet
-from ..discrete.state_constants import DISCRETE_OCCUPANCY, VACANT
-import random
-
-from ..core.distance_map import distance
+from ..discrete.state_constants import DISCRETE_OCCUPANCY
 from .neighborhoods import MooreNbHoodBuilder
+from .structure_builders import (
+    SimpleSquare2DStructureBuilder,
+    SimpleSquare3DStructureBuilder,
+)
+
 
 class DiscreteGridSetup():
     """A class for setting up states. Provides helper methods for creating starting

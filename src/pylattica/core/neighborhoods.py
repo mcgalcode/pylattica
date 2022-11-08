@@ -1,8 +1,10 @@
-from abc import ABC, abstractmethod
 import random
+from abc import ABC, abstractmethod
 from typing import List
+
 # import networkx as nx
 import rustworkx as rx
+
 
 class AbstractNeighborhood(ABC):
 

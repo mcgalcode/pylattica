@@ -1,7 +1,10 @@
 from typing import List, Tuple
+
+import numpy as np
+
 from .coordinate_utils import get_points_in_box
 from .periodic_structure import PeriodicStructure
-import numpy as np
+
 
 class Lattice():
     """A lattice is specified by it's lattice vectors. This class can then
@@ -19,8 +22,6 @@ class Lattice():
 
     vecs : np.ndarray
         The lattice vectors defining the unit cell of this lattice.
-    dim : int
-        The dimension of this lattice
     """    
 
     def __init__(self, vecs: List[Tuple[float]]):

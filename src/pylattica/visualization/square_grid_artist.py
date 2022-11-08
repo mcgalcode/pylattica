@@ -1,24 +1,21 @@
-import math
-from PIL import Image, ImageDraw
-from pylattica.square_grid.structure_builders import SimpleSquare2DStructureBuilder, SimpleSquare3DStructureBuilder
-
-from pylattica.visualization.helpers import color_map
-
-from ..core.simulation_state import SimulationState
-from ..core.constants import LOCATION, SITE_ID
-
-from ..discrete.state_constants import DISCRETE_OCCUPANCY
-import numpy as np
 import io
-
+import math
 import typing
 
-from pylattica.core import COLORS
-
 import matplotlib.pyplot as plt
-from ..discrete.discrete_step_analyzer import DiscreteStepAnalyzer
+import numpy as np
+from PIL import Image, ImageDraw
 
-from ..discrete.phase_set import PhaseSet
+from ..core import COLORS
+from ..core.constants import LOCATION, SITE_ID
+from ..core.simulation_state import SimulationState
+from ..discrete.discrete_step_analyzer import DiscreteStepAnalyzer
+from ..discrete.state_constants import DISCRETE_OCCUPANCY
+from ..square_grid.structure_builders import (
+    SimpleSquare2DStructureBuilder,
+    SimpleSquare3DStructureBuilder,
+)
+
 
 class SquareGridArtist():
 

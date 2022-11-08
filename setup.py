@@ -1,5 +1,3 @@
-from setuptools import setup, find_packages
-
 from pathlib import Path
 
 from setuptools import find_packages, setup
@@ -34,11 +32,7 @@ setup(
         'jobflow >= 0.1.8',
         'monty',
         'rustworkx',
-        'pymatgen',
-        'tqdm',
-        'plotly',
         'matplotlib',
-        'jobflow',
         'pydantic',
         'maggma',
         'Pillow >= 9.0'

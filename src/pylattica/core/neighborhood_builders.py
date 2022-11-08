@@ -1,15 +1,16 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List
+
 import numpy as np
-# import networkx as nx
 import rustworkx as rx
 from tqdm import tqdm
 
+from .constants import LOCATION, SITE_CLASS, SITE_ID
 from .coordinate_utils import periodic_distance
 from .distance_map import EuclideanDistanceMap
 from .neighborhoods import Neighborhood
 from .periodic_structure import PeriodicStructure
-from .constants import SITE_ID, SITE_CLASS, LOCATION
+
 
 class NeighborhoodBuilder(ABC):
 
@@ -118,14 +119,12 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
         NeighborGraph
             The resulting NeighborGraph.
         """        
-        # graph = nx.Graph()
         graph = rx.PyGraph()
 
         for site in struct.sites():
             graph.add_node(site[SITE_ID])
 
         all_sites = struct.sites()
-        print("Constructing neighborhood graph")
         for i in tqdm(range(len(all_sites))):
             site = all_sites[i]
             site_class = site[SITE_CLASS]

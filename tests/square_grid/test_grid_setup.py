@@ -1,9 +1,9 @@
-from pylattica.core.analyzer import StateAnalyzer
-from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
-import pytest
 from typing import Dict
 
+from pylattica.core.analyzer import StateAnalyzer
+from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 from pylattica.square_grid import DiscreteGridSetup
+
 
 def test_can_instantiate_grid_setup(simple_phase_set):
     setup = DiscreteGridSetup(simple_phase_set)
@@ -59,3 +59,5 @@ def test_setup_specific_coords(grid_setup: DiscreteGridSetup):
    
     assert periodic_state.state_at((0,0))[DISCRETE_OCCUPANCY] == 'B'
     assert periodic_state.state_at((1,1))[DISCRETE_OCCUPANCY] == 'C'
+    assert periodic_state.state_at((1,0))[DISCRETE_OCCUPANCY] == 'A'
+

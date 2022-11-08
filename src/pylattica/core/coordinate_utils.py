@@ -1,6 +1,8 @@
 import itertools
 from typing import Iterable
+
 import numpy as np
+
 
 def get_points_in_cube(lb: int, ub: int, dim: int) -> list[list[int]]:
     """Returns the list of all integer separated points in a box of dimension

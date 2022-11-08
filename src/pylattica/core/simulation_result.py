@@ -1,7 +1,9 @@
 from typing import Dict, List
+
 from monty.serialization import dumpfn, loadfn
 
 from .simulation_state import SimulationState
+
 
 class SimulationResult():
     """A class that stores the result of running a simulation.

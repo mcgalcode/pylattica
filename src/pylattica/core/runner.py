@@ -1,18 +1,14 @@
-from collections import deque
 import math
-from mimetypes import init
-from random import random, randint
+import multiprocessing as mp
+from collections import deque
 from typing import List
 
-from .utils import printif
+from tqdm import tqdm
 
 from .basic_controller import BasicController
 from .simulation_result import SimulationResult
 from .simulation_state import GENERAL, SITES, SimulationState
-
-from tqdm import tqdm
-
-import multiprocessing as mp
+from .utils import printif
 
 mp_globals = {}
 
