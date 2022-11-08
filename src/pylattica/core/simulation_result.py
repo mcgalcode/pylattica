@@ -5,7 +5,7 @@ from monty.serialization import dumpfn, loadfn
 from .simulation_state import SimulationState
 
 
-class SimulationResult():
+class SimulationResult:
     """A class that stores the result of running a simulation.
 
     Attributes
@@ -33,7 +33,7 @@ class SimulationResult():
         ----------
         starting_state : SimulationState
             The state with which the simulation started.
-        """        
+        """
         self.initial_state = starting_state
         self._steps: list[SimulationState] = [starting_state]
         self._diffs: list[dict] = []
@@ -54,7 +54,7 @@ class SimulationResult():
         ----------
         updates : dict
             The changes associated with a new simulation step.
-        """        
+        """
         new_step = self._steps[-1].copy()
         new_step.batch_update(updates)
         self._steps.append(new_step)
@@ -71,7 +71,7 @@ class SimulationResult():
         -------
         List[SimulationState]
             The list of steps
-        """        
+        """
         return self._steps
 
     @property
@@ -82,7 +82,7 @@ class SimulationResult():
         -------
         SimulationState
             The last step of the simulation
-        """        
+        """
         return self.get_step(len(self))
 
     @property
@@ -104,7 +104,7 @@ class SimulationResult():
         -------
         SimulationState
             The simulation state at the requested step.
-        """        
+        """
         return self._steps[step_no - 1]
 
     def as_dict(self):
@@ -121,5 +121,5 @@ class SimulationResult():
         ----------
         fpath : str
             The filepath at which to save the serialized simulation result.
-        """        
+        """
         dumpfn(self, fpath)

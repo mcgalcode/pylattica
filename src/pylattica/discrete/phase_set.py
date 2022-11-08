@@ -1,7 +1,7 @@
 from typing import List
 
 
-class PhaseSet():
+class PhaseSet:
     """A lightweight class for representing the set of phases possible in
     a simulation with discrete state occupancies.
     """

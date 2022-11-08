@@ -6,7 +6,7 @@ from .coordinate_utils import get_points_in_box
 from .periodic_structure import PeriodicStructure
 
 
-class Lattice():
+class Lattice:
     """A lattice is specified by it's lattice vectors. This class can then
     be used to create PeriodicStructure instances which are filled with
     a given motif. The usage flow for this class is:
@@ -22,7 +22,7 @@ class Lattice():
 
     vecs : np.ndarray
         The lattice vectors defining the unit cell of this lattice.
-    """    
+    """
 
     def __init__(self, vecs: List[Tuple[float]]):
         """Initializes a lattice with the vectors defining its unit cell provided.
@@ -32,11 +32,13 @@ class Lattice():
         ----------
         vecs : List[Tuple[float]]
             A list of vectors establishing the unit cell of the lattice. Any dimension is accepted.
-        """        
+        """
         self.vecs = np.array(vecs)
         self.dim = len(vecs[0])
         self._vec_lengths = [np.linalg.norm(np.array(vec)) for vec in vecs]
-        assert len(list(set([len(v) for v in vecs]))) == 1, "Lattice instantiated with vectors of unequal dimension"
+        assert (
+            len(list(set([len(v) for v in vecs]))) == 1
+        ), "Lattice instantiated with vectors of unequal dimension"
 
     def build_from(self, num_cells: List[int], site_motif: dict) -> PeriodicStructure:
         """Builds a PeriodicStructure lattice by repeating the unit cell num_cell times
@@ -74,12 +76,12 @@ class Lattice():
         -------
         PeriodicStructure
             The structure resulting from the lattice tiling and motif filling specified.
-        """        
+        """
         bounds = np.array([l * n for n, l in zip(num_cells, self._vec_lengths)])
         struct = self.initialize_structure(bounds)
 
         vec_coeffs = get_points_in_box([0 for _ in range(self.dim)], num_cells)
-        
+
         for vec_coeff_set in vec_coeffs:
             point = np.zeros(self.dim)
 
@@ -106,5 +108,5 @@ class Lattice():
         -------
         PeriodicStructure
             The correctly sized (but as of yet unfilled) resulting structure.
-        """        
+        """
         return PeriodicStructure(bounds)

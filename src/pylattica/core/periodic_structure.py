@@ -25,6 +25,7 @@ def get_pt_in_range(bound: float, pt: float) -> float:
     """
     return pt % bound
 
+
 @cache
 def get_periodic_point(bounds: Iterable[Number], pt: Iterable[Number]) -> tuple[Number]:
     """Given a point and a list of upper bounds (assuming zero lower bounds),
@@ -49,6 +50,7 @@ def get_periodic_point(bounds: Iterable[Number], pt: Iterable[Number]) -> tuple[
     """
     return tuple([get_pt_in_range(b, p) for b, p in zip(bounds, pt)])
 
+
 def float_loc(loc: Iterable[Number]) -> Tuple[float]:
     """Returns a new list with each element of an iterable of numerics
     cast as a float.
@@ -65,10 +67,12 @@ def float_loc(loc: Iterable[Number]) -> Tuple[float]:
     """
     return tuple(loc)
 
+
 OFFSET_PRECISION = 3
 VEC_OFFSET = 0.001
 
-class PeriodicStructure():
+
+class PeriodicStructure:
     """
     Represents a periodic arrangement of sites. Assigns
     identifiers to sites so that they can be referred to elsewhere.
@@ -100,7 +104,6 @@ class PeriodicStructure():
         self.site_ids = []
         self._location_lookup = {}
         self._offset_vector = np.array([VEC_OFFSET for _ in range(self.dim)])
-
 
     def periodized_coords(self, location: Tuple[float]) -> Tuple[float]:
         """Returns the periodic image of a point within this structure.
@@ -144,10 +147,12 @@ class PeriodicStructure():
         """
         new_site_id = len(self._sites)
         periodized_coords = self.periodized_coords(location)
-        
+
         offset_periodized_coords = self._coords_with_offset(periodized_coords)
 
-        assert self._location_lookup.get(offset_periodized_coords, None) is None, "That site is already occupied"
+        assert (
+            self._location_lookup.get(offset_periodized_coords, None) is None
+        ), "That site is already occupied"
 
         self._sites[new_site_id] = {
             SITE_CLASS: site_class,

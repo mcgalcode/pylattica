@@ -6,11 +6,11 @@ from .periodic_structure import PeriodicStructure
 from .simulation_state import SimulationState
 
 
-class PeriodicState():
+class PeriodicState:
     """A wrapper class for binding a SimulationState to the structure
     with which it belongs. Simplifies actions like retrieving simulation
     state based on site location.
-    """    
+    """
 
     def __init__(self, state: SimulationState, structure: PeriodicStructure):
         """Instantiates a PeriodicState with the provided state and structure.
@@ -21,10 +21,10 @@ class PeriodicState():
             The SimulationState
         structure : PeriodicStructure
             The structure to which the SimulationState site IDs refer.
-        """        
+        """
         self.state = state
         self.structure = structure
-    
+
     def state_at(self, location: Tuple[float]) -> Dict:
         """Retrieves the state of the site at the requested location.
 
@@ -37,7 +37,7 @@ class PeriodicState():
         -------
         Dict
             The state of the found site.
-        """        
+        """
         site = self.structure.site_at(location)
 
         if site is None:

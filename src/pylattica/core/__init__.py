@@ -9,4 +9,7 @@ from .lattice import Lattice
 from .analyzer import StateAnalyzer
 
 from .neighborhoods import Neighborhood, StochasticNeighborhood
-from .neighborhood_builders import DistanceNeighborhoodBuilder, StructureNeighborhoodBuilder
+from .neighborhood_builders import (
+    DistanceNeighborhoodBuilder,
+    StructureNeighborhoodBuilder,
+)

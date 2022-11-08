@@ -6,18 +6,20 @@ from ...discrete import PhaseSet
 from ...discrete.state_constants import DISCRETE_OCCUPANCY, VACANT
 from ...square_grid.neighborhoods import MooreNbHoodBuilder
 
-class GrowthController(BasicController):
 
-    def __init__(self, phase_set: PhaseSet, 
-                       periodic_struct: PeriodicStructure,
-                       background_phase: str = VACANT,
-                       neighborhood_spec: NeighborhoodBuilder = None
+class GrowthController(BasicController):
+    def __init__(
+        self,
+        phase_set: PhaseSet,
+        periodic_struct: PeriodicStructure,
+        background_phase: str = VACANT,
+        neighborhood_spec: NeighborhoodBuilder = None,
     ) -> None:
         self.background_phase = background_phase
         self.phase_set: PhaseSet = phase_set
 
         if neighborhood_spec is None:
-            self.neighborhood_spec = MooreNbHoodBuilder(1, dim = periodic_struct.dim)
+            self.neighborhood_spec = MooreNbHoodBuilder(1, dim=periodic_struct.dim)
         else:
             self.neighborhood_spec = neighborhood_spec
 
@@ -43,10 +45,9 @@ class GrowthController(BasicController):
                         max_spec = phase
                         max_count = count
 
-                return { DISCRETE_OCCUPANCY: max_spec }
+                return {DISCRETE_OCCUPANCY: max_spec}
 
             else:
                 return {}
         else:
             return {}
-

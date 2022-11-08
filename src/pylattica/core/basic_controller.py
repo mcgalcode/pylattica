@@ -14,11 +14,11 @@ class BasicController(ABC):
     SimulationState will be passed to this method, along with the ID of
     the site at which the update rule should be applied. It is up to the
     user to decide what updates should be produced using this information.
-    """    
+    """
 
     @abstractmethod
     def get_state_update(self, site_id: int, prev_state: SimulationState):
         pass
 
     def instantiate_result(self, starting_state):
-        return SimulationResult(starting_state = starting_state)
+        return SimulationResult(starting_state=starting_state)

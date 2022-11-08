@@ -2,6 +2,7 @@ import typing
 
 from ..core import COLORS
 
+
 def color_map(phases):
     color_map: typing.Dict[str, typing.Tuple[int, int, int]] = {}
     c_idx: int = 0

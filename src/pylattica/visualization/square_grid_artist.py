@@ -17,9 +17,8 @@ from ..square_grid.structure_builders import (
 )
 
 
-class SquareGridArtist():
-
-    def __init__(self, legend = None):
+class SquareGridArtist:
+    def __init__(self, legend=None):
         self.legend = legend
 
     def get_legend(self, state: SimulationState):
@@ -39,8 +38,8 @@ class SquareGridArtist():
     def get_img(self, state: SimulationState, **kwargs):
         return self._draw_image(state, **kwargs)
 
-class DiscreteSquareGridArtist(SquareGridArtist):
 
+class DiscreteSquareGridArtist(SquareGridArtist):
     @classmethod
     def build_legend_from_phase_list(cls, phases):
         """Returns a map of phases to colors that can be used to visualize the phases
@@ -58,7 +57,7 @@ class DiscreteSquareGridArtist(SquareGridArtist):
 
         return display_phases
 
-    def __init__(self, legend = None):
+    def __init__(self, legend=None):
         self.legend = legend
 
     def get_color_by_cell_state(self, cell_state):
@@ -73,12 +72,12 @@ class DiscreteSquareGridArtist(SquareGridArtist):
         else:
             return self.legend
 
-class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
 
+class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
     def _draw_image(self, state: SimulationState, **kwargs):
-        label = kwargs.get('label', None)
-        cell_size = kwargs.get('cell_size', 20)
-        
+        label = kwargs.get("label", None)
+        cell_size = kwargs.get("cell_size", 20)
+
         size = int(math.sqrt(state.size))
         struct = SimpleSquare2DStructureBuilder().build(size)
 
@@ -88,7 +87,11 @@ class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
 
         legend_border_width = 5
         height = max(state_size, len(legend) + 1)
-        img = Image.new('RGB', (width * cell_size + legend_border_width, height * cell_size), "black") # Create a new black image
+        img = Image.new(
+            "RGB",
+            (width * cell_size + legend_border_width, height * cell_size),
+            "black",
+        )  # Create a new black image
         pixels = img.load()
         draw = ImageDraw.Draw(img)
 
@@ -109,7 +112,7 @@ class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
         for p_y in range(height * cell_size):
             for p_x in range(0, legend_border_width):
                 x = state_size * cell_size + p_x
-                pixels[x, p_y] = (255,255,255)
+                pixels[x, p_y] = (255, 255, 255)
 
         for phase, color in legend.items():
             p_col_start = state_size * cell_size + legend_border_width + legend_hoffset
@@ -118,22 +121,25 @@ class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
                 for p_y in range(p_row_start, p_row_start + cell_size):
                     pixels[p_x, p_y] = color
 
-            legend_label_loc = (int(p_col_start + cell_size + cell_size / 4), int(p_row_start + cell_size / 4))
+            legend_label_loc = (
+                int(p_col_start + cell_size + cell_size / 4),
+                int(p_row_start + cell_size / 4),
+            )
             draw.text(legend_label_loc, phase, (255, 255, 255))
             count += 1
 
         if label is not None:
-            draw.text((5,5),label,(255,255,255))
+            draw.text((5, 5), label, (255, 255, 255))
 
         return img
 
+
 class DiscreteSquareGridArtist3D(DiscreteSquareGridArtist):
-
     def _draw_image(self, state: SimulationState, **kwargs):
-        shell_only = kwargs.get('shell_only', False)
-        include_phases = kwargs.get('include_phases', None)
+        shell_only = kwargs.get("shell_only", False)
+        include_phases = kwargs.get("include_phases", None)
 
-        size = round(state.size ** (1/3))
+        size = round(state.size ** (1 / 3))
         struct = SimpleSquare3DStructureBuilder().build(size)
 
         legend = self.get_legend(state)
@@ -145,7 +151,7 @@ class DiscreteSquareGridArtist3D(DiscreteSquareGridArtist):
             analyzer = DiscreteStepAnalyzer(struct)
             include_phases = analyzer.phases_present(state)
 
-        dataset['empty'] = np.ones(shape)
+        dataset["empty"] = np.ones(shape)
         for phase in include_phases:
             phase_data = np.zeros(shape)
             for site in struct.sites():
@@ -156,23 +162,22 @@ class DiscreteSquareGridArtist3D(DiscreteSquareGridArtist):
                     if site_state[DISCRETE_OCCUPANCY] == phase:
                         shifted_loc = tuple(int(i) for i in loc)
                         phase_data[shifted_loc] = 1
-                        dataset['empty'][shifted_loc] = 0
-    
+                        dataset["empty"][shifted_loc] = 0
+
             if phase_data.sum() > 0:
                 dataset[phase] = phase_data
 
-        ax = plt.figure(figsize=(12,12)).add_subplot(projection='3d')
+        ax = plt.figure(figsize=(12, 12)).add_subplot(projection="3d")
 
         for phase, data in dataset.items():
-            if phase == 'empty':
+            if phase == "empty":
                 colors = [0.8, 0.8, 0.8, 0.2]
-                ax.voxels(data, facecolors=colors, edgecolor='k', linewidth=0)
+                ax.voxels(data, facecolors=colors, edgecolor="k", linewidth=0)
             else:
                 colors = np.array(legend[phase]) / 255
-                ax.voxels(data, facecolors=colors, edgecolor='k', linewidth=0.25)
+                ax.voxels(data, facecolors=colors, edgecolor="k", linewidth=0.25)
 
-
-        plt.axis('off')
+        plt.axis("off")
         fig = ax.get_figure()
         buf = io.BytesIO()
         fig.savefig(buf)

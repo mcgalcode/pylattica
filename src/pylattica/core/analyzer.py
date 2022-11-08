@@ -5,9 +5,8 @@ from .periodic_structure import PeriodicStructure
 from .simulation_state import SimulationState
 
 
-class StateAnalyzer():
-    """Provides basic functionality for analyzing a SimulationState object.
-    """    
+class StateAnalyzer:
+    """Provides basic functionality for analyzing a SimulationState object."""
 
     def __init__(self, structure: PeriodicStructure = None):
         """Ininitializes the StateAnalyzer with the structure provided.
@@ -17,10 +16,15 @@ class StateAnalyzer():
         ----------
         structure : PeriodicStructure
             The structure to use as the source for site class information.
-        """        
+        """
         self._structure = structure
 
-    def get_sites(self, state: SimulationState, site_class: str = None, state_criteria: List[Callable[[Dict], bool]] = None) -> List[int]:
+    def get_sites(
+        self,
+        state: SimulationState,
+        site_class: str = None,
+        state_criteria: List[Callable[[Dict], bool]] = None,
+    ) -> List[int]:
         """Retrieves a list of site states matching the specified criteria.
         Criteria are expressed as functions or lambdas that take a site state dictionary
         and return a boolean indicating whether or not the site satisfies the criteria.
@@ -38,10 +42,10 @@ class StateAnalyzer():
         -------
         List[Dict]
             A list of site IDs satisfying the specified criteria and belonging to the specified site class.
-        """        
+        """
         if state_criteria is None:
             state_criteria = []
-        
+
         if self._structure is not None:
             sites = self._structure.sites(site_class)
             sites = [state.get_site_state(site[SITE_ID]) for site in sites]
@@ -63,7 +67,9 @@ class StateAnalyzer():
 
         return matching_sites
 
-    def get_sites_where_equal(self, state: SimulationState, search_pairs: Dict, site_class: str = None) -> List[int]:
+    def get_sites_where_equal(
+        self, state: SimulationState, search_pairs: Dict, site_class: str = None
+    ) -> List[int]:
         """Returns sites whose state dictionaries contain values matching the
         search_pairs parameters passed here. For instance, if you wanted every site
         with had a state value for property "B" equal to 2, search_pairs would be:
@@ -87,17 +93,22 @@ class StateAnalyzer():
         -------
         List[int]
             A list of site IDs corresponding to the matching sites
-        """        
+        """
 
         def _criteria(site_state: Dict) -> bool:
             for state_key, state_val in search_pairs.items():
                 if site_state.get(state_key) != state_val:
                     return False
             return True
-        
-        return self.get_sites(state, site_class = site_class, state_criteria = [_criteria])
 
-    def get_site_count(self, state: SimulationState, site_class: str = None, state_criteria: List[Callable[[Dict], bool]] = None) -> int:
+        return self.get_sites(state, site_class=site_class, state_criteria=[_criteria])
+
+    def get_site_count(
+        self,
+        state: SimulationState,
+        site_class: str = None,
+        state_criteria: List[Callable[[Dict], bool]] = None,
+    ) -> int:
         """Counts the sites in the state matching the specified criteria. See documentation
         for get_sites for more details.
 
@@ -114,10 +125,14 @@ class StateAnalyzer():
         -------
         int
             The number of sites matching the specified criteria
-        """        
-        return len(self.get_sites(state, site_class = site_class, state_criteria=state_criteria))
+        """
+        return len(
+            self.get_sites(state, site_class=site_class, state_criteria=state_criteria)
+        )
 
-    def get_site_count_where_equal(self, state: SimulationState, search_pairs: Dict, site_class: str = None) -> int:
+    def get_site_count_where_equal(
+        self, state: SimulationState, search_pairs: Dict, site_class: str = None
+    ) -> int:
         """Counts the sites which have state values equal to those specified by search_pairs.
         See get_sites_equal for a specification of the search_pairs parameter.
 
@@ -134,5 +149,9 @@ class StateAnalyzer():
         -------
         int
             The number of sites matching the criteria
-        """        
-        return len(self.get_sites_where_equal(state, site_class = site_class, search_pairs=search_pairs))
+        """
+        return len(
+            self.get_sites_where_equal(
+                state, site_class=site_class, search_pairs=search_pairs
+            )
+        )

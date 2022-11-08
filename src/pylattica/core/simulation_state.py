@@ -6,13 +6,14 @@ from .constants import SITE_ID
 GENERAL = "GENERAL"
 SITES = "SITES"
 
-class SimulationState():
+
+class SimulationState:
     """Representation of the state during a single step of the simulation. This is essentially
     a dictionary that maps the IDs of sites in the simulation structure to dictionaries with
     arbitrary keys and values that can store whatever state is relevant for the simulation.
 
     Additionally, there is a concept of general simulation state that is separate from the state
-    of any specific site in the simulation.    
+    of any specific site in the simulation.
     """
 
     def as_dict(self):
@@ -104,7 +105,7 @@ class SimulationState():
             values are left unchanged.
         """
         old_state = self.get_general_state()
-        self._state[GENERAL] = { **old_state, **updates }
+        self._state[GENERAL] = {**old_state, **updates}
 
     def set_site_state(self, site_id: int, updates: dict) -> None:
         """Updates the state stored for site with ID site_id.
@@ -118,11 +119,9 @@ class SimulationState():
         """
         old_state = self._state[SITES].get(site_id)
         if old_state is None:
-            old_state = {
-                SITE_ID: site_id
-            }
+            old_state = {SITE_ID: site_id}
 
-        self._state[SITES][site_id] = { **old_state, **updates }
+        self._state[SITES][site_id] = {**old_state, **updates}
 
     def batch_update(self, update_batch: Dict) -> None:
         """Applies a batch update to many sites and the general state. Takes a dictionary
@@ -157,4 +156,3 @@ class SimulationState():
             The copy of this SimulationState
         """
         return SimulationState(self._state)
-

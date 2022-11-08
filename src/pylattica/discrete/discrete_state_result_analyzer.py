@@ -8,7 +8,7 @@ from ..core import SimulationResult, SimulationState
 from .discrete_step_analyzer import DiscreteStepAnalyzer
 
 
-class DiscreteResultAnalyzer():
+class DiscreteResultAnalyzer:
     """A class that stores the result of running a simulation. Keeps track of all
     the steps that the simulation proceeded through, and the set of reactions that
     was used in the simulation.
@@ -49,7 +49,7 @@ class DiscreteResultAnalyzer():
 
         fig = go.Figure()
         fig.update_layout(width=800, height=800)
-        fig.update_yaxes(range=[-0.05,1.05], title="Volume Fraction")
+        fig.update_yaxes(range=[-0.05, 1.05], title="Volume Fraction")
 
         analyzer = DiscreteStepAnalyzer()
         traces = []
@@ -64,7 +64,7 @@ class DiscreteResultAnalyzer():
         filtered_traces = [t for t in traces if max(t[1]) > min_prevalence]
 
         for t in filtered_traces:
-            fig.add_trace(go.Scatter(name=t[2], x=t[0], y=t[1], mode='lines'))
+            fig.add_trace(go.Scatter(name=t[2], x=t[0], y=t[1], mode="lines"))
 
         fig.show()
 
@@ -114,13 +114,13 @@ class DiscreteResultAnalyzer():
         Returns
         -------
         Dict
-            
+
         """
         return {
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
             "steps": [s.as_dict() for s in self.steps],
-            "phase_map": self.phase_set.as_dict()
+            "phase_map": self.phase_set.as_dict(),
         }
 
     def _get_steps_to_plot(self) -> Tuple[List[int], List[SimulationState]]:

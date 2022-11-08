@@ -12,7 +12,8 @@ from .utils import printif
 
 mp_globals = {}
 
-class Runner():
+
+class Runner:
     """Class for orchestrating the running of the simulation. An automaton simulation
     is run by applying the update rule (as implemented by a Controller) to sites
     in the SimulationState repeatedly. There are two primary modes of accomplishing
@@ -41,11 +42,12 @@ class Runner():
         that this mode should be used with the is_async initialization parameter.
     """
 
-    def __init__(self,
-            parallel: bool = False,
-            workers: int = None,
-            is_async: bool = False,
-        ):
+    def __init__(
+        self,
+        parallel: bool = False,
+        workers: int = None,
+        is_async: bool = False,
+    ):
         """Instantiates a simulation Runner.
 
         Parameters
@@ -69,7 +71,13 @@ class Runner():
         self.workers = workers
         self.is_async = is_async
 
-    def run(self, initial_state: SimulationState, controller: BasicController, num_steps: int, verbose = False) -> SimulationResult:
+    def run(
+        self,
+        initial_state: SimulationState,
+        controller: BasicController,
+        num_steps: int,
+        verbose=False,
+    ) -> SimulationResult:
         """Run the simulation for the prescribed number of steps. Recall that one
         asynchronous simulation step involves one application of the update rule,
         and one normal simulation step applies the update rule to every site.
@@ -91,7 +99,7 @@ class Runner():
             The result of the simulation.
         """
         printif(verbose, "Initializing run")
-        printif(verbose, f'Running w/ sim. size {initial_state.size}')
+        printif(verbose, f"Running w/ sim. size {initial_state.size}")
 
         result = controller.instantiate_result(initial_state.copy())
 
@@ -123,24 +131,28 @@ class Runner():
                     site_queue.append(site)
 
         elif self.parallel:
-            mp_globals['controller'] = controller
-            mp_globals['initial_state'] = initial_state
+            mp_globals["controller"] = controller
+            mp_globals["initial_state"] = initial_state
 
             if self.workers is None:
                 PROCESSES = mp.cpu_count()
             else:
                 PROCESSES = self.workers
 
-            printif(verbose, f'Running in parallel using {PROCESSES} workers')
+            printif(verbose, f"Running in parallel using {PROCESSES} workers")
             num_sites = initial_state.size
             chunk_size = math.ceil(num_sites / PROCESSES)
-            print(f'Distributing {num_sites} update tasks to {PROCESSES} workers in chunks of {chunk_size}')
-            with mp.get_context('fork').Pool(PROCESSES) as pool:
+            print(
+                f"Distributing {num_sites} update tasks to {PROCESSES} workers in chunks of {chunk_size}"
+            )
+            with mp.get_context("fork").Pool(PROCESSES) as pool:
                 updates = {}
                 for i in tqdm(range(num_steps)):
-                    updates = self._take_step_parallel(updates, pool, chunk_size = chunk_size)
+                    updates = self._take_step_parallel(
+                        updates, pool, chunk_size=chunk_size
+                    )
                     result.add_step(updates)
-                    printif(verbose, f'Finished step {i}')
+                    printif(verbose, f"Finished step {i}")
         else:
             for _ in tqdm(range(num_steps)):
                 updates = self._take_step(state, controller)
@@ -160,24 +172,24 @@ class Runner():
             SimulationState:
         """
         params = []
-        site_ids = mp_globals['initial_state'].site_ids()
+        site_ids = mp_globals["initial_state"].site_ids()
         num_sites = len(site_ids)
-        site_batches = [site_ids[i:i + chunk_size] for i in range(0, num_sites, chunk_size)]
+        site_batches = [
+            site_ids[i : i + chunk_size] for i in range(0, num_sites, chunk_size)
+        ]
         for batch in site_batches:
             params.append([batch, updates])
         results = pool.starmap(_step_batch_parallel, params)
-        all_updates = {
-            SITES: {},
-            GENERAL: {}
-        }
+        all_updates = {SITES: {}, GENERAL: {}}
         for batch_update_res in results:
             all_updates[SITES].update(batch_update_res.get(SITES, {}))
             all_updates[GENERAL].update(batch_update_res.get(GENERAL, {}))
 
         return all_updates
 
-
-    def _take_step(self, state: SimulationState, controller: BasicController) -> SimulationState:
+    def _take_step(
+        self, state: SimulationState, controller: BasicController
+    ) -> SimulationState:
         site_ids = state.site_ids()
         updates = _step_batch(site_ids, state, controller)
 
@@ -194,18 +206,15 @@ def _step_batch_parallel(id_batch: List[int], last_updates: dict):
     Returns:
         _type_: _description_
     """
-    state = mp_globals['initial_state']
+    state = mp_globals["initial_state"]
     state.batch_update(last_updates)
-    return _step_batch(
-        id_batch,
-        state,
-        mp_globals['controller']
-    )
+    return _step_batch(id_batch, state, mp_globals["controller"])
 
-def _step_batch(id_batch: List[int], previous_state: SimulationState, controller: BasicController):
-    batch_updates = {
-        SITES: {}
-    }
+
+def _step_batch(
+    id_batch: List[int], previous_state: SimulationState, controller: BasicController
+):
+    batch_updates = {SITES: {}}
     for site_id in id_batch:
         state_updates = controller.get_state_update(site_id, previous_state)
         batch_updates[SITES][site_id] = state_updates

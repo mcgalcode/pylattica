@@ -7,10 +7,11 @@ import numpy as np
 
 from pymatgen.core import Structure
 
+
 class AtomicStructure(PeriodicStructure):
     """Represents a periodic structure where sites are occupied by atomic species.
     Supports an interface to pymatgen for extended materials science workflows.
-    """    
+    """
 
     def to_pymatgen(self, state: SimulationState) -> Structure:
         """Generates a pymatgen atomic structure with atomic identities
@@ -19,7 +20,7 @@ class AtomicStructure(PeriodicStructure):
         Parameters
         ----------
         state : SimulationState
-            The state which contains occupancy information (i.e. each site has 
+            The state which contains occupancy information (i.e. each site has
             an "occupancy" attribute with the atomic species at that site.)
 
         Returns
@@ -27,7 +28,7 @@ class AtomicStructure(PeriodicStructure):
         Structure
             The pymatgen structure object representing this periodic structure with
             occupancies taken from the provided SimulationState.
-        """        
+        """
 
         lattice_vecs = []
         for idx, b in enumerate(self.bounds):
@@ -47,7 +48,7 @@ class AtomicStructure(PeriodicStructure):
             occ = site_state[DISCRETE_OCCUPANCY]
             if occ is not VACANT:
                 species.append(occ)
-                frac_loc = [loc / b for loc, b in zip(site['location'], self.bounds)]
+                frac_loc = [loc / b for loc, b in zip(site["location"], self.bounds)]
                 sites.append(np.array(frac_loc))
 
         sites = np.array(sites)

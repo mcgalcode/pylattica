@@ -12,7 +12,8 @@ from PIL import Image
 
 _dsr_globals = {}
 
-class DiscreteSquareGridResultArtist():
+
+class DiscreteSquareGridResultArtist:
     """A class that stores the result of running a simulation. Keeps track of all
     the steps that the simulation proceeded through, and the set of reactions that
     was used in the simulation.
@@ -23,7 +24,7 @@ class DiscreteSquareGridResultArtist():
         self.result = result
 
     @property
-    def phase_color_map(self) -> typing.Dict[str, typing.Tuple[int, int ,int]]:
+    def phase_color_map(self) -> typing.Dict[str, typing.Tuple[int, int, int]]:
         """Returns a map of phases to colors that can be used to visualize the phases
 
         Returns:
@@ -34,19 +35,19 @@ class DiscreteSquareGridResultArtist():
         return color_map(analyzer.all_phases())
 
     def _get_images(self, **kwargs):
-        color_map = kwargs.get('color_map', self.phase_color_map)
+        color_map = kwargs.get("color_map", self.phase_color_map)
         if color_map is None:
             color_map = self.phase_color_map
 
         global _dsr_globals
-        _dsr_globals['artist'] = self._step_artist
+        _dsr_globals["artist"] = self._step_artist
         imgs = []
         PROCESSES = mp.cpu_count()
-        with mp.get_context('fork').Pool(PROCESSES) as pool:
+        with mp.get_context("fork").Pool(PROCESSES) as pool:
             params = []
             for idx, step in enumerate(self.result.steps):
-                label = f'Step {idx}'
-                step_kwargs = { **kwargs, 'label': label }
+                label = f"Step {idx}"
+                step_kwargs = {**kwargs, "label": label}
                 params.append([step, step_kwargs])
 
             for img in pool.starmap(get_img_parallel, params):
@@ -54,7 +55,12 @@ class DiscreteSquareGridResultArtist():
 
         return imgs
 
-    def jupyter_show_step(self, step_no: int, color_map: typing.Dict[str, typing.Tuple[int, int ,int]] = None, cell_size = 20) -> None:
+    def jupyter_show_step(
+        self,
+        step_no: int,
+        color_map: typing.Dict[str, typing.Tuple[int, int, int]] = None,
+        cell_size=20,
+    ) -> None:
         """In a jupyter notebook environment, visualizes the step as a color coded phase grid.
 
         Args:
@@ -65,11 +71,16 @@ class DiscreteSquareGridResultArtist():
         if color_map is None:
             color_map = self.phase_color_map
 
-        label = f'Step {step_no}'
+        label = f"Step {step_no}"
         step = self.result.steps[step_no]
         self._step_artist.jupyter_show(step, label, cell_size=cell_size)
 
-    def jupyter_play(self, color_map: typing.Dict[str, typing.Tuple[int, int ,int]] = None, cell_size: int = 20, wait: int = 1):
+    def jupyter_play(
+        self,
+        color_map: typing.Dict[str, typing.Tuple[int, int, int]] = None,
+        cell_size: int = 20,
+        wait: int = 1,
+    ):
         """In a jupyter notebook environment, plays the simulation visualization back by showing a
         series of images with {wait} seconds between each one.
 
@@ -80,7 +91,7 @@ class DiscreteSquareGridResultArtist():
         """
         from IPython.display import clear_output
 
-        imgs = self._get_images(color_map = color_map, cell_size = cell_size)
+        imgs = self._get_images(color_map=color_map, cell_size=cell_size)
         for img in imgs:
             clear_output()
             display(img)
@@ -95,27 +106,33 @@ class DiscreteSquareGridResultArtist():
             cell_size (int, optional): The side length of a grid cell in pixels. Defaults to 20.
             wait (float, optional): The time in seconds between each frame. Defaults to 0.8.
         """
-        wait = kwargs.get('wait', 0.8)
+        wait = kwargs.get("wait", 0.8)
         imgs = self._get_images(**kwargs)
         for idx, img in enumerate(imgs):
-            img.save(f'tmp_rxn_ca_step_{idx}.png')
+            img.save(f"tmp_rxn_ca_step_{idx}.png")
 
         reloaded_imgs = []
         for idx in range(len(imgs)):
-            fname = f'tmp_rxn_ca_step_{idx}.png'
+            fname = f"tmp_rxn_ca_step_{idx}.png"
             reloaded_imgs.append(Image.open(fname))
             os.remove(fname)
 
-        reloaded_imgs[0].save(filename, save_all=True, append_images=reloaded_imgs[1:], duration=wait * 1000, loop=0)
-
+        reloaded_imgs[0].save(
+            filename,
+            save_all=True,
+            append_images=reloaded_imgs[1:],
+            duration=wait * 1000,
+            loop=0,
+        )
 
     def as_dict(self):
         return {
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
             "steps": [s.as_dict() for s in self.result.steps],
-            "phase_map": self.phase_set.as_dict()
+            "phase_map": self.phase_set.as_dict(),
         }
 
+
 def get_img_parallel(step, step_kwargs):
-    return _dsr_globals['artist'].get_img(step, **step_kwargs)
+    return _dsr_globals["artist"].get_img(step, **step_kwargs)

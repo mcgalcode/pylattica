@@ -13,10 +13,10 @@ from .periodic_structure import PeriodicStructure
 
 
 class NeighborhoodBuilder(ABC):
-
     @abstractmethod
     def get(self, struct: PeriodicStructure) -> Neighborhood:
         pass
+
 
 class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
     """This neighborhood builder creates neighbor connections between
@@ -30,7 +30,7 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         ----------
         cutoff : float
             The maximum distance at which two sites are considered neighbors.
-        """        
+        """
         self.cutoff = cutoff
 
     def get(self, struct: PeriodicStructure) -> Neighborhood:
@@ -46,7 +46,7 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         -------
         NeighborGraph
             The resulting NeighborGraph
-        """        
+        """
         # graph = nx.Graph()
         graph = rx.PyGraph()
         dimensions = np.array(struct.bounds)
@@ -56,11 +56,14 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         for site in struct.sites():
             graph.add_node(site[SITE_ID])
 
-                  
         for curr_site in tqdm(all_sites):
             for other_site in struct.sites():
                 if curr_site[SITE_ID] != other_site[SITE_ID]:
-                    dist = periodic_distance(np.array(other_site[LOCATION]), np.array(curr_site[LOCATION]), dimensions)
+                    dist = periodic_distance(
+                        np.array(other_site[LOCATION]),
+                        np.array(curr_site[LOCATION]),
+                        dimensions,
+                    )
                     if dist < self.cutoff:
                         graph.add_edge(curr_site[SITE_ID], other_site[SITE_ID], dist)
 
@@ -89,7 +92,7 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
             [0, -1],
         ]
     }
-    """    
+    """
 
     def __init__(self, spec: Dict[str, List[List[float]]]):
         """Instantiates the StructureNeighborhoodBuilder by a spec as described in
@@ -99,7 +102,7 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
         ----------
         spec : Dict[str, List[List[float]]]
             See class docstring.
-        """        
+        """
         self._spec = spec
 
         neighbor_locs = [loc for loclist in spec.values() for loc in loclist]
@@ -118,7 +121,7 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
         -------
         NeighborGraph
             The resulting NeighborGraph.
-        """        
+        """
         graph = rx.PyGraph()
 
         for site in struct.sites():
@@ -135,8 +138,13 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
                 loc = tuple([s + n for s, n in zip(location, neighbor_vec)])
                 nb_site = struct.site_at(loc)
                 if nb_site[SITE_ID] != site[SITE_ID]:
-                    edges.append((nb_site[SITE_ID], site[SITE_ID], self.distances.get_dist(neighbor_vec)))
+                    edges.append(
+                        (
+                            nb_site[SITE_ID],
+                            site[SITE_ID],
+                            self.distances.get_dist(neighbor_vec),
+                        )
+                    )
             graph.add_edges_from(edges)
 
         return Neighborhood(graph)
-

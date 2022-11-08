@@ -7,19 +7,19 @@ import rustworkx as rx
 
 
 class AbstractNeighborhood(ABC):
-
     @abstractmethod
     def neighbors_of(self, site_id: int, include_weights: bool = False) -> List[int]:
         pass
+
 
 class Neighborhood(AbstractNeighborhood):
     """A specific Neighborhood. An instance of this classes corresponds
     to a particular SimulationState. It stores a map of each site_id
     in the SimulationState to the IDs of the sites which are it's neighbors.
-    """    
+    """
 
     def __init__(self, graph: rx.PyGraph):
-        """Instantiates a NeighborhoodGraph."""        
+        """Instantiates a NeighborhoodGraph."""
         self._graph = graph
 
     def neighbors_of(self, site_id: int, include_weights: bool = False) -> List[int]:
@@ -39,22 +39,25 @@ class Neighborhood(AbstractNeighborhood):
         -------
         list[int]
             Either a list of site IDs, or a list of tuples of (site ID, connection weight)
-        """        
+        """
         nbs = self._graph.neighbors(site_id)
         if include_weights:
-            weighted_nbs = [(nb_id, self._graph.edges[site_id, nb_id]['weight']) for nb_id in nbs]
+            weighted_nbs = [
+                (nb_id, self._graph.edges[site_id, nb_id]["weight"]) for nb_id in nbs
+            ]
             return weighted_nbs
         else:
             return list(nbs)
 
+
 class StochasticNeighborhood(AbstractNeighborhood):
-    """A NeighborhoodGraph for stochastic neighborhoods.
-    """
-    
+    """A NeighborhoodGraph for stochastic neighborhoods."""
+
     def __init__(self, neighborhoods: List[Neighborhood]):
         self._neighborhoods = neighborhoods
 
     def neighbors_of(self, site_id, include_weights: bool = False) -> List[int]:
         selected_neighborhood = random.choice(self._neighborhoods)
-        return list(selected_neighborhood.neighbors_of(site_id, include_weights = include_weights))
-
+        return list(
+            selected_neighborhood.neighbors_of(site_id, include_weights=include_weights)
+        )

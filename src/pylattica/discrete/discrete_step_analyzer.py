@@ -47,9 +47,7 @@ class DiscreteStepAnalyzer(StateAnalyzer):
         int
             The number of sites occupied by the specified phase.
         """
-        return self.get_site_count_where_equal(state, {
-            DISCRETE_OCCUPANCY: phase_name
-        })
+        return self.get_site_count_where_equal(state, {DISCRETE_OCCUPANCY: phase_name})
 
     def cell_ratio(self, step: SimulationState, p1: str, p2: str) -> float:
         """Returns the occupancy ratio between two phases in the provided simulation state.
@@ -98,4 +96,11 @@ class DiscreteStepAnalyzer(StateAnalyzer):
         List[str]
             A list of the phases identified.
         """
-        return list(set([site_state[DISCRETE_OCCUPANCY] for site_state in state.all_site_states()]))
+        return list(
+            set(
+                [
+                    site_state[DISCRETE_OCCUPANCY]
+                    for site_state in state.all_site_states()
+                ]
+            )
+        )

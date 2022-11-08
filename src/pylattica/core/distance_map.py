@@ -2,6 +2,7 @@ from numbers import Number
 from typing import List, Tuple
 import numpy as np
 
+
 def distance(arr1: np.array, arr2: np.array) -> float:
     """Given two 2D or 3D coordinate tuples, return the Euclidean distance
     between them. This implementation is simpler than the scipy.distance
@@ -21,7 +22,8 @@ def distance(arr1: np.array, arr2: np.array) -> float:
     """
     return np.sqrt(np.square(arr1 - arr2).sum())
 
-class DistanceMap():
+
+class DistanceMap:
     """
     The DistanceMap is a dictionary containing the distance from a
     center point to each point in a list of neighbor relative locations.
@@ -50,7 +52,9 @@ class DistanceMap():
         """
         self.distances: np.array = self._find_distances(relative_neighbor_locs)
 
-    def _find_distances(self, relative_neighbor_locs: List[Tuple]) -> dict[Tuple, float]:
+    def _find_distances(
+        self, relative_neighbor_locs: List[Tuple]
+    ) -> dict[Tuple, float]:
         """Generates a map of relative neighbor locations to their distances away.
 
         Parameters
@@ -84,16 +88,16 @@ class DistanceMap():
         """
         return self.distances.get(relative_loc)
 
+
 class EuclideanDistanceMap(DistanceMap):
-    """A distance map for storing Euclidean distances.
-    """
+    """A distance map for storing Euclidean distances."""
 
     def _distance(self, p1, p2):
         return round(distance(p1, p2), 2)
 
+
 class ManhattanDistanceMap(DistanceMap):
-    """A distance map that calculates and stores Manhattan distances
-    """
+    """A distance map that calculates and stores Manhattan distances"""
 
     def _distance(self, p1, p2):
         return np.abs(p1 - p2).sum()
