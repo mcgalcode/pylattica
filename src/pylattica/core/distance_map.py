@@ -1,5 +1,5 @@
 from numbers import Number
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 import numpy as np
 
 
@@ -54,7 +54,7 @@ class DistanceMap:
 
     def _find_distances(
         self, relative_neighbor_locs: List[Tuple]
-    ) -> dict[Tuple, float]:
+    ) -> Dict[Tuple, float]:
         """Generates a map of relative neighbor locations to their distances away.
 
         Parameters
@@ -64,7 +64,7 @@ class DistanceMap:
 
         Returns
         -------
-        dict[Tuple, float]
+        Dict[Tuple, float]
             A map of each location to it's distance away.
         """
         distances = {}

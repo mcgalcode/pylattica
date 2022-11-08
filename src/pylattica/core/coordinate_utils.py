@@ -1,10 +1,10 @@
 import itertools
-from typing import Iterable
+from typing import Iterable, List
 
 import numpy as np
 
 
-def get_points_in_cube(lb: int, ub: int, dim: int) -> list[list[int]]:
+def get_points_in_cube(lb: int, ub: int, dim: int) -> List[List[int]]:
     """Returns the list of all integer separated points in a box of dimension
     dim with lower bound and upper bounds in each direction specified by
     lb and ub.
@@ -18,13 +18,13 @@ def get_points_in_cube(lb: int, ub: int, dim: int) -> list[list[int]]:
 
     Returns
     -------
-    list[list[int]]
+    List[List[int]]
         A list of points in the cube
     """
     return get_points_in_box([lb for _ in range(dim)], [ub for _ in range(dim)])
 
 
-def get_points_in_box(lbs: Iterable[int], ubs: Iterable[int]) -> list[list[int]]:
+def get_points_in_box(lbs: Iterable[int], ubs: Iterable[int]) -> List[List[int]]:
     """Using a Cartesian product, returns a list of integer points in some region.
 
     Parameters
@@ -36,7 +36,7 @@ def get_points_in_box(lbs: Iterable[int], ubs: Iterable[int]) -> list[list[int]]
 
     Returns
     -------
-    list[list[Number]]
+    List[List[Number]]
         _description_
 
     Examples
