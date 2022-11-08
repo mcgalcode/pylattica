@@ -98,7 +98,7 @@ class Runner:
 
         state = initial_state.copy()
 
-        global mp_globals # pylint: disable=global-variable-not-assigned
+        global mp_globals  # pylint: disable=global-variable-not-assigned
 
         if self.is_async:
             site_queue = deque()

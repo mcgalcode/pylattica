@@ -180,10 +180,10 @@ class PeriodicStructure:
         location = tuple(location)
         _transformed_coords = self._transformed_coords(location)
         site_id = self._location_lookup.get(_transformed_coords)
-        
+
         if site_id is not None:
             return self.get_site(site_id)
-        
+
         return None
 
     def get_site(self, site_id: int) -> Dict:

@@ -37,7 +37,7 @@ class DiscreteSquareGridResultArtist:
         if color_map is None:
             color_map = self.phase_color_map
 
-        global _dsr_globals # pylint: disable=global-variable-not-assigned
+        global _dsr_globals  # pylint: disable=global-variable-not-assigned
         _dsr_globals["artist"] = self._step_artist
         imgs = []
         PROCESSES = mp.cpu_count()
@@ -92,7 +92,7 @@ class DiscreteSquareGridResultArtist:
         imgs = self._get_images(color_map=color_map, cell_size=cell_size)
         for img in imgs:
             clear_output()
-            display(img) # pylint: disable=undefined-variable
+            display(img)  # pylint: disable=undefined-variable
             time.sleep(wait)
 
     def to_gif(self, filename: str, **kwargs) -> None:

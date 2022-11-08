@@ -42,6 +42,6 @@ class PeriodicState:
 
         if site is None:
             return None
-        
+
         site_state = self.state.get_site_state(site[SITE_ID])
         return site_state

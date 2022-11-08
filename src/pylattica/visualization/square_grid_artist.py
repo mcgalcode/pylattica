@@ -64,7 +64,7 @@ class DiscreteSquareGridArtist(SquareGridArtist):
         phase_name = cell_state[DISCRETE_OCCUPANCY]
         return self.get_legend()[phase_name]
 
-    def get_legend(self, state = None):
+    def get_legend(self, state=None):
         if self.legend is None:
             analyzer = DiscreteStepAnalyzer()
             phases = analyzer.phases_present(state)
