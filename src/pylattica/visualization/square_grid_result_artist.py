@@ -87,12 +87,12 @@ class DiscreteSquareGridResultArtist:
             cell_size (int, optional): The sidelength of a grid cell in pixels. Defaults to 20.
             wait (int, optional): The time duration between frames in the animation. Defaults to 1.
         """
-        from IPython.display import clear_output
+        from IPython.display import clear_output, display
 
         imgs = self._get_images(color_map=color_map, cell_size=cell_size)
         for img in imgs:
             clear_output()
-            display(img)  # pylint: disable=undefined-variable
+            display(img)
             time.sleep(wait)
 
     def to_gif(self, filename: str, **kwargs) -> None:
