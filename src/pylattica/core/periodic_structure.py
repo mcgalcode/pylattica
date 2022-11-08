@@ -27,7 +27,7 @@ def get_pt_in_range(bound: float, pt: float) -> float:
 
 
 @lru_cache
-def get_periodic_point(bounds: Iterable[Number], pt: Iterable[Number]) -> tuple[Number]:
+def get_periodic_point(bounds: Iterable[Number], pt: Iterable[Number]) -> Tuple[Number]:
     """Given a point and a list of upper bounds (assuming zero lower bounds),
     returns the point, unchanged, if it lies inside the two or three
     dimensional square region defined by the bounds provided, or the periodic
