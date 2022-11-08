@@ -27,6 +27,7 @@ class SquareGridArtist:
     def jupyter_show_state(self, state: SimulationState, **kwargs):
         img = self._draw_image(state, **kwargs)
         from IPython.display import display
+
         display(img)
 
     def get_img_state(self, state: SimulationState, **kwargs):
@@ -34,6 +35,7 @@ class SquareGridArtist:
 
     def jupyter_show(self, state: SimulationState, **kwargs):
         from IPython.display import display
+
         img = self.get_img(state, **kwargs)
         display(img)
 
