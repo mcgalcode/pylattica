@@ -1,6 +1,6 @@
 # pylattica - A Framework for Lattice and Cellular Automata Simulation
 
-![test workflow](https://github.com/github/docs/actions/workflows/testing.yml/badge.svg)
+![test workflow](https://github.com/github/docs/actions/workflows/testing.yaml/badge.svg)
 
 
 pylattica is a Python library for prototyping and constructing cellular automaton and lattice models. The core features of these models are:
