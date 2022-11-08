@@ -1,4 +1,4 @@
-from functools import cache
+from functools import lru_cache
 from numbers import Number
 from typing import Dict, Iterable, List, Tuple
 
@@ -7,7 +7,7 @@ import numpy as np
 from .constants import LOCATION, SITE_CLASS, SITE_ID
 
 
-@cache
+@lru_cache
 def get_pt_in_range(bound: float, pt: float) -> float:
     """Returns the periodic image of a 1D value.
 
@@ -26,7 +26,7 @@ def get_pt_in_range(bound: float, pt: float) -> float:
     return pt % bound
 
 
-@cache
+@lru_cache
 def get_periodic_point(bounds: Iterable[Number], pt: Iterable[Number]) -> tuple[Number]:
     """Given a point and a list of upper bounds (assuming zero lower bounds),
     returns the point, unchanged, if it lies inside the two or three
