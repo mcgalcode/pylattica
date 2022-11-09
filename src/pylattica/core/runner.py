@@ -7,6 +7,7 @@ from tqdm import tqdm
 
 from .basic_controller import BasicController
 from .simulation_result import SimulationResult
+from .periodic_structure import PeriodicStructure
 from .simulation_state import GENERAL, SITES, SimulationState
 from .utils import printif
 
@@ -70,6 +71,7 @@ class Runner:
         controller: BasicController,
         num_steps: int,
         verbose=False,
+        structure: PeriodicStructure = None
     ) -> SimulationResult:
         """Run the simulation for the prescribed number of steps. Recall that one
         asynchronous simulation step involves one application of the update rule,
@@ -95,6 +97,7 @@ class Runner:
         printif(verbose, f"Running w/ sim. size {initial_state.size}")
 
         result = controller.instantiate_result(initial_state.copy())
+        controller.pre_run(initial_state, structure)
 
         state = initial_state.copy()
 
