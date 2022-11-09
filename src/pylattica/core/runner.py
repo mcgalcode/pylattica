@@ -118,6 +118,8 @@ class Runner:
                 else:
                     state_updates = controller_response
 
+                state_updates = merge_updates(state_updates, site_id=site_id)
+
                 state.batch_update(state_updates)
                 site_queue.extend(next_sites)
                 result.add_step(state_updates)
@@ -173,13 +175,14 @@ class Runner:
         site_batches = [
             site_ids[i : i + chunk_size] for i in range(0, num_sites, chunk_size)
         ]
+
         for batch in site_batches:
             params.append([batch, updates])
+
         results = pool.starmap(_step_batch_parallel, params)
-        all_updates = {SITES: {}, GENERAL: {}}
+        all_updates = None
         for batch_update_res in results:
-            all_updates[SITES].update(batch_update_res.get(SITES, {}))
-            all_updates[GENERAL].update(batch_update_res.get(GENERAL, {}))
+            all_updates = merge_updates(all_updates, batch_update_res)
 
         return all_updates
 
@@ -193,7 +196,7 @@ class Runner:
 
 
 def _step_batch_parallel(id_batch: List[int], last_updates: dict):
-    """Here we are in a subprodcess
+    """Here we are in a subprocess
 
     Args:
         id_batch (List[int]): _description_
@@ -210,9 +213,31 @@ def _step_batch_parallel(id_batch: List[int], last_updates: dict):
 def _step_batch(
     id_batch: List[int], previous_state: SimulationState, controller: BasicController
 ):
-    batch_updates = {SITES: {}}
+    batch_updates = None
     for site_id in id_batch:
-        state_updates = controller.get_state_update(site_id, previous_state)
-        batch_updates[SITES][site_id] = state_updates
+        site_updates = controller.get_state_update(site_id, previous_state)
+        batch_updates = merge_updates(site_updates, batch_updates, site_id)
 
     return batch_updates
+
+
+def merge_updates(new_updates, curr_updates=None, site_id=None):
+
+    if new_updates is None:
+        return curr_updates
+
+    if curr_updates is None:
+        curr_updates = {SITES: {}, GENERAL: {}}
+
+    # if this is a total
+    if SITES in new_updates or GENERAL in new_updates:
+        curr_updates[SITES].update(new_updates.get(SITES, {}))
+        curr_updates[GENERAL].update(new_updates.get(SITES, {}))
+
+    elif set(map(type, new_updates.keys())) == {int}:
+        curr_updates[SITES].update(new_updates)
+
+    elif site_id is not None:
+        curr_updates[SITES].update({site_id: new_updates})
+
+    return curr_updates
