@@ -11,12 +11,12 @@ from .structure_builders import SimpleSquare2DStructureBuilder
 
 
 class VonNeumannNbHood2DBuilder(StructureNeighborhoodBuilder):
-    def __init__(self, size):
+    def __init__(self, size = 1):
         points = get_points_in_cube(-size, size + 1, 2)
 
         filtered_points = []
         for point in points:
-            if sum(np.abs(p) for p in point) < size:
+            if sum(np.abs(p) for p in point) <= size:
                 filtered_points.append(point)
 
         super().__init__({SimpleSquare2DStructureBuilder.SITE_CLASS: filtered_points})

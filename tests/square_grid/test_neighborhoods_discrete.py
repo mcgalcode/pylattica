@@ -4,13 +4,31 @@ from pylattica.core.periodic_structure import PeriodicStructure
 from pylattica.square_grid.neighborhoods import (
     CircularNeighborhoodBuilder,
     MooreNbHoodBuilder,
+    VonNeumannNbHood2DBuilder
 )
+from pylattica.core.constants import SITE_ID
 from pylattica.square_grid.structure_builders import SimpleSquare2DStructureBuilder
 
+def test_von_neumann_neighborhood():
+    struct = SimpleSquare2DStructureBuilder().build(10)
 
-def test_moore_neighborhood(square_grid_2D_2x2: PeriodicStructure):
+    spec = VonNeumannNbHood2DBuilder()
+    nb_hood = spec.get(struct)
+
+    site = struct.site_at((5,5))
+    nbs = nb_hood.neighbors_of(site[SITE_ID])
+    assert len(nbs) == 4
+
+
+def test_moore_neighborhood():
+    struct = SimpleSquare2DStructureBuilder().build(10)
+
     spec = MooreNbHoodBuilder()
-    nb_hood = spec.get(square_grid_2D_2x2)
+    nb_hood = spec.get(struct)
+
+    site = struct.site_at((5,5))
+    nbs = nb_hood.neighbors_of(site[SITE_ID])
+    assert len(nbs) == 8
 
 def test_circular_neighborhood():
     struct = SimpleSquare2DStructureBuilder().build(20)
