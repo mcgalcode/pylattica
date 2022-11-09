@@ -1,7 +1,7 @@
 import copy
 from typing import Dict, List
 
-from .constants import SITE_ID, STATE_VALUE
+from .constants import SITE_ID
 
 GENERAL = "GENERAL"
 SITES = "SITES"
