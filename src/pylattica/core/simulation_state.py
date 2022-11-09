@@ -1,7 +1,7 @@
 import copy
 from typing import Dict, List
 
-from .constants import SITE_ID
+from .constants import SITE_ID, STATE_VALUE
 
 GENERAL = "GENERAL"
 SITES = "SITES"
@@ -139,12 +139,15 @@ class SimulationState:
         update_batch : Dict
             The updates to apply as a batch.
         """
-        if SITES in update_batch:
-            for site_id, updates in update_batch[SITES].items():
-                self.set_site_state(site_id, updates)
 
         if GENERAL in update_batch:
+            for site_id, updates in update_batch[SITES].items():
+                self.set_site_state(site_id, updates)
+            
             self.set_general_state(update_batch[GENERAL])
+        else:
+            for site_id, updates in update_batch.items():
+                self.set_site_state(site_id, updates)
 
     def copy(self) -> "SimulationState":
         """Creates a new simulation state identical to this one. This is a deepcopy
