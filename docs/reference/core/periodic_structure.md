@@ -1,0 +1,1 @@
+::: pylattica.core.periodic_structure

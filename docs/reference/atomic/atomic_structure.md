@@ -1,0 +1,1 @@
+::: pylattica.atomic.atomic_structure

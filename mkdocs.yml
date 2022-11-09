@@ -1,0 +1,84 @@
+site_name: pylattica documentation
+site_description: Documentation for the pylattica package
+copyright: Built by Max Gallant
+watch:
+  - src/pylattica
+nav:
+  - Home:
+    - index.md
+    - Reference: reference/core/runner.md
+    - Notebooks: ./examples/game_of_life.ipynb
+  - Notebooks:
+    - Game Of Life: ./examples/game_of_life.ipynb
+  - Reference:
+    - Core:
+      - Runner: reference/core/runner.md
+      - PeriodicStructure: reference/core/periodic_structure.md
+      - Lattice: reference/core/lattice.md
+      - Coordinate Utilities: reference/core/coordinate_utils.md
+      - Neighborhoods: reference/core/neighborhood.md
+      - NeighborhoodBuilders: reference/core/neighborhood_builders.md
+      - SimulationResult: reference/core/simulation_result.md
+      - SimulationState: reference/core/simulation_state.md
+      - Analyzer: reference/core/analyzer.md
+      - BasicController: reference/core/basic_controller.md
+      - DistanceMap: reference/core/distance_map.md
+    - Atomic:
+      - AtomicStructure: reference/atomic/atomic_structure.md
+    - Discrete:
+      - DiscreteStepAnalyzer: reference/discrete/discrete_step_analyzer.md
+      - DiscreteStateResultAnalyzer: reference/discrete/discrete_state_result_analyzer.md
+      - PhaseSet: reference/discrete/phase_set.md
+    - SquareGrid:
+      - GridSetup: reference/square_grid/grid_setup.md
+      - Lattice: reference/square_grid/lattice.md
+      - Neighorboods: reference/square_grid/neighborhoods.md
+      - StructureBuilders: reference/square_grid/structure_builders.md
+    - Visualization:
+      - SquareGridArtist: reference/visualization/square_grid_artist.md
+      - SquareGridResultArtist: reference/visualization/square_grid_result_artist.md
+  - CHANGELOG: ../CHANGELOG.md
+
+repo_url: https://github.com/mcgalcode/pylattica/
+repo_name: Github
+
+theme:
+  name: material
+  icon:
+    logo: material/currency-sign
+  features:
+    - navigation.tabs
+    - navigation.top
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: purple
+
+# extra_css:
+#   - css/mkdocstrings.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  # - pymdownx.emoji
+  - pymdownx.magiclink
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+
+plugins:
+  - search
+  - section-index
+  - mkdocs-jupyter
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: ['src']
+          setup_commands:
+            - import sys
+            - sys.path.append("docs")
+          selection:
+            new_path_syntax: yes

@@ -1,0 +1,1 @@
+::: pylattica.square_grid.neighborhoods
