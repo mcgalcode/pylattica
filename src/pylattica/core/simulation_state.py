@@ -143,7 +143,7 @@ class SimulationState:
         if GENERAL in update_batch:
             for site_id, updates in update_batch[SITES].items():
                 self.set_site_state(site_id, updates)
-            
+
             self.set_general_state(update_batch[GENERAL])
         else:
             for site_id, updates in update_batch.items():

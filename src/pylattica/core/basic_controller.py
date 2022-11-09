@@ -21,7 +21,9 @@ class BasicController(ABC):
     def get_state_update(self, site_id: int, prev_state: SimulationState):
         pass
 
-    def pre_run(self, initial_state: SimulationState, structure: PeriodicStructure = None) -> None:
+    def pre_run(
+        self, initial_state: SimulationState, structure: PeriodicStructure = None
+    ) -> None:
         pass
 
     def instantiate_result(self, starting_state):

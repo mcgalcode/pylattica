@@ -11,7 +11,7 @@ from .structure_builders import SimpleSquare2DStructureBuilder
 
 
 class VonNeumannNbHood2DBuilder(StructureNeighborhoodBuilder):
-    def __init__(self, size = 1):
+    def __init__(self, size=1):
         points = get_points_in_cube(-size, size + 1, 2)
 
         filtered_points = []

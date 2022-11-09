@@ -71,7 +71,7 @@ class Runner:
         controller: BasicController,
         num_steps: int,
         verbose=False,
-        structure: PeriodicStructure = None
+        structure: PeriodicStructure = None,
     ) -> SimulationResult:
         """Run the simulation for the prescribed number of steps. Recall that one
         asynchronous simulation step involves one application of the update rule,
