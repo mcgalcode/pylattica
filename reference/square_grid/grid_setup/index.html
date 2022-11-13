@@ -413,6 +413,48 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/simulation_state/" class="md-nav__link">
+        Simulation State in pylattica
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/square_grids/" class="md-nav__link">
+        Square Grid Simulations
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/life_like_demos/" class="md-nav__link">
+        Life-like Cellular Automata
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1372,7 +1414,8 @@ states in specific shapes</p>
 <span class="normal">236</span>
 <span class="normal">237</span>
 <span class="normal">238</span>
-<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DiscreteGridSetup</span><span class="p">:</span>
+<span class="normal">239</span>
+<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DiscreteGridSetup</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A class for setting up states. Provides helper methods for creating starting</span>
 <span class="sd">    states in specific shapes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1404,7 +1447,7 @@ states in specific shapes</p>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_blank_state</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">phase_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">state</span>
 
-    <span class="k">def</span> <span class="nf">setup_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeriodicState</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">setup_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Generates a starting state that is divided into two phases. One phase</span>
 <span class="sd">        occupies the left half of the state, and one phase occupies the right half of the state</span>
 
@@ -1424,11 +1467,11 @@ states in specific shapes</p>
                 <span class="n">state</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span><span class="n">site</span><span class="p">[</span><span class="n">SITE_ID</span><span class="p">],</span> <span class="p">{</span><span class="n">DISCRETE_OCCUPANCY</span><span class="p">:</span> <span class="n">p1</span><span class="p">})</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">state</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span><span class="n">site</span><span class="p">[</span><span class="n">SITE_ID</span><span class="p">],</span> <span class="p">{</span><span class="n">DISCRETE_OCCUPANCY</span><span class="p">:</span> <span class="n">p2</span><span class="p">})</span>
-        <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">setup_particle</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bulk_phase</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">particle_phase</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeriodicState</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Generates a starting state with a bulk phase surrounding a particle in the</span>
 <span class="sd">        center of the state.</span>
 
@@ -1449,7 +1492,7 @@ states in specific shapes</p>
         <span class="n">state</span><span class="p">:</span> <span class="n">SimulationState</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_particle_to_state</span><span class="p">(</span>
             <span class="n">structure</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">particle_phase</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">setup_random_particles</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1458,7 +1501,7 @@ states in specific shapes</p>
         <span class="n">num_particles</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">bulk_phase</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">particle_phases</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeriodicState</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Generates a starting state with a one phase in the background and num_particles particles distributed</span>
 <span class="sd">        onto it randomly</span>
 
@@ -1483,7 +1526,7 @@ states in specific shapes</p>
                 <span class="n">structure</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">rand_coords</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">phase</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_particle_to_state</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1507,16 +1550,16 @@ states in specific shapes</p>
             <span class="k">for</span> <span class="n">coords</span> <span class="ow">in</span> <span class="n">coord_list</span><span class="p">:</span>
                 <span class="n">site_id</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">site_at</span><span class="p">(</span><span class="n">coords</span><span class="p">)[</span><span class="n">SITE_ID</span><span class="p">]</span>
                 <span class="n">state</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span><span class="n">site_id</span><span class="p">,</span> <span class="p">{</span><span class="n">DISCRETE_OCCUPANCY</span><span class="p">:</span> <span class="n">phase</span><span class="p">})</span>
-        <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">setup_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">phases</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">PeriodicState</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">setup_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">phases</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
         <span class="n">structure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_builder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
         <span class="n">state</span><span class="p">:</span> <span class="n">SimulationState</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_blank_state</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">sites</span><span class="p">():</span>
             <span class="n">state</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span>
                 <span class="n">site</span><span class="p">[</span><span class="n">SITE_ID</span><span class="p">],</span> <span class="p">{</span><span class="n">DISCRETE_OCCUPANCY</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">phases</span><span class="p">)}</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">setup_random_sites</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1526,7 +1569,7 @@ states in specific shapes</p>
         <span class="n">nuc_species</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">nuc_ratios</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">buffer</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeriodicState</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;_summary_</span>
 
 <span class="sd">        Args:</span>
@@ -1553,7 +1596,7 @@ states in specific shapes</p>
             <span class="n">nuc_ratios</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nuc_species</span><span class="p">)))</span>
 
         <span class="n">specie_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nuc_species</span><span class="p">)))</span>
-        <span class="n">normalized_ratios</span> <span class="o">=</span> <span class="n">nuc_ratios</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nuc_ratios</span><span class="p">)</span>
+        <span class="n">normalized_ratios</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nuc_ratios</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nuc_ratios</span><span class="p">)</span>
 
         <span class="n">total_attempts</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">num_sites_planted</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1581,6 +1624,7 @@ states in specific shapes</p>
                     <span class="o">!=</span> <span class="n">background_spec</span>
                 <span class="p">):</span>
                     <span class="n">found_existing_nucleus_in_nb</span> <span class="o">=</span> <span class="kc">True</span>
+
             <span class="k">if</span> <span class="ow">not</span> <span class="n">found_existing_nucleus_in_nb</span><span class="p">:</span>
                 <span class="n">chosen_spec</span> <span class="o">=</span> <span class="n">nuc_species</span><span class="p">[</span>
                     <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">specie_idxs</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">normalized_ratios</span><span class="p">)</span>
@@ -1590,7 +1634,7 @@ states in specific shapes</p>
 
             <span class="n">total_attempts</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -1746,7 +1790,7 @@ occupies the left half of the state, and one phase occupies the right half of th
     <tbody>
         <tr>
 <td><code>SimulationState</code></td>          <td>
-                <code><span title="pylattica.core.periodic_state.PeriodicState">PeriodicState</span></code>
+                <code><span title="pylattica.core.simulation.Simulation">Simulation</span></code>
           </td>
           <td></td>
         </tr>
@@ -1775,7 +1819,7 @@ occupies the left half of the state, and one phase occupies the right half of th
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">setup_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeriodicState</span><span class="p">:</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">setup_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Generates a starting state that is divided into two phases. One phase</span>
 <span class="sd">    occupies the left half of the state, and one phase occupies the right half of the state</span>
 
@@ -1795,7 +1839,7 @@ occupies the left half of the state, and one phase occupies the right half of th
             <span class="n">state</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span><span class="n">site</span><span class="p">[</span><span class="n">SITE_ID</span><span class="p">],</span> <span class="p">{</span><span class="n">DISCRETE_OCCUPANCY</span><span class="p">:</span> <span class="n">p1</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">state</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span><span class="n">site</span><span class="p">[</span><span class="n">SITE_ID</span><span class="p">],</span> <span class="p">{</span><span class="n">DISCRETE_OCCUPANCY</span><span class="p">:</span> <span class="n">p2</span><span class="p">})</span>
-    <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -1882,7 +1926,7 @@ center of the state.</p>
     <tbody>
         <tr>
 <td><code>SimulationState</code></td>          <td>
-                <code><span title="pylattica.core.periodic_state.PeriodicState">PeriodicState</span></code>
+                <code><span title="pylattica.core.simulation.Simulation">Simulation</span></code>
           </td>
           <td></td>
         </tr>
@@ -1916,7 +1960,7 @@ center of the state.</p>
 <span class="normal">97</span>
 <span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">setup_particle</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bulk_phase</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">particle_phase</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeriodicState</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Generates a starting state with a bulk phase surrounding a particle in the</span>
 <span class="sd">    center of the state.</span>
 
@@ -1937,7 +1981,7 @@ center of the state.</p>
     <span class="n">state</span><span class="p">:</span> <span class="n">SimulationState</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_particle_to_state</span><span class="p">(</span>
         <span class="n">structure</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">particle_phase</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -2034,7 +2078,7 @@ onto it randomly</p>
     <tbody>
         <tr>
 <td><code>SimulationState</code></td>          <td>
-                <code><span title="pylattica.core.periodic_state.PeriodicState">PeriodicState</span></code>
+                <code><span title="pylattica.core.simulation.Simulation">Simulation</span></code>
           </td>
           <td></td>
         </tr>
@@ -2082,7 +2126,7 @@ onto it randomly</p>
     <span class="n">num_particles</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">bulk_phase</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">particle_phases</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeriodicState</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Generates a starting state with a one phase in the background and num_particles particles distributed</span>
 <span class="sd">    onto it randomly</span>
 
@@ -2107,7 +2151,7 @@ onto it randomly</p>
             <span class="n">structure</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">rand_coords</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">phase</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -2231,7 +2275,7 @@ onto it randomly</p>
     <tbody>
         <tr>
 <td><code>_type_</code></td>          <td>
-                <code><span title="pylattica.core.periodic_state.PeriodicState">PeriodicState</span></code>
+                <code><span title="pylattica.core.simulation.Simulation">Simulation</span></code>
           </td>
           <td><p><em>description</em></p></td>
         </tr>
@@ -2312,7 +2356,8 @@ onto it randomly</p>
 <span class="normal">236</span>
 <span class="normal">237</span>
 <span class="normal">238</span>
-<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">setup_random_sites</span><span class="p">(</span>
+<span class="normal">239</span>
+<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">setup_random_sites</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">num_sites_desired</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -2320,7 +2365,7 @@ onto it randomly</p>
     <span class="n">nuc_species</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">nuc_ratios</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">buffer</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeriodicState</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;_summary_</span>
 
 <span class="sd">    Args:</span>
@@ -2347,7 +2392,7 @@ onto it randomly</p>
         <span class="n">nuc_ratios</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nuc_species</span><span class="p">)))</span>
 
     <span class="n">specie_idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nuc_species</span><span class="p">)))</span>
-    <span class="n">normalized_ratios</span> <span class="o">=</span> <span class="n">nuc_ratios</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nuc_ratios</span><span class="p">)</span>
+    <span class="n">normalized_ratios</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nuc_ratios</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nuc_ratios</span><span class="p">)</span>
 
     <span class="n">total_attempts</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">num_sites_planted</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2375,6 +2420,7 @@ onto it randomly</p>
                 <span class="o">!=</span> <span class="n">background_spec</span>
             <span class="p">):</span>
                 <span class="n">found_existing_nucleus_in_nb</span> <span class="o">=</span> <span class="kc">True</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">found_existing_nucleus_in_nb</span><span class="p">:</span>
             <span class="n">chosen_spec</span> <span class="o">=</span> <span class="n">nuc_species</span><span class="p">[</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">specie_idxs</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">normalized_ratios</span><span class="p">)</span>
@@ -2384,7 +2430,7 @@ onto it randomly</p>
 
         <span class="n">total_attempts</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="k">return</span> <span class="n">PeriodicState</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>

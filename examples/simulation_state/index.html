@@ -15,7 +15,7 @@
     
     
       
-        <title>Conway's Game of Life - pylattica documentation</title>
+        <title>Simulation State in pylattica - pylattica documentation</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#conways-game-of-life" class="md-skip">
+        <a href="#simulation-state-in-pylattica" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Conway's Game of Life
+              Simulation State in pylattica
             
           </span>
         </div>
@@ -209,7 +209,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link md-tabs__link--active">
+      <a href="../game_of_life/" class="md-tabs__link md-tabs__link--active">
         Notebooks
       </a>
     </li>
@@ -357,7 +357,7 @@
   
   
     <li class="md-nav__item">
-      <a href="./" class="md-nav__link">
+      <a href="../game_of_life/" class="md-nav__link">
         Notebooks
       </a>
     </li>
@@ -405,6 +405,20 @@
               
   
   
+  
+    <li class="md-nav__item">
+      <a href="../game_of_life/" class="md-nav__link">
+        Conway's Game of Life
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
     
   
   
@@ -417,12 +431,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Conway's Game of Life
+          Simulation State in pylattica
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Conway's Game of Life
+        Simulation State in pylattica
       </a>
       
         
@@ -441,49 +455,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#setting-up-a-simulation-state" class="md-nav__link">
-    Setting Up A Simulation State
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#inspecting-the-simulation-state" class="md-nav__link">
-    Inspecting the Simulation State
-  </a>
-  
-    <nav class="md-nav" aria-label="Inspecting the Simulation State">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#periodic-structure" class="md-nav__link">
-    Periodic Structure
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#simulation-state-dictionary" class="md-nav__link">
-    Simulation State Dictionary
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#site-neighborhoods" class="md-nav__link">
-    Site Neighborhoods
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementing-the-simulation-controller" class="md-nav__link">
-    Implementing the Simulation Controller
+  <a href="#general-state" class="md-nav__link">
+    General State
   </a>
   
 </li>
@@ -492,20 +465,6 @@
   
 </nav>
       
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../simulation_state/" class="md-nav__link">
-        Simulation State in pylattica
-      </a>
     </li>
   
 
@@ -1080,49 +1039,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#setting-up-a-simulation-state" class="md-nav__link">
-    Setting Up A Simulation State
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#inspecting-the-simulation-state" class="md-nav__link">
-    Inspecting the Simulation State
-  </a>
-  
-    <nav class="md-nav" aria-label="Inspecting the Simulation State">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#periodic-structure" class="md-nav__link">
-    Periodic Structure
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#simulation-state-dictionary" class="md-nav__link">
-    Simulation State Dictionary
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#site-neighborhoods" class="md-nav__link">
-    Site Neighborhoods
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementing-the-simulation-controller" class="md-nav__link">
-    Implementing the Simulation Controller
+  <a href="#general-state" class="md-nav__link">
+    General State
   </a>
   
 </li>
@@ -1141,7 +1059,7 @@
                 
                   
 
-  <a href="https://github.com/mcgalcode/pylattica/edit/master/docs/examples/game_of_life.ipynb" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/mcgalcode/pylattica/edit/master/docs/examples/simulation_state.ipynb" title="Edit this page" class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
@@ -2177,13 +2095,13 @@ Licensed under the Apache License, Version 2.0.
     }
     init_mathjax();
     </script>
-    <!-- End of mathjax configuration --><div class="jupyter-wrapper"><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <!-- End of mathjax configuration --><div class="jupyter-wrapper"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[43]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -2210,30 +2128,6 @@ Licensed under the Apache License, Version 2.0.
 </div>
 </div>
 
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>The autoreload extension is already loaded. To reload it, use:
-  %reload_ext autoreload
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
 </div>
 </div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
@@ -2242,19 +2136,9 @@ Licensed under the Apache License, Version 2.0.
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="conways-game-of-life">Conway's Game of Life<a class="anchor-link" href="#conways-game-of-life">&#182;</a></h1><p>While the concept of a cellular automaton (a model in which cells are updated based on the state of their neighbors) has been around for a while, Conway's Game of Life is the most famous example of such a system. It demonstrates quite clearly the way that very complex phenomena can emerge from simple local interactions, and has been studied extensively.</p>
-<p>In Conway's Game of Life, a 2D square grid of cells are labelled as "alive" or "dead". Then, as the simulation progresses, the cell states flip between "dead" and "alive" depending on how many living cells surround them.</p>
-<p>This automaton is a good place to start for a demonstration of pylattica because it shows a few of the fundamental features of the code.</p>
-<p>Before we begin though, take a quick look at the <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Wikipedia Article</a> for the Game of Life to understand what the model is.</p>
-<p>In particular, note that the rules describing the game are simple:</p>
-<ol>
-<li>Any live cell with fewer than two live neighbours dies, as if by underpopulation.</li>
-<li>Any live cell with two or three live neighbours lives on to the next generation.</li>
-<li>Any live cell with more than three live neighbours dies, as if by overpopulation.</li>
-<li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
-</ol>
-<p>In this notebook, we will implement this model using pylattica and show some of the libarary's visualization capabilities.</p>
-<p>To begin, we make a few key imports.</p>
+<h1 id="simulation-state-in-pylattica">Simulation State in pylattica<a class="anchor-link" href="#simulation-state-in-pylattica">&#182;</a></h1><p>At the core of every pylattica simulation is a state object. This object is implemented by the <code>SimulationState</code> class. The easiest way to think about it is as a dictionary mapping <em>site IDs</em> to state values. These site IDs refer to sites inside the lattice that you've defined for your simulation. Technically, the sites don't have to refer to physically arranged sites, but for the usual application of pylattica, they do.</p>
+<p><strong>NOTE: The following examples are to show how the state of the simulation works. In application, the simulation runner performs most of the updates, and you will not explicitly run state update commands</strong></p>
+<p>Here's the most basic way to set up a simulation state:</p>
 
 </div>
 </div>
@@ -2265,7 +2149,7 @@ Licensed under the Apache License, Version 2.0.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[44]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -2280,13 +2164,13 @@ Licensed under the Apache License, Version 2.0.
                 </div>
             </clipboard-copy>
         </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.core</span> <span class="kn">import</span> <span class="n">Runner</span>
-<span class="kn">from</span> <span class="nn">pylattica.discrete</span> <span class="kn">import</span> <span class="n">PhaseSet</span>
-<span class="kn">from</span> <span class="nn">pylattica.square_grid</span> <span class="kn">import</span> <span class="n">DiscreteGridSetup</span><span class="p">,</span> <span class="n">SimpleSquare2DStructureBuilder</span>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.core</span> <span class="kn">import</span> <span class="n">SimulationState</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">SimulationState</span><span class="p">()</span>
 </pre></div>
-<div id="cell-2" class="clipboard-copy-txt">from pylattica.core import Runner
-from pylattica.discrete import PhaseSet
-from pylattica.square_grid import DiscreteGridSetup, SimpleSquare2DStructureBuilder</div>
+<div id="cell-2" class="clipboard-copy-txt">from pylattica.core import SimulationState
+
+state = SimulationState()</div>
     
         </div>
     </div>
@@ -2302,302 +2186,7 @@ from pylattica.square_grid import DiscreteGridSetup, SimpleSquare2DStructureBuil
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The first step toward running the Game of Life with pylattica is to implement the rules we found in the Wikipedia article in python.</p>
-<p>This is accomplished using an object oriented programming approach. Specifically, we create a new class called a Controller that implements the update rule.</p>
-<p>Before that though, let's just write out this logic very simply:</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[45]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-3">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span> <span class="nf">update_state</span><span class="p">(</span><span class="n">old_state</span><span class="p">,</span> <span class="n">neighboring_states</span><span class="p">):</span>
-    <span class="n">alive_neighbor_count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">dead_neighbor_count</span> <span class="o">=</span> <span class="mi">0</span>
-    
-    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">neighboring_states</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;alive&quot;</span><span class="p">:</span>
-            <span class="n">alive_neighbor_count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># since all cells are either alive or dead, nothing else</span>
-            <span class="n">dead_neighbor_count</span> <span class="o">+=</span> <span class="mi">1</span>
-    
-    <span class="c1"># Now, we can implement the rules in python logic:</span>
-    <span class="k">if</span> <span class="n">old_state</span> <span class="o">==</span> <span class="s2">&quot;alive&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">alive_neighbor_count</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;dead&quot;</span>
-        <span class="k">elif</span> <span class="n">alive_neighbor_count</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">alive_neighbor_count</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;alive&quot;</span>
-        <span class="k">elif</span> <span class="n">alive_neighbor_count</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;dead&quot;</span>
-    <span class="k">elif</span> <span class="n">old_state</span> <span class="o">==</span> <span class="s2">&quot;dead&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">alive_neighbor_count</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;alive&quot;</span>
-    
-    <span class="k">return</span> <span class="n">old_state</span>
-</pre></div>
-<div id="cell-3" class="clipboard-copy-txt">def update_state(old_state, neighboring_states):
-    alive_neighbor_count = 0
-    dead_neighbor_count = 0
-    
-    for state in neighboring_states:
-        if state == "alive":
-            alive_neighbor_count += 1
-        else:
-            # since all cells are either alive or dead, nothing else
-            dead_neighbor_count += 1
-    
-    # Now, we can implement the rules in python logic:
-    if old_state == "alive":
-        if alive_neighbor_count < 2:
-            return "dead"
-        elif alive_neighbor_count == 2 or alive_neighbor_count == 3:
-            return "alive"
-        elif alive_neighbor_count > 3:
-            return "dead"
-    elif old_state == "dead":
-        if alive_neighbor_count == 3:
-            return "alive"
-    
-    return old_state
-    </div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>This is a bit verbose, but we've written it that way just to emphasize the direct mapping of logical statements here to the rules from the Wikipedia article. Let's try out some hypothetical situations:</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[42]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-4">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;alive cell, 2 dead, 2 alive neighbors:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;result:&quot;</span><span class="p">,</span> <span class="n">update_state</span><span class="p">(</span><span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="s2">&quot;dead&quot;</span><span class="p">,</span> <span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="s2">&quot;dead&quot;</span><span class="p">]))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;alive cell, 1 dead, 4 alive neighbors:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;result:&quot;</span><span class="p">,</span> <span class="n">update_state</span><span class="p">(</span><span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="s2">&quot;alive&quot;</span><span class="p">]))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dead cell, 1 dead, 3 alive neighbors:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;result:&quot;</span><span class="p">,</span> <span class="n">update_state</span><span class="p">(</span><span class="s2">&quot;dead&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="s2">&quot;dead&quot;</span><span class="p">]))</span>
-</pre></div>
-<div id="cell-4" class="clipboard-copy-txt">print("alive cell, 2 dead, 2 alive neighbors:")
-print("result:", update_state("alive", ["alive", "dead", "alive", "dead"]))
-print("")
-print("alive cell, 1 dead, 4 alive neighbors:")
-print("result:", update_state("alive", ["alive", "alive", "alive", "alive"]))
-print("")
-print("dead cell, 1 dead, 3 alive neighbors:")
-print("result:", update_state("dead", ["alive", "alive", "alive", "dead"]))</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>alive cell, 2 dead, 2 alive neighbors:
-result: alive
-
-alive cell, 1 dead, 4 alive neighbors:
-result: dead
-
-dead cell, 1 dead, 3 alive neighbors:
-result: alive
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The rule looks like it's working. Let's see how we can use pylattica to make this rule into a whole simulation.</p>
-
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="setting-up-a-simulation-state">Setting Up A Simulation State<a class="anchor-link" href="#setting-up-a-simulation-state">&#182;</a></h2>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>We know that Conway's Game of Life has cells that are either dead or alive. In the parlance of pylattica, these discrete states are referred to as "phases", and the record of possible phases in a given simulation is called the <code>PhaseSet</code>.</p>
-<p>We can establish the list of possible phases by providing some human identifiable strings to the <code>PhaseSet</code> class.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-5">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">phases</span> <span class="o">=</span> <span class="n">PhaseSet</span><span class="p">([</span><span class="s2">&quot;alive&quot;</span><span class="p">,</span> <span class="s2">&quot;dead&quot;</span><span class="p">])</span>
-</pre></div>
-<div id="cell-5" class="clipboard-copy-txt">phases = PhaseSet(["alive", "dead"])</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Now that we have our phases, let's set up a square simulation with a random distribution of dead and alive sites.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-6">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">setup</span> <span class="o">=</span> <span class="n">DiscreteGridSetup</span><span class="p">(</span><span class="n">phases</span><span class="p">)</span>
-<span class="n">starting_step</span> <span class="o">=</span> <span class="n">setup</span><span class="o">.</span><span class="n">setup_noise</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="n">phases</span><span class="o">.</span><span class="n">phases</span><span class="p">)</span>
-</pre></div>
-<div id="cell-6" class="clipboard-copy-txt">setup = DiscreteGridSetup(phases)
-starting_step = setup.setup_noise(59, phases.phases)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>That's it! Now we can do a quick visualization to see what the simulation state looks like.</p>
+<p>Now, you can specify the state value for a given site. By default, the site state is <code>None</code> for an unknown site.</p>
 
 </div>
 </div>
@@ -2613,7 +2202,7 @@ starting_step = setup.setup_noise(59, phases.phases)</div>
         
         <div class="CodeMirror cm-s-jupyter">
         <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-7">
+            <clipboard-copy for="cell-3">
             <div>
                 <span class="notice" hidden>Copied!</span>
                 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -2623,15 +2212,13 @@ starting_step = setup.setup_noise(59, phases.phases)</div>
                 </div>
             </clipboard-copy>
         </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.visualization</span> <span class="kn">import</span> <span class="n">DiscreteSquareGridArtist2D</span>
-
-<span class="n">step_artist</span> <span class="o">=</span> <span class="n">DiscreteSquareGridArtist2D</span><span class="p">()</span>
-<span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">starting_step</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;State for site 1 before setting state: &quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">state</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;my state key&quot;</span><span class="p">:</span> <span class="s2">&quot;my state value&quot;</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;State for site 1 after setting state: &quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
-<div id="cell-7" class="clipboard-copy-txt">from pylattica.visualization import DiscreteSquareGridArtist2D
-
-step_artist = DiscreteSquareGridArtist2D()
-step_artist.jupyter_show(starting_step.state, cell_size=5)</div>
+<div id="cell-3" class="clipboard-copy-txt">print("State for site 1 before setting state: ", state.get_site_state(1))
+state.set_site_state(1, { "my state key": "my state value"})
+print("State for site 1 after setting state: ", state.get_site_state(1))</div>
     
         </div>
     </div>
@@ -2652,14 +2239,83 @@ step_artist.jupyter_show(starting_step.state, cell_size=5)</div>
     <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>State for site 1 before setting state:  None
+State for site 1 after setting state:  {&#39;_site_id&#39;: 1, &#39;my state key&#39;: &#39;my state value&#39;}
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Note that the simulation state will also return the ID of the site inside the state. This just simplifies calculations during simulations.</p>
+<p>Setting site state does not completely overwrite the previous state. It instead only overwrites the values that you specify.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+        <div class="zeroclipboard-container">
+            <clipboard-copy for="cell-4">
+            <div>
+                <span class="notice" hidden>Copied!</span>
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                </svg>
+                </div>
+            </clipboard-copy>
+        </div>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">state</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;another key&quot;</span><span class="p">:</span> <span class="s2">&quot;another value&quot;</span> <span class="p">})</span>
+<span class="n">state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+<div id="cell-4" class="clipboard-copy-txt">state.set_site_state(1, { "another key": "another value" })
+state.get_site_state(1)</div>
+    
+        </div>
+    </div>
+
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
 
 
-<div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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
-"
-class="
-"
->
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;_site_id&#39;: 1,
+ &#39;my state key&#39;: &#39;my state value&#39;,
+ &#39;another key&#39;: &#39;another value&#39;}</pre>
 </div>
 
 </div>
@@ -2676,12 +2332,80 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="inspecting-the-simulation-state">Inspecting the Simulation State<a class="anchor-link" href="#inspecting-the-simulation-state">&#182;</a></h2><p>Before we continue, we have to understand structure of pylattica's simulation state. There are three core aspects to it:</p>
-<ol>
-<li>A periodic structure</li>
-<li>A simulation state dictionary</li>
-<li>A neighborhood graph</li>
-</ol>
+<p>Here's how you partially update existing state:</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+        
+        
+        <div class="CodeMirror cm-s-jupyter">
+        <div class="zeroclipboard-container">
+            <clipboard-copy for="cell-5">
+            <div>
+                <span class="notice" hidden>Copied!</span>
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
+                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
+                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+                </svg>
+                </div>
+            </clipboard-copy>
+        </div>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">state</span><span class="o">.</span><span class="n">set_site_state</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">{</span> <span class="s2">&quot;my state key&quot;</span><span class="p">:</span> <span class="s2">&quot;a brand new value&quot;</span> <span class="p">})</span>
+<span class="n">state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+<div id="cell-5" class="clipboard-copy-txt">state.set_site_state(1, { "my state key": "a brand new value" })
+state.get_site_state(1)</div>
+    
+        </div>
+    </div>
+
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;_site_id&#39;: 1,
+ &#39;my state key&#39;: &#39;a brand new value&#39;,
+ &#39;another key&#39;: &#39;another value&#39;}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Note that only the state value for <code>"my state key"</code> was updated.</p>
 
 </div>
 </div>
@@ -2693,8 +2417,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="periodic-structure">Periodic Structure<a class="anchor-link" href="#periodic-structure">&#182;</a></h4><p>Underlying the simulation state is an arrangement of sites. In our case, it is a two dimensional square grid (but in other simulations, it could be any type of lattice). This is called the "structure" of the simulation state. It is subject to periodic boundary conditions, meaning that a cell on the edge of the structure is a neighbor to the cell on the opposite edge of the grid.</p>
-<p>Here's how we can view one of the sites in our structure.</p>
+<h4 id="general-state">General State<a class="anchor-link" href="#general-state">&#182;</a></h4><p>Some simulations require state at each simulation frame that isn't specific to any one single site, but instead applies to the whole simulation frame. The <code>SimulationState</code> class supports that with the concept of <em>General State</em>. This state is accessed as follows:</p>
 
 </div>
 </div>
@@ -2710,7 +2433,7 @@ class="
         
         <div class="CodeMirror cm-s-jupyter">
         <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-8">
+            <clipboard-copy for="cell-6">
             <div>
                 <span class="notice" hidden>Copied!</span>
                 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -2720,9 +2443,9 @@ class="
                 </div>
             </clipboard-copy>
         </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">starting_step</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">sites</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">state</span><span class="o">.</span><span class="n">get_general_state</span><span class="p">()</span>
 </pre></div>
-<div id="cell-8" class="clipboard-copy-txt">starting_step.structure.sites()[0]</div>
+<div id="cell-6" class="clipboard-copy-txt">state.get_general_state()</div>
     
         </div>
     </div>
@@ -2746,7 +2469,7 @@ class="
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{&#39;_site_class&#39;: &#39;_A&#39;, &#39;_location&#39;: (0.0, 0.0), &#39;_site_id&#39;: 0}</pre>
+<pre>{}</pre>
 </div>
 
 </div>
@@ -2763,7 +2486,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Here are a few more. See how the locations are represented by two coordinates? They lie on a square grid.</p>
+<p>It's a dictionary, just like the state for each site. You can update it like this:</p>
 
 </div>
 </div>
@@ -2774,12 +2497,12 @@ class="
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
         <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-9">
+            <clipboard-copy for="cell-7">
             <div>
                 <span class="notice" hidden>Copied!</span>
                 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
@@ -2789,13 +2512,11 @@ class="
                 </div>
             </clipboard-copy>
         </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">starting_step</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">sites</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;_location&#39;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">starting_step</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">sites</span><span class="p">()[</span><span class="mi">2</span><span class="p">][</span><span class="s1">&#39;_location&#39;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">starting_step</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">sites</span><span class="p">()[</span><span class="mi">23</span><span class="p">][</span><span class="s1">&#39;_location&#39;</span><span class="p">])</span>
+            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">state</span><span class="o">.</span><span class="n">set_general_state</span><span class="p">({</span><span class="s2">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span><span class="p">})</span>
+<span class="n">state</span><span class="o">.</span><span class="n">get_general_state</span><span class="p">()</span>
 </pre></div>
-<div id="cell-9" class="clipboard-copy-txt">print(starting_step.structure.sites()[1]['_location'])
-print(starting_step.structure.sites()[2]['_location'])
-print(starting_step.structure.sites()[23]['_location'])</div>
+<div id="cell-7" class="clipboard-copy-txt">state.set_general_state({"key1": "value1"})
+state.get_general_state()</div>
     
         </div>
     </div>
@@ -2813,946 +2534,19 @@ print(starting_step.structure.sites()[23]['_location'])</div>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>(1.0, 0.0)
-(2.0, 0.0)
-(23.0, 0.0)
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Every site in this structure has a <code>_site_class</code> of "_A". This is not significant. In other, more complex simulations, this attribute can be used to distinguish types of sites that exist in the structure. For instance, in materials science, we refer to lattice sites by their coordination structure (e.g. tetrahedral, octahedral).</p>
-
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="simulation-state-dictionary">Simulation State Dictionary<a class="anchor-link" href="#simulation-state-dictionary">&#182;</a></h4><p>You may have noticed that the sites in our structure also have IDs. These IDs are referred to by the <code>SimulationState</code>. This object is essentially a dictionary that maps site IDs to the state of that site. A site state can be any arbitrary python dictionary, but in our case each site is just assigned an occupancy value. Let's make some sense of this.</p>
-<p>The first site we have is (0,0). It's ID is 0 as well.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-10">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">first_site</span> <span class="o">=</span> <span class="n">starting_step</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">sites</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Site </span><span class="si">{</span><span class="n">first_site</span><span class="p">[</span><span class="s2">&quot;_site_id&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> is at </span><span class="si">{</span><span class="n">first_site</span><span class="p">[</span><span class="s2">&quot;_location&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-<div id="cell-10" class="clipboard-copy-txt">first_site = starting_step.structure.sites()[0]
-print(f'Site {first_site["_site_id"]} is at {first_site["_location"]}')</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Site 0 is at (0.0, 0.0)
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Now let's see what it's state is:</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-11">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">starting_step</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-<div id="cell-11" class="clipboard-copy-txt">starting_step.state.get_site_state(0)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{&#39;_site_id&#39;: 0, &#39;DISCRETE_OCCUPANCY&#39;: &#39;alive&#39;}</pre>
+<pre>{&#39;key1&#39;: &#39;value1&#39;}</pre>
 </div>
 
 </div>
 
 </div>
 
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The <code>DISCRETE_OCCUPANCY</code> key indicates the "phase" that occupies that cell. Let's see if that lines up with our visualization. Remember, this site is at (0,0), or the bottom left of the simulation state.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-12">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">starting_step</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-<div id="cell-12" class="clipboard-copy-txt">step_artist.jupyter_show(starting_step.state, cell_size=5)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-<div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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
-"
-class="
-"
->
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Sure enough, that bottom left cell looks right!</p>
-
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="site-neighborhoods">Site Neighborhoods<a class="anchor-link" href="#site-neighborhoods">&#182;</a></h4><p>The final ingredient to the pylattica model is the concept of a neighborhood. A neighborhood is simply the set of other sites that are considered neighbors. There are many different neighborhood specifications that are possible including classic neighborhoods for 2D square grids like <a href="https://en.wikipedia.org/wiki/Moore_neighborhood">Moore Neighborhoods</a> and <a href="https://en.wikipedia.org/wiki/Von_Neumann_neighborhood">Von Neumann Neighborhoods</a>.</p>
-<p>You can specify neighborhoods in many different ways such as:</p>
-<ul>
-<li>All cells within a certain distance (actually Moore and Von Neumann neighborhoods both fall into this category, but with different distance cutoffs, or different distance metrics)</li>
-<li>All cells given by moving in a certain direction</li>
-<li>A random subset of surrounding cells</li>
-</ul>
-<p>pylattica provides implementations for many common neighborhoods. As specified in the Game of Life Wikipedia article, we need a Moore neighborhood (includes the cells in each of the cardinal directions and the diagonal directions).</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-13">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.square_grid</span> <span class="kn">import</span> <span class="n">MooreNbHoodBuilder</span>
-</pre></div>
-<div id="cell-13" class="clipboard-copy-txt">from pylattica.square_grid import MooreNbHoodBuilder</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>To construct our neighborhood, we provide our state structure to a neighborhood builder. In this step, you can imagine the neighborhood builder visiting each site in the structure, and constructing a graph that specifies which sites are neighbors of every other site.</p>
-<p>Here's how it works.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-14">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">builder</span> <span class="o">=</span> <span class="n">MooreNbHoodBuilder</span><span class="p">()</span>
-<span class="n">nb_hood</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">starting_step</span><span class="o">.</span><span class="n">structure</span><span class="p">)</span>
-</pre></div>
-<div id="cell-14" class="clipboard-copy-txt">builder = MooreNbHoodBuilder()
-nb_hood = builder.get(starting_step.structure)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>100%|████████████████████████████████████████| 3481/3481 [00:00&lt;00:00, 55452.10it/s]
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>We can use the neighborhood to get the neighbors of any site, let's try the one at (5, 5).</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[31]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-15">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">site</span> <span class="o">=</span> <span class="n">starting_step</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">site_at</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
-<span class="n">nbs</span> <span class="o">=</span> <span class="n">nb_hood</span><span class="o">.</span><span class="n">neighbors_of</span><span class="p">(</span><span class="n">site</span><span class="p">[</span><span class="s1">&#39;_site_id&#39;</span><span class="p">])</span>
-</pre></div>
-<div id="cell-15" class="clipboard-copy-txt">site = starting_step.structure.site_at((5,5))
-nbs = nb_hood.neighbors_of(site['_site_id'])</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>What do we expect the locations of these neighboring sites to be?</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[32]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-16">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="k">for</span> <span class="n">nb_id</span> <span class="ow">in</span> <span class="n">nbs</span><span class="p">:</span>
-    <span class="n">site</span> <span class="o">=</span> <span class="n">starting_step</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">get_site</span><span class="p">(</span><span class="n">nb_id</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Neighbor with ID </span><span class="si">{</span><span class="n">nb_id</span><span class="si">}</span><span class="s1"> is at </span><span class="si">{</span><span class="n">site</span><span class="p">[</span><span class="s2">&quot;_location&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-</pre></div>
-<div id="cell-16" class="clipboard-copy-txt">for nb_id in nbs:
-    site = starting_step.structure.get_site(nb_id)
-    print(f'Neighbor with ID {nb_id} is at {site["_location"]}')</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Neighbor with ID 359 is at (5.0, 6.0)
-Neighbor with ID 360 is at (6.0, 6.0)
-Neighbor with ID 240 is at (4.0, 4.0)
-Neighbor with ID 242 is at (6.0, 4.0)
-Neighbor with ID 358 is at (4.0, 6.0)
-Neighbor with ID 241 is at (5.0, 4.0)
-Neighbor with ID 301 is at (6.0, 5.0)
-Neighbor with ID 299 is at (4.0, 5.0)
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>As expected, these eight coordinate pairs correspond to the sites above, below, right and left, and diagonal of the site at (5, 5).</p>
-
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="implementing-the-simulation-controller">Implementing the Simulation Controller<a class="anchor-link" href="#implementing-the-simulation-controller">&#182;</a></h2><p>We've defined the possible states in our system, and initialized a starting point. The next step is move our update rule from before into a format the pylattica can understand. For this, we have to implement a new <code>Controller</code> class.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[33]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-17">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.core</span> <span class="kn">import</span> <span class="n">BasicController</span><span class="p">,</span> <span class="n">SimulationState</span>
-<span class="kn">from</span> <span class="nn">pylattica.discrete.state_constants</span> <span class="kn">import</span> <span class="n">DISCRETE_OCCUPANCY</span>
-<span class="kn">from</span> <span class="nn">pylattica.core.simulation_state</span> <span class="kn">import</span> <span class="n">SITES</span>
-</pre></div>
-<div id="cell-17" class="clipboard-copy-txt">from pylattica.core import BasicController, SimulationState
-from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
-from pylattica.core.simulation_state import SITES</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>To accomplish this, we need to implement two methods in our controller class. The first, <code>pre_run</code> provides an opportunity to do any setup you'd like to before the simulation runs. It accepts as parameters the initial state of the simulation, and the structure underlying the state.</p>
-<p>All we'll do is setup a neighborhood based on the structure that we can use later.</p>
-<p>Second, we need to implement the <code>get_state_update</code> method. This is the fundamental piece of the controller. This method takes a site for which a new state should be calculated and the entire current simulation state. We can do any calculation we want to figure out the new state, but, armed with our neighborhood, and the update rule we implemented earlier, we have enough to create Conway's Game of Life.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[37]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-18">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="k">def</span> <span class="nf">update_state</span><span class="p">(</span><span class="n">old_state</span><span class="p">,</span> <span class="n">neighboring_states</span><span class="p">):</span>
-    <span class="n">alive_neighbor_count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">dead_neighbor_count</span> <span class="o">=</span> <span class="mi">0</span>
-    
-    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">neighboring_states</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;alive&quot;</span><span class="p">:</span>
-            <span class="n">alive_neighbor_count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># since all cells are either alive or dead, nothing else</span>
-            <span class="n">dead_neighbor_count</span> <span class="o">+=</span> <span class="mi">1</span>
-    
-    <span class="c1"># Now, we can implement the rules in python logic:</span>
-    <span class="k">if</span> <span class="n">old_state</span> <span class="o">==</span> <span class="s2">&quot;alive&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">alive_neighbor_count</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;dead&quot;</span>
-        <span class="k">elif</span> <span class="n">alive_neighbor_count</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">alive_neighbor_count</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;alive&quot;</span>
-        <span class="k">elif</span> <span class="n">alive_neighbor_count</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;dead&quot;</span>
-    <span class="k">elif</span> <span class="n">old_state</span> <span class="o">==</span> <span class="s2">&quot;dead&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">alive_neighbor_count</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;alive&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;dead&quot;</span>
-    
-    <span class="k">return</span> <span class="n">old_state</span>
-
-<span class="k">class</span> <span class="nc">GameOfLifeController</span><span class="p">(</span><span class="n">BasicController</span><span class="p">):</span>
-    
-    <span class="k">def</span> <span class="nf">pre_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">structure</span><span class="p">):</span>
-        <span class="c1"># Before the simulation runs, we build a neighborhood based on the </span>
-        <span class="c1"># structure of the current simulation.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood</span> <span class="o">=</span> <span class="n">MooreNbHoodBuilder</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span>
-    
-    <span class="k">def</span> <span class="nf">get_state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_id</span><span class="p">,</span> <span class="n">curr_state</span><span class="p">:</span> <span class="n">SimulationState</span><span class="p">):</span>
-        <span class="n">neighbor_site_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood</span><span class="o">.</span><span class="n">neighbors_of</span><span class="p">(</span><span class="n">site_id</span><span class="p">)</span>
-        
-        <span class="n">neighbor_states</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">nb_site_id</span> <span class="ow">in</span> <span class="n">neighbor_site_ids</span><span class="p">:</span>
-            <span class="n">neighbor_state</span> <span class="o">=</span> <span class="n">curr_state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="n">nb_site_id</span><span class="p">)</span>
-            <span class="n">neighbor_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbor_state</span><span class="p">[</span><span class="n">DISCRETE_OCCUPANCY</span><span class="p">])</span>
-
-        <span class="n">current_state</span> <span class="o">=</span> <span class="n">curr_state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="n">site_id</span><span class="p">)[</span><span class="n">DISCRETE_OCCUPANCY</span><span class="p">]</span>
-        
-        <span class="n">new_state</span> <span class="o">=</span> <span class="n">update_state</span><span class="p">(</span><span class="n">current_state</span><span class="p">,</span> <span class="n">neighbor_states</span><span class="p">)</span>
-        <span class="c1"># print(site_id, current_state, neighbor_states, new_state)</span>
-        <span class="n">updates</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">DISCRETE_OCCUPANCY</span><span class="p">:</span> <span class="n">new_state</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">updates</span>
-</pre></div>
-<div id="cell-18" class="clipboard-copy-txt">def update_state(old_state, neighboring_states):
-    alive_neighbor_count = 0
-    dead_neighbor_count = 0
-    
-    for state in neighboring_states:
-        if state == "alive":
-            alive_neighbor_count += 1
-        else:
-            # since all cells are either alive or dead, nothing else
-            dead_neighbor_count += 1
-    
-    # Now, we can implement the rules in python logic:
-    if old_state == "alive":
-        if alive_neighbor_count < 2:
-            return "dead"
-        elif alive_neighbor_count == 2 or alive_neighbor_count == 3:
-            return "alive"
-        elif alive_neighbor_count > 3:
-            return "dead"
-    elif old_state == "dead":
-        if alive_neighbor_count == 3:
-            return "alive"
-        else:
-            return "dead"
-    
-    return old_state
-
-class GameOfLifeController(BasicController):
-    
-    def pre_run(self, initial_state, structure):
-        # Before the simulation runs, we build a neighborhood based on the 
-        # structure of the current simulation.
-        self.neighborhood = MooreNbHoodBuilder().get(structure)
-    
-    def get_state_update(self, site_id, curr_state: SimulationState):
-        neighbor_site_ids = self.neighborhood.neighbors_of(site_id)
-        
-        neighbor_states = []
-        for nb_site_id in neighbor_site_ids:
-            neighbor_state = curr_state.get_site_state(nb_site_id)
-            neighbor_states.append(neighbor_state[DISCRETE_OCCUPANCY])
-
-        current_state = curr_state.get_site_state(site_id)[DISCRETE_OCCUPANCY]
-        
-        new_state = update_state(current_state, neighbor_states)
-        # print(site_id, current_state, neighbor_states, new_state)
-        updates = {
-            DISCRETE_OCCUPANCY: new_state
-        }
-        return updates
-            </div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Finally, we instantiate our controller and a <code>Runner</code>, and let the simulation run for a few steps.</p>
-
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[38]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-19">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">controller</span> <span class="o">=</span> <span class="n">GameOfLifeController</span><span class="p">()</span>
-<span class="n">runner</span> <span class="o">=</span> <span class="n">Runner</span><span class="p">(</span><span class="n">parallel</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">starting_step</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">starting_step</span><span class="o">.</span><span class="n">structure</span><span class="p">)</span>
-</pre></div>
-<div id="cell-19" class="clipboard-copy-txt">controller = GameOfLifeController()
-runner = Runner(parallel = True)
-result = runner.run(starting_step.state, controller, 100, structure=starting_step.structure)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>100%|████████████████████████████████████████| 3481/3481 [00:00&lt;00:00, 55105.10it/s]
-100%|█████████████████████████████████████████████| 100/100 [00:01&lt;00:00, 59.10it/s]
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[39]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-20">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get_step</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get_step</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get_step</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-</pre></div>
-<div id="cell-20" class="clipboard-copy-txt">step_artist.jupyter_show(result.get_step(2), cell_size=3)
-step_artist.jupyter_show(result.get_step(4), cell_size=3)
-step_artist.jupyter_show(result.get_step(8), cell_size=3)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-<div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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
-"
-class="
-"
->
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-<div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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
-"
-class="
-"
->
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-<div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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
-"
-class="
-"
->
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[40]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-21">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.visualization</span> <span class="kn">import</span> <span class="n">DiscreteSquareGridResultArtist</span>
-<span class="n">res_artist</span> <span class="o">=</span> <span class="n">DiscreteSquareGridResultArtist</span><span class="p">(</span><span class="n">step_artist</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-<span class="n">res_artist</span><span class="o">.</span><span class="n">to_gif</span><span class="p">(</span><span class="s2">&quot;out.gif&quot;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-</pre></div>
-<div id="cell-21" class="clipboard-copy-txt">from pylattica.visualization import DiscreteSquareGridResultArtist
-res_artist = DiscreteSquareGridResultArtist(step_artist, result)
-res_artist.to_gif("out.gif", wait=0.1)</div>
-    
-        </div>
-    </div>
-
-</div>
-</div>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-        
-        
-        <div class="CodeMirror cm-s-jupyter">
-        <div class="zeroclipboard-container">
-            <clipboard-copy for="cell-22">
-            <div>
-                <span class="notice" hidden>Copied!</span>
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 16 16" version="1.1"  data-view-component="true" class="clipboard-copy-icon">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path>
-                    <path fill="currentColor" fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
-                </svg>
-                </div>
-            </clipboard-copy>
-        </div>
-            <div class="highlight-ipynb hl-python"><pre><span></span>
-</pre></div>
-<div id="cell-22" class="clipboard-copy-txt"></div>
-    
-        </div>
-    </div>
-
-</div>
 </div>
 
 </div>
@@ -3785,7 +2579,7 @@ res_artist.to_gif("out.gif", wait=0.1)</div>
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="./" class="md-footer__link md-footer__link--prev" aria-label="Previous: Notebooks" rel="prev">
+        <a href="../game_of_life/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Conway&#39;s Game of Life" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -3794,20 +2588,20 @@ res_artist.to_gif("out.gif", wait=0.1)</div>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Notebooks
+              Conway's Game of Life
             </div>
           </div>
         </a>
       
       
         
-        <a href="../simulation_state/" class="md-footer__link md-footer__link--next" aria-label="Next: Simulation State in pylattica" rel="next">
+        <a href="../square_grids/" class="md-footer__link md-footer__link--next" aria-label="Next: Square Grid Simulations" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Simulation State in pylattica
+              Square Grid Simulations
             </div>
           </div>
           <div class="md-footer__button md-icon">
