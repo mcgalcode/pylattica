@@ -19,7 +19,7 @@ class GameOfLifeController(BasicController):
             self.variant = variant
         self.born, self.survive = process_variant_string(self.variant)
 
-    def pre_run(self, initial_state, structure = None):
+    def pre_run(self, initial_state, structure=None):
         self.neighborhood = MooreNbHoodBuilder().get(structure)
 
     def get_state_update(self, site_id, curr_state: SimulationState):
