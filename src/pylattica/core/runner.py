@@ -154,7 +154,7 @@ class Runner:
                     result.add_step(updates)
                     printif(verbose, f"Finished step {i}")
         else:
-            printif(verbose, f"Running in series.")
+            printif(verbose, "Running in series.")
             for _ in tqdm(range(num_steps)):
                 updates = self._take_step(state, controller)
                 state.batch_update(updates)
