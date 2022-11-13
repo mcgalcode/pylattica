@@ -379,16 +379,23 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#debugging" class="md-nav__link">
-    Debugging
+  <a href="#development" class="md-nav__link">
+    Development
   </a>
   
-    <nav class="md-nav" aria-label="Debugging">
+    <nav class="md-nav" aria-label="Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#grpcio" class="md-nav__link">
-    grpcio
+  <a href="#building-documentation" class="md-nav__link">
+    Building Documentation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linting" class="md-nav__link">
+    Linting
   </a>
   
 </li>
@@ -1080,16 +1087,23 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#debugging" class="md-nav__link">
-    Debugging
+  <a href="#development" class="md-nav__link">
+    Development
   </a>
   
-    <nav class="md-nav" aria-label="Debugging">
+    <nav class="md-nav" aria-label="Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#grpcio" class="md-nav__link">
-    grpcio
+  <a href="#building-documentation" class="md-nav__link">
+    Building Documentation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linting" class="md-nav__link">
+    Linting
   </a>
   
 </li>
@@ -1135,11 +1149,27 @@
 <p>Detailed documentation for this library can be found <a href="https://mcgalcode.github.io/pylattica/">here</a>.</p>
 <h3 id="examples">Examples</h3>
 <p>Example notebooks are included in <code>docs/examples</code>.</p>
-<h2 id="debugging">Debugging</h2>
-<h3 id="grpcio">grpcio</h3>
-<p>On M1 Macs, importing code related to the reaction-network can cause breakages. The suggested action from the error message, reproduced below, should fix any issues.</p>
-<div class="highlight"><pre><span></span><code>Failed to import grpc on Apple Silicon. On Apple Silicon machines, try `pip uninstall grpcio; conda install grpcio`. Check out https://docs.ray.io/en/master/ray-overview/installation.html#m1-mac-apple-silicon-support for more details.
+<h2 id="development">Development</h2>
+<h3 id="building-documentation">Building Documentation</h3>
+<p>The docs for this project are built using mkdocs. To build the documentation</p>
+<div class="highlight"><pre><span></span><code>pip install &#39;.[docs]&#39;
+mkdocs build
 </code></pre></div>
+<p>To run the documentation server locally:</p>
+<div class="highlight"><pre><span></span><code>mkdocs serve
+</code></pre></div>
+<h3 id="linting">Linting</h3>
+<p>This project uses the <code>black</code> package for style and formatting, and <code>prospector</code> for type checking and other lint warnings. These packages are not listed as dependencies of this project, so you can install them manually. This is partially because this project doesn't rely on specific versions of them, and we expect developers to have their own installations already. You can run them as follows:</p>
+<p>To assess the changes that will happen if you run the <code>black</code> linter, run the following:</p>
+<div class="highlight"><pre><span></span><code>black --check src
+</code></pre></div>
+<p>To automatically make the changes, remove the <code>--check</code> flag:</p>
+<div class="highlight"><pre><span></span><code>black src
+</code></pre></div>
+<p>To run all other linters with prospector, use this:</p>
+<div class="highlight"><pre><span></span><code>prospector
+</code></pre></div>
+<p>In the top of this repository.</p>
 
 
 

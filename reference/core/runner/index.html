@@ -1516,7 +1516,7 @@ that this mode should be used with the is_async initialization parameter.</p>
         <span class="k">global</span> <span class="n">mp_globals</span>  <span class="c1"># pylint: disable=global-variable-not-assigned</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_async</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;running async&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running async&quot;</span><span class="p">)</span>
             <span class="n">site_queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
             <span class="n">site_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">get_random_site</span><span class="p">())</span>
 
@@ -1555,7 +1555,7 @@ that this mode should be used with the is_async initialization parameter.</p>
             <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_sites</span> <span class="o">/</span> <span class="n">PROCESSES</span><span class="p">)</span>
             <span class="n">printif</span><span class="p">(</span>
                 <span class="n">verbose</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;Distributing </span><span class="si">{</span><span class="n">num_sites</span><span class="si">}</span><span class="s2"> update tasks to </span><span class="si">{</span><span class="n">PROCESSES</span><span class="si">}</span><span class="s2"> workers in chunks of </span><span class="si">{</span><span class="n">chunk_size</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Distributing </span><span class="si">{</span><span class="n">num_sites</span><span class="si">}</span><span class="s2"> update tasks to </span><span class="si">{</span><span class="n">PROCESSES</span><span class="si">}</span><span class="s2"> workers in chunks of </span><span class="si">{</span><span class="n">chunk_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">get_context</span><span class="p">(</span><span class="s2">&quot;fork&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">PROCESSES</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
                 <span class="n">updates</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1566,7 +1566,7 @@ that this mode should be used with the is_async initialization parameter.</p>
                     <span class="n">result</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">updates</span><span class="p">)</span>
                     <span class="n">printif</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Finished step </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">printif</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Running in series.&quot;</span><span class="p">)</span>
+            <span class="n">printif</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="s2">&quot;Running in series.&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">)):</span>
                 <span class="n">updates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_take_step</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">controller</span><span class="p">)</span>
                 <span class="n">state</span><span class="o">.</span><span class="n">batch_update</span><span class="p">(</span><span class="n">updates</span><span class="p">)</span>
@@ -1874,7 +1874,7 @@ and one normal simulation step applies the update rule to every site.</p>
     <span class="k">global</span> <span class="n">mp_globals</span>  <span class="c1"># pylint: disable=global-variable-not-assigned</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_async</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;running async&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;running async&quot;</span><span class="p">)</span>
         <span class="n">site_queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
         <span class="n">site_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">get_random_site</span><span class="p">())</span>
 
@@ -1913,7 +1913,7 @@ and one normal simulation step applies the update rule to every site.</p>
         <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_sites</span> <span class="o">/</span> <span class="n">PROCESSES</span><span class="p">)</span>
         <span class="n">printif</span><span class="p">(</span>
             <span class="n">verbose</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s2">&quot;Distributing </span><span class="si">{</span><span class="n">num_sites</span><span class="si">}</span><span class="s2"> update tasks to </span><span class="si">{</span><span class="n">PROCESSES</span><span class="si">}</span><span class="s2"> workers in chunks of </span><span class="si">{</span><span class="n">chunk_size</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Distributing </span><span class="si">{</span><span class="n">num_sites</span><span class="si">}</span><span class="s2"> update tasks to </span><span class="si">{</span><span class="n">PROCESSES</span><span class="si">}</span><span class="s2"> workers in chunks of </span><span class="si">{</span><span class="n">chunk_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">get_context</span><span class="p">(</span><span class="s2">&quot;fork&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">PROCESSES</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
             <span class="n">updates</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1924,7 +1924,7 @@ and one normal simulation step applies the update rule to every site.</p>
                 <span class="n">result</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">updates</span><span class="p">)</span>
                 <span class="n">printif</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Finished step </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">printif</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Running in series.&quot;</span><span class="p">)</span>
+        <span class="n">printif</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="s2">&quot;Running in series.&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">)):</span>
             <span class="n">updates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_take_step</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">controller</span><span class="p">)</span>
             <span class="n">state</span><span class="o">.</span><span class="n">batch_update</span><span class="p">(</span><span class="n">updates</span><span class="p">)</span>
