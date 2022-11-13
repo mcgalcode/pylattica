@@ -4,7 +4,7 @@ from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 from pylattica.models.growth import GrowthController
 from pylattica.discrete import PhaseSet
 from pylattica.square_grid import DiscreteGridSetup
-from pylattica.square_grid.neighborhoods import PseudoHexagonalNeighborhoodBuilder2D, MooreNbHoodBuilder
+from pylattica.square_grid.neighborhoods import MooreNbHoodBuilder
 
 def test_can_run_growth_sim_parallel():
     phases = PhaseSet(["A", "B", "C", "D"])
@@ -18,7 +18,7 @@ def test_can_run_growth_sim_parallel():
     controller = GrowthController(
         phases,
         periodic_initial_state.structure,
-        neighborhood_spec=nb_spec,
+        nb_builder=nb_spec,
         background_phase="A"
     )
     runner = Runner(parallel=True)
@@ -46,7 +46,7 @@ def test_can_run_growth_sim_series():
     controller = GrowthController(
         phases,
         periodic_initial_state.structure,
-        neighborhood_spec=nb_spec,
+        nb_builder=nb_spec,
         background_phase="A"
     )
     runner = Runner(parallel=False)

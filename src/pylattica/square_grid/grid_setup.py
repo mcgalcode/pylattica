@@ -6,7 +6,7 @@ import numpy as np
 from ..core.constants import LOCATION, SITE_ID
 from ..core.distance_map import distance
 from ..core.neighborhoods import Neighborhood
-from ..core.periodic_state import PeriodicState
+from ..core.simulation import Simulation
 from ..core.periodic_structure import PeriodicStructure
 from ..core.simulation_state import SimulationState
 from ..discrete.phase_set import PhaseSet
@@ -50,7 +50,7 @@ class DiscreteGridSetup:
         state = self._build_blank_state(structure, phase_name)
         return state
 
-    def setup_interface(self, size: int, p1: str, p2: str) -> PeriodicState:
+    def setup_interface(self, size: int, p1: str, p2: str) -> Simulation:
         """Generates a starting state that is divided into two phases. One phase
         occupies the left half of the state, and one phase occupies the right half of the state
 
@@ -70,11 +70,11 @@ class DiscreteGridSetup:
                 state.set_site_state(site[SITE_ID], {DISCRETE_OCCUPANCY: p1})
             else:
                 state.set_site_state(site[SITE_ID], {DISCRETE_OCCUPANCY: p2})
-        return PeriodicState(state, structure)
+        return Simulation(state, structure)
 
     def setup_particle(
         self, size: int, radius: int, bulk_phase: str, particle_phase: str
-    ) -> PeriodicState:
+    ) -> Simulation:
         """Generates a starting state with a bulk phase surrounding a particle in the
         center of the state.
 
@@ -95,7 +95,7 @@ class DiscreteGridSetup:
         state: SimulationState = self.add_particle_to_state(
             structure, state, center, radius, particle_phase
         )
-        return PeriodicState(state, structure)
+        return Simulation(state, structure)
 
     def setup_random_particles(
         self,
@@ -104,7 +104,7 @@ class DiscreteGridSetup:
         num_particles: int,
         bulk_phase: str,
         particle_phases: str,
-    ) -> PeriodicState:
+    ) -> Simulation:
         """Generates a starting state with a one phase in the background and num_particles particles distributed
         onto it randomly
 
@@ -129,7 +129,7 @@ class DiscreteGridSetup:
                 structure, state, rand_coords, radius, phase
             )
 
-        return PeriodicState(state, structure)
+        return Simulation(state, structure)
 
     def add_particle_to_state(
         self,
@@ -153,16 +153,16 @@ class DiscreteGridSetup:
             for coords in coord_list:
                 site_id = structure.site_at(coords)[SITE_ID]
                 state.set_site_state(site_id, {DISCRETE_OCCUPANCY: phase})
-        return PeriodicState(state, structure)
+        return Simulation(state, structure)
 
-    def setup_noise(self, size: int, phases: typing.List[str]) -> PeriodicState:
+    def setup_noise(self, size: int, phases: typing.List[str]) -> Simulation:
         structure = self._builder.build(size)
         state: SimulationState = self._build_blank_state(structure)
         for site in structure.sites():
             state.set_site_state(
                 site[SITE_ID], {DISCRETE_OCCUPANCY: random.choice(phases)}
             )
-        return PeriodicState(state, structure)
+        return Simulation(state, structure)
 
     def setup_random_sites(
         self,
@@ -172,7 +172,7 @@ class DiscreteGridSetup:
         nuc_species: typing.List[str],
         nuc_ratios: typing.List[float] = None,
         buffer: int = 2,
-    ) -> PeriodicState:
+    ) -> Simulation:
         """_summary_
 
         Args:
@@ -199,7 +199,7 @@ class DiscreteGridSetup:
             nuc_ratios = np.ones((len(nuc_species)))
 
         specie_idxs = np.array(range(0, len(nuc_species)))
-        normalized_ratios = nuc_ratios / np.sum(nuc_ratios)
+        normalized_ratios = np.array(nuc_ratios) / np.sum(nuc_ratios)
 
         total_attempts = 0
         num_sites_planted = 0
@@ -227,6 +227,7 @@ class DiscreteGridSetup:
                     != background_spec
                 ):
                     found_existing_nucleus_in_nb = True
+            
             if not found_existing_nucleus_in_nb:
                 chosen_spec = nuc_species[
                     np.random.choice(specie_idxs, p=normalized_ratios)
@@ -236,4 +237,4 @@ class DiscreteGridSetup:
 
             total_attempts += 1
 
-        return PeriodicState(state, structure)
+        return Simulation(state, structure)

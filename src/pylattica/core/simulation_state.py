@@ -120,7 +120,7 @@ class SimulationState:
         old_state = self._state[SITES].get(site_id)
         if old_state is None:
             old_state = {SITE_ID: site_id}
-
+            
         self._state[SITES][site_id] = {**old_state, **updates}
 
     def batch_update(self, update_batch: Dict) -> None:

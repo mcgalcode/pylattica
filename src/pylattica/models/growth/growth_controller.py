@@ -13,17 +13,17 @@ class GrowthController(BasicController):
         phase_set: PhaseSet,
         periodic_struct: PeriodicStructure,
         background_phase: str = VACANT,
-        neighborhood_spec: NeighborhoodBuilder = None,
+        nb_builder: NeighborhoodBuilder = None,
     ) -> None:
         self.background_phase = background_phase
         self.phase_set: PhaseSet = phase_set
 
-        if neighborhood_spec is None:
-            self.neighborhood_spec = MooreNbHoodBuilder(1, dim=periodic_struct.dim)
+        if nb_builder is None:
+            self.nb_builder = MooreNbHoodBuilder(1, dim=periodic_struct.dim)
         else:
-            self.neighborhood_spec = neighborhood_spec
+            self.nb_builder = nb_builder
 
-        self.nb_graph = self.neighborhood_spec.get(periodic_struct)
+        self.nb_graph = self.nb_builder.get(periodic_struct)
 
     def get_state_update(self, site_id: int, prev_state: SimulationState):
         curr_state = prev_state.get_site_state(site_id)

@@ -6,14 +6,14 @@ from .periodic_structure import PeriodicStructure
 from .simulation_state import SimulationState
 
 
-class PeriodicState:
+class Simulation:
     """A wrapper class for binding a SimulationState to the structure
     with which it belongs. Simplifies actions like retrieving simulation
     state based on site location.
     """
 
     def __init__(self, state: SimulationState, structure: PeriodicStructure):
-        """Instantiates a PeriodicState with the provided state and structure.
+        """Instantiates a Simulation with the provided state and structure.
 
         Parameters
         ----------

@@ -104,6 +104,7 @@ class Runner:
         global mp_globals  # pylint: disable=global-variable-not-assigned
 
         if self.is_async:
+            print('running async')
             site_queue = deque()
             site_queue.append(controller.get_random_site())
 
@@ -140,7 +141,8 @@ class Runner:
             printif(verbose, f"Running in parallel using {PROCESSES} workers")
             num_sites = initial_state.size
             chunk_size = math.ceil(num_sites / PROCESSES)
-            print(
+            printif(
+                verbose,
                 f"Distributing {num_sites} update tasks to {PROCESSES} workers in chunks of {chunk_size}"
             )
             with mp.get_context("fork").Pool(PROCESSES) as pool:
@@ -152,9 +154,11 @@ class Runner:
                     result.add_step(updates)
                     printif(verbose, f"Finished step {i}")
         else:
+            printif(verbose, f"Running in series.")
             for _ in tqdm(range(num_steps)):
                 updates = self._take_step(state, controller)
                 state.batch_update(updates)
+                print(updates)
                 result.add_step(updates)
 
         return result

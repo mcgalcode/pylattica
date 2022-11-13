@@ -10,6 +10,9 @@ nav:
     - Notebooks: ./examples/game_of_life.ipynb
   - Notebooks:
     - Game Of Life: ./examples/game_of_life.ipynb
+    - Simulation State: ./examples/simulation_state.ipynb
+    - Square Grids: ./examples/square_grids.ipynb
+    - Life Like Demos: ./examples/life_like_demos.ipynb
   - Reference:
     - Core:
       - Runner: reference/core/runner.md
@@ -61,7 +64,7 @@ theme:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  # - pymdownx.emoji
+  - pymdownx.emoji
   - pymdownx.magiclink
   - pymdownx.snippets:
       check_paths: true
