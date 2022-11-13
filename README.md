@@ -22,12 +22,43 @@ Detailed documentation for this library can be found [here](https://mcgalcode.gi
 
 Example notebooks are included in `docs/examples`.
 
-## Debugging
+## Development
 
-### grpcio
+### Building Documentation
 
-On M1 Macs, importing code related to the reaction-network can cause breakages. The suggested action from the error message, reproduced below, should fix any issues.
+The docs for this project are built using mkdocs. To build the documentation
 
 ```
-Failed to import grpc on Apple Silicon. On Apple Silicon machines, try `pip uninstall grpcio; conda install grpcio`. Check out https://docs.ray.io/en/master/ray-overview/installation.html#m1-mac-apple-silicon-support for more details.
+pip install '.[docs]'
+mkdocs build
 ```
+
+To run the documentation server locally:
+
+```
+mkdocs serve
+```
+
+### Linting
+
+This project uses the `black` package for style and formatting, and `prospector` for type checking and other lint warnings. These packages are not listed as dependencies of this project, so you can install them manually. This is partially because this project doesn't rely on specific versions of them, and we expect developers to have their own installations already. You can run them as follows:
+
+To assess the changes that will happen if you run the `black` linter, run the following:
+
+```
+black --check src
+```
+
+To automatically make the changes, remove the `--check` flag:
+
+```
+black src
+```
+
+To run all other linters with prospector, use this:
+
+```
+prospector
+```
+
+In the top of this repository.
