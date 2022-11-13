@@ -227,7 +227,7 @@ class DiscreteGridSetup:
                     != background_spec
                 ):
                     found_existing_nucleus_in_nb = True
-            
+
             if not found_existing_nucleus_in_nb:
                 chosen_spec = nuc_species[
                     np.random.choice(specie_idxs, p=normalized_ratios)
