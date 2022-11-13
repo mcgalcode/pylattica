@@ -28,7 +28,7 @@ class VonNeumannNbHood3DBuilder(StructureNeighborhoodBuilder):
 
         filtered_points = []
         for point in points:
-            if sum(np.abs(p) for p in point) < size:
+            if sum(np.abs(p) for p in point) <= size:
                 filtered_points.append(point)
 
         super().__init__({SimpleSquare2DStructureBuilder.SITE_CLASS: filtered_points})

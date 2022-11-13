@@ -66,7 +66,7 @@ class DiscreteResultAnalyzer:
         for t in filtered_traces:
             fig.add_trace(go.Scatter(name=t[2], x=t[0], y=t[1], mode="lines"))
 
-        fig.show()
+        return fig
 
     def final_phase_fractions(self) -> Dict[str, float]:
         """Returns the fractions of each phase in the last frame of the simulation.
