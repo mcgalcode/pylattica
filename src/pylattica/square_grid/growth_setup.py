@@ -3,12 +3,10 @@ from pylattica.discrete import PhaseSet
 from .grid_setup import DiscreteGridSetup
 from ..models.growth import GrowthController
 
-# from ..square_grid.neighborhoods import PseudoHexagonalNeighborhoodBuilder2D
-
-
 class GrowthSetup:
-    def __init__(self, phase_set: PhaseSet):
+    def __init__(self, phase_set: PhaseSet, dim = 2):
         self._phases = phase_set
+        self.dim = dim
 
     def grow(
         self,
@@ -20,7 +18,7 @@ class GrowthSetup:
         nuc_ratios=None,
         buffer=2,
     ):
-        setup = DiscreteGridSetup(self._phases)
+        setup = DiscreteGridSetup(self._phases, dim=self.dim)
         simulation = setup.setup_random_sites(
             size,
             num_sites_desired=num_sites_desired,

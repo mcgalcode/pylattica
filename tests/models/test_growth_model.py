@@ -26,11 +26,11 @@ def test_can_run_growth_sim_parallel():
 
     analyzer = StateAnalyzer(periodic_initial_state.structure)
 
-    assert analyzer.get_site_count_where_equal(res.get_step(2), {
+    assert analyzer.get_site_count_where_equal(res.get_step(1), {
         DISCRETE_OCCUPANCY: "B"
     }) == 9
 
-    assert analyzer.get_site_count_where_equal(res.get_step(3), {
+    assert analyzer.get_site_count_where_equal(res.get_step(2), {
         DISCRETE_OCCUPANCY: "B"
     }) == 25
 
@@ -54,10 +54,10 @@ def test_can_run_growth_sim_series():
 
     analyzer = StateAnalyzer(periodic_initial_state.structure)
 
-    assert analyzer.get_site_count_where_equal(res.get_step(2), {
+    assert analyzer.get_site_count_where_equal(res.get_step(1), {
         DISCRETE_OCCUPANCY: "B"
     }) == 9
 
-    assert analyzer.get_site_count_where_equal(res.get_step(3), {
+    assert analyzer.get_site_count_where_equal(res.get_step(2), {
         DISCRETE_OCCUPANCY: "B"
     }) == 25

@@ -42,6 +42,19 @@ class SquareGridArtist:
     def get_img(self, state: SimulationState, **kwargs):
         return self._draw_image(state, **kwargs)
 
+    def save_img(self, state: SimulationState, filename: str, **kwargs) -> None:
+        """Saves the areaction result as an animated GIF.
+
+        Args:
+            filename (str): The name of the output GIF. Must end in .gif.
+            color_map (_type_, optional): Defaults to None.
+            cell_size (int, optional): The side length of a grid cell in pixels. Defaults to 20.
+            wait (float, optional): The time in seconds between each frame. Defaults to 0.8.
+        """
+        img = self.get_img(state, **kwargs)
+        img.save(filename)
+        return filename
+
 
 class DiscreteSquareGridArtist(SquareGridArtist):
     @classmethod
@@ -85,7 +98,10 @@ class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
         size = int(math.sqrt(state.size))
         struct = SimpleSquare2DStructureBuilder().build(size)
 
-        legend = self.get_legend(state)
+        legend = kwargs.get("color_map")
+        if legend is None:
+            legend = self.get_legend(state)
+            
         state_size = int(struct.bounds[0])
         width = state_size + 6
 
@@ -181,6 +197,7 @@ class DiscreteSquareGridArtist3D(DiscreteSquareGridArtist):
                 colors = np.array(legend[phase]) / 255
                 ax.voxels(data, facecolors=colors, edgecolor="k", linewidth=0.25)
 
+        ax.legend()
         plt.axis("off")
         fig = ax.get_figure()
         buf = io.BytesIO()

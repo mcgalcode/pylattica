@@ -34,18 +34,24 @@ class DiscreteSquareGridResultArtist:
 
     def _get_images(self, **kwargs):
         color_map = kwargs.get("color_map", self.phase_color_map)
-        if color_map is None:
-            color_map = self.phase_color_map
-
+        kwargs["color_map"] = color_map
+        
+        draw_freq = kwargs.get("draw_freq", 1)
+        indices = list(range(0, len(self.result), draw_freq))
+        
+        
         global _dsr_globals  # pylint: disable=global-variable-not-assigned
         _dsr_globals["artist"] = self._step_artist
         imgs = []
+
         PROCESSES = mp.cpu_count()
+
         with mp.get_context("fork").Pool(PROCESSES) as pool:
             params = []
-            for idx, step in enumerate(self.result.steps):
+            for idx in indices:
                 label = f"Step {idx}"
                 step_kwargs = {**kwargs, "label": label}
+                step = self.result.get_step(idx)
                 params.append([step, step_kwargs])
 
             for img in pool.starmap(get_img_parallel, params):
@@ -70,8 +76,8 @@ class DiscreteSquareGridResultArtist:
             color_map = self.phase_color_map
 
         label = f"Step {step_no}"
-        step = self.result.steps[step_no]
-        self._step_artist.jupyter_show(step, label, cell_size=cell_size)
+        step = self.result.get_step(step_no)
+        self._step_artist.jupyter_show(step, label=label, cell_size=cell_size)
 
     def jupyter_play(
         self,
@@ -127,7 +133,7 @@ class DiscreteSquareGridResultArtist:
         return {
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
-            "steps": [s.as_dict() for s in self.result.steps],
+            "steps": [s.as_dict() for s in self.result.steps()],
             "phase_map": self.phase_set.as_dict(),
         }
 

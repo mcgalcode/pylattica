@@ -22,6 +22,11 @@ class SimulationState:
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
         }
+    
+    @classmethod
+    def from_dict(cls, state_dict):
+        state = state_dict["state"]
+        return cls(state)
 
     def __init__(self, state: Dict = None):
         """Initializes the SimulationState.

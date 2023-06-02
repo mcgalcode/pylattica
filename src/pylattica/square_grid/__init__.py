@@ -13,3 +13,5 @@ from .structure_builders import (
     SimpleSquare2DStructureBuilder,
     SimpleSquare3DStructureBuilder,
 )
+
+from .growth_setup import GrowthSetup

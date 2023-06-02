@@ -3,6 +3,7 @@ from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go
+from functools import lru_cache
 
 from ..core import SimulationResult, SimulationState
 from .discrete_step_analyzer import DiscreteStepAnalyzer
@@ -24,6 +25,7 @@ class DiscreteResultAnalyzer:
         """
         self._result = result
 
+    @lru_cache
     def all_phases(self) -> List[str]:
         """Returns all of the phases present across the analyzed result.
 
@@ -34,11 +36,11 @@ class DiscreteResultAnalyzer:
         """
         analyzer = DiscreteStepAnalyzer()
         phases = []
-        for step in self._result.steps:
+        for step in self._result.steps():
             curr_phases = analyzer.phases_present(step)
             phases = phases + curr_phases
 
-        return list(set(phases))
+        return frozenset(phases)
 
     def plot_phase_fractions(self, min_prevalence=0.01) -> None:
         """In a Jupyter Notebook environment, plots the phase prevalence traces for the simulation.
@@ -124,10 +126,8 @@ class DiscreteResultAnalyzer:
         }
 
     def _get_steps_to_plot(self) -> Tuple[List[int], List[SimulationState]]:
-        num_points = 10
-        if len(self._result) > num_points:
-            step_size = round(len(self._result) / num_points)
-            step_idxs = list(range(1, len(self._result), step_size))
-        else:
-            step_idxs = list(range(1, len(self._result)))
+        num_points = min(100, len(self._result))
+        step_size = max(1, round(len(self._result) / num_points))
+        self._result.load_steps(step_size)
+        step_idxs = list(range(0, len(self._result), step_size))
         return step_idxs, [self._result.get_step(step_idx) for step_idx in step_idxs]

@@ -1,4 +1,5 @@
 import math
+import random
 import multiprocessing as mp
 from collections import deque
 from typing import List
@@ -14,7 +15,7 @@ from .utils import printif
 mp_globals = {}
 
 
-class Runner:
+class  Runner:
     """Class for orchestrating the running of the simulation. An automaton simulation
     is run by applying the update rule (as implemented by a Controller) to sites
     in the SimulationState repeatedly. There are two primary modes of accomplishing
@@ -96,22 +97,26 @@ class Runner:
         printif(verbose, "Initializing run")
         printif(verbose, f"Running w/ sim. size {initial_state.size}")
 
+        if controller.is_async:
+            self.is_async = True
+
         result = controller.instantiate_result(initial_state.copy())
         controller.pre_run(initial_state, structure)
 
-        state = initial_state.copy()
+        live_state = initial_state.copy()
 
         global mp_globals  # pylint: disable=global-variable-not-assigned
 
         if self.is_async:
-            print("running async")
+            print("Running asynchronously")
             site_queue = deque()
-            site_queue.append(controller.get_random_site())
+            # site_queue.append(controller.get_random_site())
+            site_queue.append(random.randint(0,len(structure.site_ids) - 1))
 
             for _ in tqdm(range(num_steps)):
                 site_id = site_queue.popleft()
 
-                controller_response = controller.get_state_update(site_id, state)
+                controller_response = controller.get_state_update(site_id, live_state)
                 next_sites = []
                 # See if controller is specifying which sites to visit next
                 if isinstance(controller_response, tuple):
@@ -120,14 +125,12 @@ class Runner:
                     state_updates = controller_response
 
                 state_updates = merge_updates(state_updates, site_id=site_id)
-
-                state.batch_update(state_updates)
+                live_state.batch_update(state_updates)
                 site_queue.extend(next_sites)
                 result.add_step(state_updates)
 
                 if len(site_queue) == 0:
-                    site = controller.get_random_site()
-                    site_queue.append(site)
+                    site_queue.append(random.randint(0,len(structure.site_ids) - 1))
 
         elif self.parallel:
             mp_globals["controller"] = controller
@@ -151,14 +154,13 @@ class Runner:
                     updates = self._take_step_parallel(
                         updates, pool, chunk_size=chunk_size
                     )
+                    # print(updates)
                     result.add_step(updates)
-                    printif(verbose, f"Finished step {i}")
         else:
             printif(verbose, "Running in series.")
             for _ in tqdm(range(num_steps)):
-                updates = self._take_step(state, controller)
-                state.batch_update(updates)
-                print(updates)
+                updates = self._take_step(live_state, controller)
+                live_state.batch_update(updates)
                 result.add_step(updates)
 
         return result
@@ -220,6 +222,7 @@ def _step_batch(
     batch_updates = None
     for site_id in id_batch:
         site_updates = controller.get_state_update(site_id, previous_state)
+        # print(site_updates)
         batch_updates = merge_updates(site_updates, batch_updates, site_id)
 
     return batch_updates
@@ -236,7 +239,7 @@ def merge_updates(new_updates, curr_updates=None, site_id=None):
     # if this is a total
     if SITES in new_updates or GENERAL in new_updates:
         curr_updates[SITES].update(new_updates.get(SITES, {}))
-        curr_updates[GENERAL].update(new_updates.get(SITES, {}))
+        curr_updates[GENERAL].update(new_updates.get(GENERAL, {}))
 
     elif set(map(type, new_updates.keys())) == {int}:
         curr_updates[SITES].update(new_updates)

@@ -41,7 +41,7 @@ class Neighborhood(AbstractNeighborhood):
         nbs = self._graph.neighbors(site_id)
         if include_weights:
             weighted_nbs = [
-                (nb_id, self._graph.edges[site_id, nb_id]["weight"]) for nb_id in nbs
+                (nb_id, self._graph.get_edge_data(site_id, nb_id)) for nb_id in nbs
             ]
             return weighted_nbs
 

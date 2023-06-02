@@ -1,7 +1,9 @@
+import tqdm
+
 from typing import Dict, List
 
 from monty.serialization import dumpfn, loadfn
-
+import datetime
 from .simulation_state import SimulationState
 
 
@@ -20,10 +22,10 @@ class SimulationResult:
 
     @classmethod
     def from_dict(cls, res_dict):
-        steps = res_dict["steps"]
-        res = cls({})
-        for step in steps:
-            res.add_step(step)
+        diffs = res_dict["diffs"]
+        res = cls(res_dict["initial_state"])
+        for diff in diffs:
+            res.add_step(diff)
         return res
 
     def __init__(self, starting_state: SimulationState):
@@ -35,8 +37,8 @@ class SimulationResult:
             The state with which the simulation started.
         """
         self.initial_state = starting_state
-        self._steps: list[SimulationState] = [starting_state]
         self._diffs: list[dict] = []
+        self._stored_states = {}
 
     def add_step(self, updates: Dict[int, Dict]) -> None:
         """Takes a set of updates as a dictionary mapping site IDs
@@ -55,15 +57,11 @@ class SimulationResult:
         updates : dict
             The changes associated with a new simulation step.
         """
-        new_step = self._steps[-1].copy()
-        new_step.batch_update(updates)
-        self._steps.append(new_step)
         self._diffs.append(updates)
 
     def __len__(self) -> int:
         return len(self._diffs) + 1
 
-    @property
     def steps(self) -> List[SimulationState]:
         """Returns a list of all the steps from this simulation.
 
@@ -72,7 +70,10 @@ class SimulationResult:
         List[SimulationState]
             The list of steps
         """
-        return self._steps
+        live_state = self.initial_state.copy()
+        for diff in self._diffs:
+            yield live_state
+            live_state.batch_update(diff)
 
     @property
     def last_step(self) -> SimulationState:
@@ -83,11 +84,21 @@ class SimulationResult:
         SimulationState
             The last step of the simulation
         """
-        return self.get_step(len(self))
+        return self.get_step(len(self) - 1)
 
     @property
     def first_step(self):
-        return self.get_step(1)
+        return self.get_step(0)
+
+    def load_steps(self, interval=1):
+        live_state = self.initial_state.copy()
+        self._stored_states[0] = self.initial_state.copy()
+        for ud_idx in tqdm.tqdm(range(0, len(self._diffs)), desc="Constructing result from diffs"):
+            step_no = ud_idx + 1
+            live_state.batch_update(self._diffs[ud_idx])
+            if step_no % interval == 0 and self._stored_states.get(step_no) is None:
+                stored_state = live_state.copy()
+                self._stored_states[step_no] = stored_state
 
     def get_step(self, step_no) -> SimulationState:
         """Retrieves the step at the provided number.
@@ -102,16 +113,25 @@ class SimulationResult:
         SimulationState
             The simulation state at the requested step.
         """
-        return self._steps[step_no - 1]
+
+        stored = self._stored_states.get(step_no)
+        if stored is not None:
+            return stored
+        else:
+            state = self.initial_state.copy()
+            for ud_idx in range(0, step_no):
+                state.batch_update(self._diffs[ud_idx])
+            return state
 
     def as_dict(self):
         return {
-            "steps": [s.as_dict() for s in self._steps],
+            "initial_state": self.initial_state.as_dict(),
+            "diffs": self._diffs,
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
         }
 
-    def to_file(self, fpath: str) -> None:
+    def to_file(self, fpath: str = None) -> None:
         """Serializes this result to the specified filepath.
 
         Parameters
@@ -119,4 +139,9 @@ class SimulationResult:
         fpath : str
             The filepath at which to save the serialized simulation result.
         """
+        if fpath is None:
+            now = datetime.datetime.now()
+            date_string = now.strftime("%m-%d-%Y-%H-%M")
+            fpath = f'{date_string}.json'        
+
         dumpfn(self, fpath)
