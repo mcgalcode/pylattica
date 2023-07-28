@@ -191,8 +191,9 @@ class DiscreteGridSetup:
         """
         structure = self._builder.build(size)
         state = self.setup_solid_phase(structure, background_spec)
-        nb_spec: MooreNbHoodBuilder = MooreNbHoodBuilder(buffer, dim=structure.dim)
-        nb_graph: Neighborhood = nb_spec.get(structure)
+        if buffer is not None:
+            nb_spec: MooreNbHoodBuilder = MooreNbHoodBuilder(buffer, dim=structure.dim)
+            nb_graph: Neighborhood = nb_spec.get(structure)
         all_sites = structure.sites()
 
         if nuc_ratios is None:
@@ -221,12 +222,13 @@ class DiscreteGridSetup:
 
             found_existing_nucleus_in_nb = False
 
-            for nb_site_id in nb_graph.neighbors_of(rand_site_id):
-                if (
-                    state.get_site_state(nb_site_id)[DISCRETE_OCCUPANCY]
-                    != background_spec
-                ):
-                    found_existing_nucleus_in_nb = True
+            if buffer is not None:
+                for nb_site_id in nb_graph.neighbors_of(rand_site_id):
+                    if (
+                        state.get_site_state(nb_site_id)[DISCRETE_OCCUPANCY]
+                        != background_spec
+                    ):
+                        found_existing_nucleus_in_nb = True
 
             if not found_existing_nucleus_in_nb:
                 chosen_spec = nuc_species[

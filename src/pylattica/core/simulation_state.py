@@ -1,10 +1,7 @@
 import copy
 from typing import Dict, List
 
-from .constants import SITE_ID
-
-GENERAL = "GENERAL"
-SITES = "SITES"
+from .constants import SITE_ID, SITES, GENERAL
 
 
 class SimulationState:

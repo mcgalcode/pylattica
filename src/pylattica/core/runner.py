@@ -9,7 +9,8 @@ from tqdm import tqdm
 from .basic_controller import BasicController
 from .simulation_result import SimulationResult
 from .periodic_structure import PeriodicStructure
-from .simulation_state import GENERAL, SITES, SimulationState
+from .simulation_state import SimulationState
+from .constants import GENERAL, SITES
 from .utils import printif
 
 mp_globals = {}
@@ -108,12 +109,12 @@ class  Runner:
         global mp_globals  # pylint: disable=global-variable-not-assigned
 
         if self.is_async:
-            print("Running asynchronously")
+            printif(verbose, "Running asynchronously")
             site_queue = deque()
             # site_queue.append(controller.get_random_site())
             site_queue.append(random.randint(0,len(structure.site_ids) - 1))
 
-            for _ in tqdm(range(num_steps)):
+            for _ in tqdm(range(num_steps), disable=(not verbose)):
                 site_id = site_queue.popleft()
 
                 controller_response = controller.get_state_update(site_id, live_state)
