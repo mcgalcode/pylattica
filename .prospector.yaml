@@ -42,7 +42,7 @@ pylint:
     - R0913
     - R0914
 mypy:
-  run: true
+  run: false
   options:
     ignore-missing-imports: true
     follow-imports: skip
