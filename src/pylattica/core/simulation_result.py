@@ -90,6 +90,9 @@ class SimulationResult:
     def first_step(self):
         return self.get_step(0)
 
+    def set_output(self, step: SimulationState):
+        self.output = step
+
     def load_steps(self, interval=1):
         live_state = self.initial_state.copy()
         self._stored_states[0] = self.initial_state.copy()

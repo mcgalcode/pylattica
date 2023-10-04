@@ -95,8 +95,6 @@ class  Runner:
         BasicSimulationResult
             The result of the simulation.
         """
-        printif(verbose, "Initializing run")
-        printif(verbose, f"Running w/ sim. size {initial_state.size}")
 
         if controller.is_async:
             self.is_async = True
@@ -109,7 +107,6 @@ class  Runner:
         global mp_globals  # pylint: disable=global-variable-not-assigned
 
         if self.is_async:
-            printif(verbose, "Running asynchronously")
             site_queue = deque()
             # site_queue.append(controller.get_random_site())
             site_queue.append(random.randint(0,len(structure.site_ids) - 1))
@@ -164,6 +161,7 @@ class  Runner:
                 live_state.batch_update(updates)
                 result.add_step(updates)
 
+        result.set_output(live_state)
         return result
 
     def _take_step_parallel(self, updates: dict, pool, chunk_size) -> SimulationState:
