@@ -148,7 +148,7 @@ class Runner:
             )
             with mp.get_context("fork").Pool(PROCESSES) as pool:
                 updates = {}
-                for i in tqdm(range(num_steps)):
+                for _ in tqdm(range(num_steps)):
                     updates = self._take_step_parallel(
                         updates, pool, chunk_size=chunk_size
                     )
