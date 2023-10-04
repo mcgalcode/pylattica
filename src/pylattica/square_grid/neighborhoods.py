@@ -41,7 +41,6 @@ class MooreNbHoodBuilder(StructureNeighborhoodBuilder):
 
 
 class CircularNeighborhoodBuilder(DistanceNeighborhoodBuilder):
-
     pass
 
 

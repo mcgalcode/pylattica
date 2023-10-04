@@ -228,7 +228,6 @@ def _step_batch(
 
 
 def merge_updates(new_updates, curr_updates=None, site_id=None):
-
     if new_updates is None:
         return curr_updates
 

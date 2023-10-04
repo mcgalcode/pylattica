@@ -11,7 +11,6 @@ def process_variant_string(v_string):
 
 
 class GameOfLifeController(BasicController):
-
     variant = None
 
     def __init__(self, variant="B3/S23"):

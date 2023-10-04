@@ -11,7 +11,6 @@ class StructureBuilder:
 
 
 class SimpleSquare2DStructureBuilder(StructureBuilder):
-
     SITE_CLASS = "_A"
 
     def __init__(self):
@@ -25,7 +24,6 @@ class SimpleSquare2DStructureBuilder(StructureBuilder):
 
 
 class SimpleSquare3DStructureBuilder(StructureBuilder):
-
     SITE_CLASS = "_A"
 
     def __init__(self):

@@ -90,7 +90,6 @@ class Lattice:
 
             for site_class, basis_vecs in site_motif.items():
                 for vec in basis_vecs:
-
                     site_loc = tuple(point + np.array(vec))
                     struct.add_site(site_class, site_loc)
 
