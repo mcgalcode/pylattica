@@ -101,7 +101,7 @@ class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
         legend = kwargs.get("color_map")
         if legend is None:
             legend = self.get_legend(state)
-            
+
         state_size = int(struct.bounds[0])
         width = state_size + 6
 

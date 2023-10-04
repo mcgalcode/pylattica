@@ -96,7 +96,9 @@ class SimulationResult:
     def load_steps(self, interval=1):
         live_state = self.initial_state.copy()
         self._stored_states[0] = self.initial_state.copy()
-        for ud_idx in tqdm.tqdm(range(0, len(self._diffs)), desc="Constructing result from diffs"):
+        for ud_idx in tqdm.tqdm(
+            range(0, len(self._diffs)), desc="Constructing result from diffs"
+        ):
             step_no = ud_idx + 1
             live_state.batch_update(self._diffs[ud_idx])
             if step_no % interval == 0 and self._stored_states.get(step_no) is None:
@@ -145,6 +147,6 @@ class SimulationResult:
         if fpath is None:
             now = datetime.datetime.now()
             date_string = now.strftime("%m-%d-%Y-%H-%M")
-            fpath = f'{date_string}.json'        
+            fpath = f"{date_string}.json"
 
         dumpfn(self, fpath)

@@ -35,11 +35,10 @@ class DiscreteSquareGridResultArtist:
     def _get_images(self, **kwargs):
         color_map = kwargs.get("color_map", self.phase_color_map)
         kwargs["color_map"] = color_map
-        
+
         draw_freq = kwargs.get("draw_freq", 1)
         indices = list(range(0, len(self.result), draw_freq))
-        
-        
+
         global _dsr_globals  # pylint: disable=global-variable-not-assigned
         _dsr_globals["artist"] = self._step_artist
         imgs = []

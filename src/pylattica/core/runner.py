@@ -16,7 +16,7 @@ from .utils import printif
 mp_globals = {}
 
 
-class  Runner:
+class Runner:
     """Class for orchestrating the running of the simulation. An automaton simulation
     is run by applying the update rule (as implemented by a Controller) to sites
     in the SimulationState repeatedly. There are two primary modes of accomplishing
@@ -109,7 +109,7 @@ class  Runner:
         if self.is_async:
             site_queue = deque()
             # site_queue.append(controller.get_random_site())
-            site_queue.append(random.randint(0,len(structure.site_ids) - 1))
+            site_queue.append(random.randint(0, len(structure.site_ids) - 1))
 
             for _ in tqdm(range(num_steps), disable=(not verbose)):
                 site_id = site_queue.popleft()
@@ -128,7 +128,7 @@ class  Runner:
                 result.add_step(state_updates)
 
                 if len(site_queue) == 0:
-                    site_queue.append(random.randint(0,len(structure.site_ids) - 1))
+                    site_queue.append(random.randint(0, len(structure.site_ids) - 1))
 
         elif self.parallel:
             mp_globals["controller"] = controller

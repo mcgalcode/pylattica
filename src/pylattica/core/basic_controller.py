@@ -33,7 +33,7 @@ class BasicController(ABC):
         pass
 
     def get_random_site(self):
-        return random.randint(0,len(self.structure.site_ids) - 1)
+        return random.randint(0, len(self.structure.site_ids) - 1)
 
     def instantiate_result(self, starting_state):
         return SimulationResult(starting_state=starting_state)

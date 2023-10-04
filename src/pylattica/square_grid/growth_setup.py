@@ -3,8 +3,9 @@ from pylattica.discrete import PhaseSet
 from .grid_setup import DiscreteGridSetup
 from ..models.growth import GrowthController
 
+
 class GrowthSetup:
-    def __init__(self, phase_set: PhaseSet, dim = 2):
+    def __init__(self, phase_set: PhaseSet, dim=2):
         self._phases = phase_set
         self.dim = dim
 
