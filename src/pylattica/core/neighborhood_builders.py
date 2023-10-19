@@ -6,16 +6,16 @@ import rustworkx as rx
 from tqdm import tqdm
 
 from .constants import LOCATION, SITE_CLASS, SITE_ID
-from .coordinate_utils import periodic_distance
 from .distance_map import EuclideanDistanceMap
 from .neighborhoods import Neighborhood
 from .periodic_structure import PeriodicStructure
+from .lattice import pbc_diff_cart
 
 
 class NeighborhoodBuilder(ABC):
     @abstractmethod
     def get(self, struct: PeriodicStructure) -> Neighborhood:
-        pass
+        pass # pragma: no cover
 
 
 class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
@@ -47,9 +47,7 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         NeighborGraph
             The resulting NeighborGraph
         """
-        # graph = nx.Graph()
         graph = rx.PyGraph()
-        dimensions = np.array(struct.bounds)
 
         all_sites = struct.sites()
 
@@ -59,10 +57,10 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         for curr_site in tqdm(all_sites):
             for other_site in struct.sites():
                 if curr_site[SITE_ID] != other_site[SITE_ID]:
-                    dist = periodic_distance(
+                    dist = pbc_diff_cart(
                         np.array(other_site[LOCATION]),
                         np.array(curr_site[LOCATION]),
-                        dimensions,
+                        struct.lattice,
                     )
                     if dist < self.cutoff:
                         graph.add_edge(curr_site[SITE_ID], other_site[SITE_ID], dist)
@@ -92,6 +90,9 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
             [0, -1],
         ]
     }
+
+    Note that there is reciprocity here between the A and B sites. The A sites
+    list B sites as their neighbors, and the B sites list A sites as their neighbors.
     """
 
     def __init__(self, spec: Dict[str, List[List[float]]]):
@@ -128,8 +129,7 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
             graph.add_node(site[SITE_ID])
 
         all_sites = struct.sites()
-        for i in tqdm(range(len(all_sites))):
-            site = all_sites[i]
+        for site in tqdm(all_sites):
             site_class = site[SITE_CLASS]
             location = site[LOCATION]
             site_class_neighbors = self._spec[site_class]

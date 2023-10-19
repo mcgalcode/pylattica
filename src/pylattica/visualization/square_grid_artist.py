@@ -102,7 +102,7 @@ class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
         if legend is None:
             legend = self.get_legend(state)
 
-        state_size = int(struct.bounds[0])
+        state_size = int(struct.lattice.vec_lengths[0])
         width = state_size + 6
 
         legend_border_width = 5

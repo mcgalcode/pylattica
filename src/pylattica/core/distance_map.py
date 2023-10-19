@@ -23,7 +23,7 @@ def distance(arr1: np.array, arr2: np.array) -> float:
     return np.sqrt(np.square(arr1 - arr2).sum())
 
 
-class DistanceMap:
+class DistanceMap():
     """
     The DistanceMap is a dictionary containing the distance from a
     center point to each point in a list of neighbor relative locations.

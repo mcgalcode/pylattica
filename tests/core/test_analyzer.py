@@ -21,6 +21,16 @@ def test_analyze_get_sites_arb_criteria(square_grid_2D_4x4: PeriodicStructure):
 
     sites = analyzer.get_sites(state, state_criteria=[_criteria_1, _criteria_2])
     assert len(sites) == 4
+
+def test_analyze_get_sites_no_criteria(square_grid_2D_4x4: PeriodicStructure):
+    state = SimulationState()
+    for idx, site in enumerate(square_grid_2D_4x4.sites()):
+        state.set_site_state(site[SITE_ID], { "trait": idx })
+    
+    analyzer = StateAnalyzer(square_grid_2D_4x4) 
+
+    sites = analyzer.get_sites(state)
+    assert len(sites) == len(state.all_site_states())   
         
 
 def test_analyze_count_equal(grid_setup: DiscreteGridSetup):

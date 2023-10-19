@@ -64,7 +64,7 @@ class DiscreteGridSetup:
         """
         structure = self._builder.build(size=size)
         state: SimulationState = self._build_blank_state(structure)
-        half: int = int(structure.bounds[0] / 2)
+        half: int = int(structure.lattice.vec_lengths[0] / 2)
         for site in structure.sites():
             if site[LOCATION][0] < half:
                 state.set_site_state(site[SITE_ID], {DISCRETE_OCCUPANCY: p1})
@@ -90,7 +90,7 @@ class DiscreteGridSetup:
         structure = self._builder.build(size=size)
         state: SimulationState = self.setup_solid_phase(structure, bulk_phase)
         center: typing.Tuple[int, int] = tuple(
-            structure.bounds[0] / 2 for _ in range(structure.dim)
+            structure.lattice.vec_lengths[0] / 2 for _ in range(structure.dim)
         )
         state: SimulationState = self.add_particle_to_state(
             structure, state, center, radius, particle_phase
@@ -122,7 +122,7 @@ class DiscreteGridSetup:
         state: SimulationState = self.setup_solid_phase(structure, bulk_phase)
         for _ in range(num_particles):
             rand_coords = tuple(
-                np.random.choice(int(structure.bounds[0])) for _ in range(structure.dim)
+                np.random.choice(int(structure.lattice.vec_lengths[0])) for _ in range(structure.dim)
             )
             phase: str = random.choice(particle_phases)
             state: np.array = self.add_particle_to_state(

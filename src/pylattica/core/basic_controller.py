@@ -20,9 +20,12 @@ class BasicController(ABC):
 
     is_async = False
 
+    def __init__(self, struct: PeriodicStructure):
+        self.structure = struct
+
     @abstractmethod
     def get_state_update(self, site_id: int, prev_state: SimulationState):
-        pass
+        pass # pragma: no cover
 
     def pre_run(
         self, initial_state: SimulationState, structure: PeriodicStructure = None
