@@ -25,7 +25,7 @@ class SimulationResult:
         diffs = res_dict["diffs"]
         res = cls(SimulationState.from_dict(res_dict["initial_state"]))
         for diff in diffs:
-            formatted = { int(k): v for k,v in diff.items() if k != "GENERAL" }
+            formatted = {int(k): v for k, v in diff.items() if k != "GENERAL"}
             res.add_step(formatted)
         return res
 

@@ -11,6 +11,7 @@ import math
 def periodize(frac_coords):
     return frac_coords - np.floor(frac_coords)
 
+
 def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike):
     """Returns the 'fractional distance' between two coordinates taking into
     account periodic boundary conditions. (from pymatgen)
@@ -31,6 +32,7 @@ def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike):
     """
     fdist = np.subtract(fcoords1, fcoords2)
     return fdist - np.round(fdist)
+
 
 def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lattice):
     """Returns the 'fractional distance' between two coordinates taking into
@@ -53,9 +55,12 @@ def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lat
     fcoords1 = lattice.get_fractional_coords(cart_coords1)
     fcoords2 = lattice.get_fractional_coords(cart_coords2)
     frac_dist = pbc_diff_frac(fcoords1, fcoords2)
-    return np.round(np.linalg.norm(np.abs(frac_dist) * lattice.vec_lengths), OFFSET_PRECISION)
+    return np.round(
+        np.linalg.norm(np.abs(frac_dist) * lattice.vec_lengths), OFFSET_PRECISION
+    )
 
-class Lattice():
+
+class Lattice:
     """A lattice is specified by it's lattice vectors. This class can then
     be used to create PeriodicStructure instances which are filled with
     a given motif. The usage flow for this class is:
@@ -90,13 +95,12 @@ class Lattice():
         self.vecs = np.array(vecs)
 
         dim = int(math.sqrt(len(np.array(self.vecs).flatten())))
-        mat = np.array(self.vecs, dtype=np.float64).reshape((dim, dim))     
+        mat = np.array(self.vecs, dtype=np.float64).reshape((dim, dim))
         mat.setflags(write=False)
 
         self._matrix: np.ndarray = mat
         self._inv_matrix: np.ndarray | None = None
-    
-   
+
         self.dim = len(vecs[0])
         self.vec_lengths = [np.linalg.norm(np.array(vec)) for vec in vecs]
         assert (
@@ -137,10 +141,10 @@ class Lattice():
             Fractional coordinates.
         """
         return np.dot(cart_coords, self.inv_matrix)
-    
+
     def get_periodized_cartesian_coords(self, cart_coords: ArrayLike) -> np.ndarray:
         frac = self.get_fractional_coords(cart_coords)
         return self.get_cartesian_coords(periodize(frac))
-    
+
     def get_scaled_lattice(self, num_cells: ArrayLike) -> Lattice:
         return Lattice(np.array([v * amt for amt, v in zip(num_cells, self.vecs)]))

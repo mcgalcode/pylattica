@@ -37,4 +37,6 @@ class SimpleSquare3DStructureBuilder(StructureBuilder):
         }
 
     def build(self, size):
-        return PeriodicStructure.build_from(self.lattice, (size, size, size), self._motif)
+        return PeriodicStructure.build_from(
+            self.lattice, (size, size, size), self._motif
+        )

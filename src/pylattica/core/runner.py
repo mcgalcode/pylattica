@@ -199,7 +199,7 @@ class Runner:
         return updates
 
 
-def _step_batch_parallel(id_batch: List[int], last_updates: dict): # pragma: no cover
+def _step_batch_parallel(id_batch: List[int], last_updates: dict):  # pragma: no cover
     """Here we are in a subprocess
 
     Args:

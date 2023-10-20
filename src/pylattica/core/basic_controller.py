@@ -25,7 +25,7 @@ class BasicController(ABC):
 
     @abstractmethod
     def get_state_update(self, site_id: int, prev_state: SimulationState):
-        pass # pragma: no cover
+        pass  # pragma: no cover
 
     def pre_run(
         self, initial_state: SimulationState, structure: PeriodicStructure = None

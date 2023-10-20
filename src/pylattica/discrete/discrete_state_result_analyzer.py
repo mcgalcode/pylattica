@@ -102,7 +102,7 @@ class DiscreteResultAnalyzer:
         analyzer = DiscreteStepAnalyzer()
         return analyzer.cell_fraction(self._result.get_step(step), phase)
 
-    def plot_phase_counts(self) -> None: # pragma: no cover
+    def plot_phase_counts(self) -> None:  # pragma: no cover
         """In a jupyter notebook environment, plots the number of phases at each
         time step.
         """

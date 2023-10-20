@@ -15,7 +15,7 @@ from .lattice import pbc_diff_cart
 class NeighborhoodBuilder(ABC):
     @abstractmethod
     def get(self, struct: PeriodicStructure) -> Neighborhood:
-        pass # pragma: no cover
+        pass  # pragma: no cover
 
 
 class DistanceNeighborhoodBuilder(NeighborhoodBuilder):

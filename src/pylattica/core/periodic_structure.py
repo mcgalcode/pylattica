@@ -10,6 +10,7 @@ from .constants import LOCATION, SITE_CLASS, SITE_ID, OFFSET_PRECISION
 
 VEC_OFFSET = 0.001
 
+
 class PeriodicStructure:
     """
     Represents a periodic arrangement of sites. Assigns
