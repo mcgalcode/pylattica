@@ -152,7 +152,6 @@ class Runner:
                     updates = self._take_step_parallel(
                         updates, pool, chunk_size=chunk_size
                     )
-                    # print(updates)
                     result.add_step(updates)
         else:
             printif(verbose, "Running in series.")
@@ -200,7 +199,7 @@ class Runner:
         return updates
 
 
-def _step_batch_parallel(id_batch: List[int], last_updates: dict):
+def _step_batch_parallel(id_batch: List[int], last_updates: dict): # pragma: no cover
     """Here we are in a subprocess
 
     Args:
@@ -221,7 +220,6 @@ def _step_batch(
     batch_updates = None
     for site_id in id_batch:
         site_updates = controller.get_state_update(site_id, previous_state)
-        # print(site_updates)
         batch_updates = merge_updates(site_updates, batch_updates, site_id)
 
     return batch_updates
@@ -238,10 +236,10 @@ def merge_updates(new_updates, curr_updates=None, site_id=None):
     if SITES in new_updates or GENERAL in new_updates:
         curr_updates[SITES].update(new_updates.get(SITES, {}))
         curr_updates[GENERAL].update(new_updates.get(GENERAL, {}))
-
+    # if these updates only include site updates
     elif set(map(type, new_updates.keys())) == {int}:
         curr_updates[SITES].update(new_updates)
-
+    # if these updates only apply to a single site
     elif site_id is not None:
         curr_updates[SITES].update({site_id: new_updates})
 

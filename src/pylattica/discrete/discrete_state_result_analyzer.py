@@ -102,28 +102,13 @@ class DiscreteResultAnalyzer:
         analyzer = DiscreteStepAnalyzer()
         return analyzer.cell_fraction(self._result.get_step(step), phase)
 
-    def plot_phase_counts(self) -> None:
+    def plot_phase_counts(self) -> None: # pragma: no cover
         """In a jupyter notebook environment, plots the number of phases at each
         time step.
         """
         xs = np.arange(len(self.steps))
         ys = [step.phase_count for step in self.steps]
         plt.plot(xs, ys)
-
-    def as_dict(self) -> Dict:
-        """Returns a dictionary representation of this object. Used for serialization
-
-        Returns
-        -------
-        Dict
-
-        """
-        return {
-            "@module": self.__class__.__module__,
-            "@class": self.__class__.__name__,
-            "steps": [s.as_dict() for s in self.steps],
-            "phase_map": self.phase_set.as_dict(),
-        }
 
     def _get_steps_to_plot(self) -> Tuple[List[int], List[SimulationState]]:
         num_points = min(100, len(self._result))

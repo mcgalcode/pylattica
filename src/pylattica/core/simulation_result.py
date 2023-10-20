@@ -23,9 +23,10 @@ class SimulationResult:
     @classmethod
     def from_dict(cls, res_dict):
         diffs = res_dict["diffs"]
-        res = cls(res_dict["initial_state"])
+        res = cls(SimulationState.from_dict(res_dict["initial_state"]))
         for diff in diffs:
-            res.add_step(diff)
+            formatted = { int(k): v for k,v in diff.items() if k != "GENERAL" }
+            res.add_step(formatted)
         return res
 
     def __init__(self, starting_state: SimulationState):
@@ -150,3 +151,4 @@ class SimulationResult:
             fpath = f"{date_string}.json"
 
         dumpfn(self, fpath)
+        return fpath

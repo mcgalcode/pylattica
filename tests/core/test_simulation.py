@@ -18,3 +18,9 @@ def test_retrieves_state_correctly(square_2x2_2D_grid_in_test: PeriodicStructure
     periodic_state = Simulation(state, square_2x2_2D_grid_in_test)
     site_state = periodic_state.state_at((0.5, 0.5))
     assert site_state['my_state_key'] == 2
+
+def test_returns_none_if_no_state(square_2x2_2D_grid_in_test: PeriodicStructure):
+    state = SimulationState()
+    sim = Simulation(state, square_2x2_2D_grid_in_test)
+
+    assert sim.state_at((0.6, 0.6)) is None
