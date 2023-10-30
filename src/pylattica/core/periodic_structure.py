@@ -177,6 +177,12 @@ class PeriodicStructure:
         else:
             return None
 
+    def site_class(self, site_id: int) -> str:
+        return self.get_site(site_id)[SITE_CLASS]
+
+    def site_location(self, site_id: int) -> str:
+        return self.get_site(site_id)[LOCATION]
+
     def get_site(self, site_id: int) -> Dict:
         """Returns the site with the specified ID.
 

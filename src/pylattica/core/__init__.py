@@ -8,6 +8,7 @@ from .periodic_structure import PeriodicStructure
 from .simulation import Simulation
 from .lattice import Lattice
 from .analyzer import StateAnalyzer
+from .structure_builder import StructureBuilder
 
 from .neighborhoods import Neighborhood, StochasticNeighborhood
 from .neighborhood_builders import (
