@@ -4,7 +4,7 @@ from pymatgen.core.lattice import Lattice as PmgLattice
 from ..core import Lattice as PylLattice, StructureBuilder, PeriodicStructure
 
 
-class PymatgenStructureConverter:
+class PymatgenStructureConverter():
     def to_pylattica_lattice(self, pmg_lat: PmgLattice):
         pmg_lat = pmg_lat
         pyl_lat = PylLattice(pmg_lat.matrix)
