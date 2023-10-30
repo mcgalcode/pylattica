@@ -75,7 +75,7 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
                     np.array(curr_site[LOCATION]),
                     struct.lattice,
                 )
-                print(dist)
+
                 if dist < self.cutoff:
                     nbs.append((other_site[SITE_ID], dist))
 
@@ -130,7 +130,7 @@ class AnnularNeighborhoodBuilder(NeighborhoodBuilder):
         return nbs
 
 
-class StructureNeighborhoodBuilder(NeighborhoodBuilder):
+class MotifNeighborhoodBuilder(NeighborhoodBuilder):
     """This NeighborhoodBuilder constructs NeighborGraphs with connections between
     points that are separated by one of a set of specific offset vectors.
 
@@ -158,7 +158,7 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
     """
 
     def __init__(self, spec: Dict[str, List[List[float]]]):
-        """Instantiates the StructureNeighborhoodBuilder by a spec as described in
+        """Instantiates the MotifNeighborhoodBuilder by a spec as described in
         the docstring for the class.
 
         Parameters

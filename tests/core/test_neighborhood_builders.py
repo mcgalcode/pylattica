@@ -3,7 +3,7 @@ import pytest
 import numpy as np
 import math
 
-from pylattica.core.neighborhood_builders import DistanceNeighborhoodBuilder, StructureNeighborhoodBuilder, AnnularNeighborhoodBuilder
+from pylattica.core.neighborhood_builders import DistanceNeighborhoodBuilder, MotifNeighborhoodBuilder, AnnularNeighborhoodBuilder
 from pylattica.structures.square_grid.structure_builders import SimpleSquare2DStructureBuilder
 
 def test_distance_nb_builder(square_grid_2D_4x4):
@@ -49,7 +49,7 @@ def test_annular_nb_hood_builder():
 
 def test_struct_nb_hood_builder(square_grid_2D_4x4):
     site_class = SimpleSquare2DStructureBuilder.SITE_CLASS
-    builder = StructureNeighborhoodBuilder({
+    builder = MotifNeighborhoodBuilder({
         site_class: [(0, 1), (0, -1)]
     })
 

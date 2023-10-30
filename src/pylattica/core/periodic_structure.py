@@ -141,7 +141,7 @@ class PeriodicStructure:
 
         periodized_coords = self.lattice.get_periodized_cartesian_coords(location)
         offset_periodized_coords = tuple(self._transformed_coords(location))
-        print(offset_periodized_coords)
+
         assert (
             self._location_lookup.get(offset_periodized_coords, None) is None
         ), "That site is already occupied"

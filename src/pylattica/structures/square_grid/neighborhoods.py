@@ -5,13 +5,13 @@ from ...core.coordinate_utils import get_points_in_cube
 from ...core.neighborhood_builders import (
     NeighborhoodBuilder,
     StochasticNeighborhoodBuilder,
-    StructureNeighborhoodBuilder,
+    MotifNeighborhoodBuilder,
     DistanceNeighborhoodBuilder,
 )
 from .structure_builders import SimpleSquare2DStructureBuilder
 
 
-class VonNeumannNbHood2DBuilder(StructureNeighborhoodBuilder):
+class VonNeumannNbHood2DBuilder(MotifNeighborhoodBuilder):
     def __init__(self, size=1):
         points = get_points_in_cube(-size, size + 1, 2)
 
@@ -23,7 +23,7 @@ class VonNeumannNbHood2DBuilder(StructureNeighborhoodBuilder):
         super().__init__({SimpleSquare2DStructureBuilder.SITE_CLASS: filtered_points})
 
 
-class VonNeumannNbHood3DBuilder(StructureNeighborhoodBuilder):
+class VonNeumannNbHood3DBuilder(MotifNeighborhoodBuilder):
     def __init__(self, size):
         points = get_points_in_cube(-size, size + 1, 3)
 
@@ -35,7 +35,7 @@ class VonNeumannNbHood3DBuilder(StructureNeighborhoodBuilder):
         super().__init__({SimpleSquare2DStructureBuilder.SITE_CLASS: filtered_points})
 
 
-class MooreNbHoodBuilder(StructureNeighborhoodBuilder):
+class MooreNbHoodBuilder(MotifNeighborhoodBuilder):
     def __init__(self, size=1, dim=2):
         points = get_points_in_cube(-size, size + 1, dim)
         super().__init__({SimpleSquare2DStructureBuilder.SITE_CLASS: points})
@@ -69,7 +69,7 @@ class PseudoHexagonalNeighborhoodBuilder2D(StochasticNeighborhoodBuilder):
                 ]
             },
         ]
-        self.builders = [StructureNeighborhoodBuilder(m) for m in motifs]
+        self.builders = [MotifNeighborhoodBuilder(m) for m in motifs]
 
 
 class PseudoHexagonalNeighborhoodBuilder3D(StochasticNeighborhoodBuilder):
@@ -112,7 +112,7 @@ class PseudoHexagonalNeighborhoodBuilder3D(StochasticNeighborhoodBuilder):
                 ]
             },
         ]
-        self.builders = [StructureNeighborhoodBuilder(m) for m in motifs]
+        self.builders = [MotifNeighborhoodBuilder(m) for m in motifs]
 
 
 class PseudoPentagonalNeighborhoodBuilder(StochasticNeighborhoodBuilder):
@@ -155,4 +155,4 @@ class PseudoPentagonalNeighborhoodBuilder(StochasticNeighborhoodBuilder):
                 ]
             },
         ]
-        self.builders = [StructureNeighborhoodBuilder(m) for m in motifs]
+        self.builders = [MotifNeighborhoodBuilder(m) for m in motifs]
