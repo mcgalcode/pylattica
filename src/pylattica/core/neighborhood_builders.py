@@ -82,6 +82,54 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         return nbs
 
 
+class AnnularNeighborhoodBuilder(NeighborhoodBuilder):
+    """This neighborhood builder creates neighbor connections between
+    sites which are within a ring-shaped region around eachother. This region
+    is specified by a minimum (inner radius) and maximum (outer radius) distance.
+    """
+
+    def __init__(self, inner_radius: float, outer_radius: float):
+        """Instantiates a DistanceNeighborhoodBuilder
+
+        Parameters
+        ----------
+        inner_radius : float
+            The minimum at which two sites are considered neighbors.
+        outer_radius : float
+            The maximum distance at which two sites are considered neighbors.
+        """
+        self.inner_radius = inner_radius
+        self.outer_radius = outer_radius
+
+    def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
+        """Builds a NeighborGraph from the provided structure according
+        to the cutoff distance of this Builder.
+
+        Parameters
+        ----------
+        struct : PeriodicStructure
+            The structure from which a NeighborGraph should be constructed.
+
+        Returns
+        -------
+        NeighborGraph
+            The resulting NeighborGraph
+        """
+        nbs = []
+        for other_site in struct.sites():
+            if curr_site[SITE_ID] != other_site[SITE_ID]:
+                dist = pbc_diff_cart(
+                    np.array(other_site[LOCATION]),
+                    np.array(curr_site[LOCATION]),
+                    struct.lattice,
+                )
+
+                if dist < self.outer_radius and dist > self.inner_radius:
+                    nbs.append((other_site[SITE_ID], dist))
+
+        return nbs
+
+
 class StructureNeighborhoodBuilder(NeighborhoodBuilder):
     """This NeighborhoodBuilder constructs NeighborGraphs with connections between
     points that are separated by one of a set of specific offset vectors.
