@@ -55,7 +55,7 @@ class SynchronousRunner(Runner):
             if self.workers is None:
                 PROCESSES = mp.cpu_count()
             else:
-                PROCESSES = self.workers
+                PROCESSES = self.workers # pragma: no cover
 
             printif(verbose, f"Running in parallel using {PROCESSES} workers")
             num_sites = initial_state.size

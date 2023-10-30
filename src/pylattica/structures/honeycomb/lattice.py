@@ -6,15 +6,6 @@ HONEYCOMB_SIDE_LENGTH = 1
 ROOT_3 = math.sqrt(3)
 
 
-class HoneycombLattice(Lattice):
-    def __init__(self):
-        lattice_vecs = [
-            (ROOT_3 * HONEYCOMB_SIDE_LENGTH / 2, HONEYCOMB_SIDE_LENGTH / 2),
-            (-ROOT_3 * HONEYCOMB_SIDE_LENGTH / 2, HONEYCOMB_SIDE_LENGTH / 2),
-        ]
-        super().__init__(lattice_vecs)
-
-
 class RhombohedralLattice(Lattice):
     def __init__(self):
         lattice_vecs = [

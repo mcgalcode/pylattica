@@ -31,6 +31,51 @@ def test_basic_structure_building():
     assert structure.site_at((0.25,0.5)) is not None
     assert structure.site_at((0.25, 0.5))[SITE_CLASS] is "B"
 
+def test_basic_structure_building_size_as_int():
+    lattice = Lattice([
+        [1, 0],
+        [0, 1]
+    ])
+
+    motif = {
+        "A": [
+            (0.5, 0.5)
+        ],
+        "B": [
+            (0.25, 0.5)
+        ]
+    }
+
+    builder = StructureBuilder(lattice, motif)
+    structure = builder.build(2)
+
+    assert len(structure.site_ids) == 8
+    assert structure.site_at((0,0)) is None
+    assert structure.site_at((0.5,0.5)) is not None
+    assert structure.site_at((0.5, 0.5))[SITE_CLASS] is "A"
+
+    assert structure.site_at((0.25,0.5)) is not None
+    assert structure.site_at((0.25, 0.5))[SITE_CLASS] is "B"
+
+def test_basic_structure_building_bad_size_value():
+    lattice = Lattice([
+        [1, 0],
+        [0, 1]
+    ])
+
+    motif = {
+        "A": [
+            (0.5, 0.5)
+        ],
+        "B": [
+            (0.25, 0.5)
+        ]
+    }
+
+    builder = StructureBuilder(lattice, motif)
+    with pytest.raises(ValueError, match="Desired structure dimensions"):
+        builder.build((2,2,2,2))
+
 def test_structure_building_unequal_dirs():
     lattice = Lattice([
         [1, 0],

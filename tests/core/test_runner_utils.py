@@ -104,6 +104,20 @@ def test_merge_updates_specific_site(curr_updates):
 
     assert updated_updates == expected
 
+def test_merge_updates_specific_site_no_curr():
+
+    new_updates = { "b": 1 }
+    updated_updates = merge_updates(new_updates, site_id=1)
+
+    expected = {
+        SITES: {
+            1: {"b": 1},
+        },
+        GENERAL: {}
+    }
+
+    assert updated_updates == expected
+
 def test_merge_updates_specific_site_overwrite(curr_updates):
 
     new_updates = { "a": 2 }
