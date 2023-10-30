@@ -2,6 +2,7 @@ import copy
 from typing import Dict, List
 
 from .constants import SITE_ID, SITES, GENERAL
+from .periodic_structure import PeriodicStructure
 
 
 class SimulationState:
@@ -24,6 +25,15 @@ class SimulationState:
     def from_dict(cls, state_dict):
         state = state_dict["state"]
         return cls(state)
+
+    @classmethod
+    def from_struct(cls, struct: PeriodicStructure):
+        state = cls()
+
+        for sid in struct.site_ids:
+            state.set_site_state(sid, {})
+
+        return state
 
     def __init__(self, state: Dict = None):
         """Initializes the SimulationState.

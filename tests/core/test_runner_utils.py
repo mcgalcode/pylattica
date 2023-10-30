@@ -1,6 +1,6 @@
 import pytest
 
-from pylattica.core.runner import merge_updates
+from pylattica.core.runner.common import merge_updates
 from pylattica.core.constants import GENERAL, SITES
 
 @pytest.fixture

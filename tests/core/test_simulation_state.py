@@ -1,10 +1,6 @@
-from pylattica.core import Runner
-from pylattica.core.analyzer import StateAnalyzer
-from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
-from pylattica.models.growth import GrowthController
 from pylattica.discrete import PhaseSet
-from pylattica.structures.square_grid import SimpleSquare2DStructureBuilder, DiscreteGridSetup
-from pylattica.structures.square_grid.neighborhoods import CircularNeighborhoodBuilder, PseudoHexagonalNeighborhoodBuilder2D, PseudoPentagonalNeighborhoodBuilder
+from pylattica.structures.square_grid import DiscreteGridSetup
+from pylattica.structures.square_grid.neighborhoods import PseudoHexagonalNeighborhoodBuilder2D
 from pylattica.core.simulation_state import SimulationState
 from pylattica.core.constants import SITES, GENERAL
 

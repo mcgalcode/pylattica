@@ -1,4 +1,4 @@
-from pylattica.core import Runner, BasicController
+from pylattica.core import SynchronousRunner, BasicController
 from pylattica.core.simulation_state import SimulationState
 from pylattica.discrete import PhaseSet
 from pylattica.structures.square_grid.grid_setup import DiscreteGridSetup
@@ -13,20 +13,20 @@ def test_step_artist():
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases)
     artist = DiscreteSquareGridArtist2D()
-    starting_state = setup.setup_noise(10, ["dead", "alive"])
-    controller = Life()
-    runner = Runner(parallel=True)
-    result = runner.run(starting_state.state, controller, 10, structure=starting_state.structure, verbose=False)
+    simulation = setup.setup_noise(10, ["dead", "alive"])
+    controller = Life(structure = simulation.structure)
+    runner = SynchronousRunner(parallel=True)
+    result = runner.run(simulation.state, controller, 10, verbose=False)
     artist.get_img(result.last_step, cell_size=5)
 
 def test_result_artist():
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases)
     step_artist = DiscreteSquareGridArtist2D()
-    starting_state = setup.setup_noise(10, ["dead", "alive"])
-    controller = Life()
-    runner = Runner(parallel=True)
-    result = runner.run(starting_state.state, controller, 10, structure=starting_state.structure, verbose=False)
+    simulation = setup.setup_noise(10, ["dead", "alive"])
+    controller = Life(structure = simulation.structure)
+    runner = SynchronousRunner(parallel=True)
+    result = runner.run(simulation.state, controller, 10, verbose=False)
     step_artist.get_img(result.last_step, cell_size=5)
     result_artist = DiscreteSquareGridResultArtist(step_artist, result)
     result_artist.to_gif("out.gif", cell_size=5)
@@ -46,7 +46,7 @@ def test_step_artist_3D():
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases, dim=3)
     artist = DiscreteSquareGridArtist3D()
-    starting_state = setup.setup_noise(10, ["dead", "alive"])
-    runner = Runner(parallel=True)
-    result = runner.run(starting_state.state, SimpleController(), 4, structure=starting_state.structure, verbose=False)
+    simulation = setup.setup_noise(10, ["dead", "alive"])
+    runner = SynchronousRunner(parallel=True)
+    result = runner.run(simulation.state, SimpleController(), 4, verbose=False)
     artist.get_img(result.last_step, cell_size=5)

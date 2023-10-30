@@ -1,4 +1,4 @@
-from pylattica.core import BasicController, SimulationState
+from pylattica.core import BasicController, SimulationState, PeriodicStructure
 from pylattica.structures.square_grid import MooreNbHoodBuilder
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 
@@ -13,13 +13,14 @@ def process_variant_string(v_string):
 class GameOfLifeController(BasicController):
     variant = None
 
-    def __init__(self, variant="B3/S23"):
+    def __init__(self, structure: PeriodicStructure, variant="B3/S23"):
         if self.variant is None:
             self.variant = variant
         self.born, self.survive = process_variant_string(self.variant)
+        self.structure = structure
 
-    def pre_run(self, initial_state, structure=None):
-        self.neighborhood = MooreNbHoodBuilder().get(structure)
+    def pre_run(self, _):
+        self.neighborhood = MooreNbHoodBuilder().get(self.structure)
 
     def get_state_update(self, site_id, curr_state: SimulationState):
         alive_neighbor_count = 0

@@ -1,6 +1,6 @@
 import pytest
 
-from pylattica.core import Runner, BasicController
+from pylattica.core import SynchronousRunner, BasicController
 from pylattica.core.simulation_state import SimulationState
 from pylattica.core.periodic_structure import PeriodicStructure
 from pylattica.core.constants import SITE_ID
@@ -24,10 +24,10 @@ def test_parallel_runner(square_grid_2D_4x4: PeriodicStructure):
     for site in square_grid_2D_4x4.sites():
         initial_state.set_site_state(site[SITE_ID], { "value": 0 })
     
-    runner = Runner(parallel=True)
+    runner = SynchronousRunner(parallel=True)
 
     controller = SimpleParallelController(square_grid_2D_4x4)
-    result = runner.run(initial_state, controller=controller, num_steps = 1000, structure = square_grid_2D_4x4)
+    result = runner.run(initial_state, controller=controller, num_steps = 1000)
 
     last_step = result.last_step
 
@@ -53,19 +53,19 @@ def test_parallel_runner_speed(square_grid_2D_4x4: PeriodicStructure):
     
 
     
-    parallel_runner = Runner(parallel=True)
-    series_runner = Runner()
+    parallel_runner = SynchronousRunner(parallel=True)
+    series_runner = SynchronousRunner()
 
     controller = SimpleParallelController(square_grid_2D_4x4)
 
     num_steps = 1000
 
     t0 = time.time()
-    parallel_result = parallel_runner.run(initial_state, controller=controller, num_steps = num_steps, structure = square_grid_2D_4x4)
+    parallel_result = parallel_runner.run(initial_state, controller=controller, num_steps = num_steps)
     t1 = time.time()
 
     t2 = time.time()
-    series_result = series_runner.run(initial_state, controller=controller, num_steps = num_steps, structure = square_grid_2D_4x4)
+    series_result = series_runner.run(initial_state, controller=controller, num_steps = num_steps)
     t3 = time.time()
 
     assert (t3 - t2) < (t1 - t0)

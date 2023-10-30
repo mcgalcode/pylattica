@@ -1,6 +1,6 @@
 import pytest
 
-from pylattica.core import Runner
+from pylattica.core import SynchronousRunner
 from pylattica.models.game_of_life import Life
 from pylattica.discrete import PhaseSet, DiscreteResultAnalyzer
 from pylattica.structures.square_grid.grid_setup import DiscreteGridSetup
@@ -10,9 +10,9 @@ def discrete_result():
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases)
     simulation = setup.setup_noise(10, ["dead", "alive"])
-    controller = Life()
-    runner = Runner(parallel=True)
-    return runner.run(simulation.state, controller, 10, structure=simulation.structure, verbose=False)
+    controller = Life(structure = simulation.structure)
+    runner = SynchronousRunner(parallel=True)
+    return runner.run(simulation.state, controller, 10, verbose=False)
 
 def test_plot_phase_fractions(discrete_result):
     analyzer = DiscreteResultAnalyzer(discrete_result)
@@ -29,9 +29,9 @@ def test_phase_fraction_at_step():
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases)
     simulation = setup.setup_interface(10, "dead", "alive")
-    controller = Life()
-    runner = Runner(parallel=True)
-    result = runner.run(simulation.state, controller, 10, structure=simulation.structure, verbose=False)
+    controller = Life(structure = simulation.structure)
+    runner = SynchronousRunner(parallel=True)
+    result = runner.run(simulation.state, controller, 10, verbose=False)
 
     analyzer = DiscreteResultAnalyzer(result)
 

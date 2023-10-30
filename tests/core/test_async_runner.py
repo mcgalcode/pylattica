@@ -1,6 +1,6 @@
 import pytest
 
-from pylattica.core import Runner, BasicController
+from pylattica.core import AsynchronousRunner, BasicController
 from pylattica.core.simulation_state import SimulationState
 from pylattica.core.periodic_structure import PeriodicStructure
 from pylattica.core.constants import SITE_ID
@@ -23,10 +23,10 @@ def test_simple_async_controller(square_grid_2D_4x4: PeriodicStructure):
     for site in square_grid_2D_4x4.sites():
         initial_state.set_site_state(site[SITE_ID], { "value": 0 })
     
-    runner = Runner(is_async=True)
+    runner = AsynchronousRunner()
 
     controller = SimpleAsyncController(square_grid_2D_4x4)
-    result = runner.run(initial_state, controller=controller, num_steps = 10, structure = square_grid_2D_4x4)
+    result = runner.run(initial_state, controller=controller, num_steps = 10)
 
     last_step = result.last_step
 
@@ -43,8 +43,6 @@ def test_simple_async_controller_async_flag(square_grid_2D_4x4: PeriodicStructur
     
     class SimpleAsyncController(BasicController):
 
-        is_async = True
-
         def get_state_update(self, site_id: int, prev_state: SimulationState):
             new_state = 3
             return {
@@ -57,10 +55,10 @@ def test_simple_async_controller_async_flag(square_grid_2D_4x4: PeriodicStructur
     for site in square_grid_2D_4x4.sites():
         initial_state.set_site_state(site[SITE_ID], { "value": 0 })
     
-    runner = Runner()
+    runner = AsynchronousRunner()
 
     controller = SimpleAsyncController(square_grid_2D_4x4)
-    result = runner.run(initial_state, controller=controller, num_steps = 10, structure = square_grid_2D_4x4)
+    result = runner.run(initial_state, controller=controller, num_steps = 10)
 
     last_step = result.last_step
 

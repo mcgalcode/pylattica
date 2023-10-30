@@ -1,4 +1,4 @@
-from pylattica.core import Runner, Simulation
+from pylattica.core import SynchronousRunner, Simulation
 from pylattica.discrete import PhaseSet
 from .grid_setup import DiscreteGridSetup
 from ...models.growth import GrowthController
@@ -36,6 +36,6 @@ class GrowthSetup:
             background_phase=background_spec,
         )
 
-        runner = Runner(parallel=True)
+        runner = SynchronousRunner(parallel=True)
         res = runner.run(simulation.state, controller, num_steps=size)
         return Simulation(res.last_step, simulation.structure)

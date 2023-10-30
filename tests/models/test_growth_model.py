@@ -1,4 +1,4 @@
-from pylattica.core import Runner
+from pylattica.core import SynchronousRunner
 from pylattica.core.analyzer import StateAnalyzer
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 from pylattica.models.growth import GrowthController
@@ -21,7 +21,7 @@ def test_can_run_growth_sim_parallel():
         nb_builder=nb_spec,
         background_phase="A"
     )
-    runner = Runner(parallel=True)
+    runner = SynchronousRunner(parallel=True)
     res = runner.run(periodic_initial_state.state, controller, num_steps = 3)
 
     analyzer = StateAnalyzer(periodic_initial_state.structure)
@@ -49,7 +49,7 @@ def test_can_run_growth_sim_series():
         nb_builder=nb_spec,
         background_phase="A"
     )
-    runner = Runner(parallel=False)
+    runner = SynchronousRunner()
     res = runner.run(periodic_initial_state.state, controller, num_steps = 3)
 
     analyzer = StateAnalyzer(periodic_initial_state.structure)

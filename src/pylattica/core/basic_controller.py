@@ -27,13 +27,11 @@ class BasicController(ABC):
     def get_state_update(self, site_id: int, prev_state: SimulationState):
         pass  # pragma: no cover
 
-    def pre_run(
-        self, initial_state: SimulationState, structure: PeriodicStructure = None
-    ) -> None:
+    def pre_run(self, initial_state: SimulationState) -> None:
         pass
 
-    def get_random_site(self):
-        return random.randint(0, len(self.structure.site_ids) - 1)
+    def get_random_site(self, state: SimulationState):
+        return random.randint(0, len(state.site_ids()) - 1)
 
-    def instantiate_result(self, starting_state):
+    def instantiate_result(self, starting_state: SimulationState):
         return SimulationResult(starting_state=starting_state)
