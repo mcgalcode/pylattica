@@ -3,8 +3,8 @@ from pylattica.core.analyzer import StateAnalyzer
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 from pylattica.models.growth import GrowthController
 from pylattica.discrete import PhaseSet
-from pylattica.square_grid import DiscreteGridSetup
-from pylattica.square_grid.neighborhoods import MooreNbHoodBuilder
+from pylattica.structures.square_grid import DiscreteGridSetup
+from pylattica.structures.square_grid.neighborhoods import MooreNbHoodBuilder
 
 def test_can_run_growth_sim_parallel():
     phases = PhaseSet(["A", "B", "C", "D"])

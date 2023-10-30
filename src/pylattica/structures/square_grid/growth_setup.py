@@ -1,7 +1,7 @@
 from pylattica.core import Runner, Simulation
 from pylattica.discrete import PhaseSet
 from .grid_setup import DiscreteGridSetup
-from ..models.growth import GrowthController
+from ...models.growth import GrowthController
 
 
 class GrowthSetup:

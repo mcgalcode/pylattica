@@ -1,4 +1,4 @@
-from pylattica.square_grid.structure_builders import SimpleSquare2DStructureBuilder, SimpleSquare3DStructureBuilder
+from pylattica.structures.square_grid.structure_builders import SimpleSquare2DStructureBuilder, SimpleSquare3DStructureBuilder
 
 from pylattica.core.constants import LOCATION
 

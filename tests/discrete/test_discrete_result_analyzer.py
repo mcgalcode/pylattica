@@ -3,7 +3,7 @@ import pytest
 from pylattica.core import Runner
 from pylattica.models.game_of_life import Life
 from pylattica.discrete import PhaseSet, DiscreteResultAnalyzer
-from pylattica.square_grid.grid_setup import DiscreteGridSetup
+from pylattica.structures.square_grid.grid_setup import DiscreteGridSetup
 
 @pytest.fixture()
 def discrete_result():

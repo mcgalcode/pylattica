@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import numpy as np
 import rustworkx as rx
@@ -7,15 +7,35 @@ from tqdm import tqdm
 
 from .constants import LOCATION, SITE_CLASS, SITE_ID
 from .distance_map import EuclideanDistanceMap
-from .neighborhoods import Neighborhood
+from .neighborhoods import Neighborhood, StochasticNeighborhood
 from .periodic_structure import PeriodicStructure
 from .lattice import pbc_diff_cart
 
 
 class NeighborhoodBuilder(ABC):
-    @abstractmethod
     def get(self, struct: PeriodicStructure) -> Neighborhood:
+        graph = rx.PyGraph()
+
+        all_sites = struct.sites()
+
+        for site in struct.sites():
+            graph.add_node(site[SITE_ID])
+
+        for curr_site in tqdm(all_sites):
+            nbs = self.get_neighbors(curr_site, struct)
+            for nb_id, weight in nbs:
+                graph.add_edge(curr_site[SITE_ID], nb_id, weight)
+
+        return Neighborhood(graph)
+
+    @abstractmethod
+    def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
         pass  # pragma: no cover
+
+
+class StochasticNeighborhoodBuilder(ABC):
+    def get(self, struct: PeriodicStructure) -> Neighborhood:
+        return StochasticNeighborhood([b.get(struct) for b in self.builders])
 
 
 class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
@@ -33,7 +53,7 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         """
         self.cutoff = cutoff
 
-    def get(self, struct: PeriodicStructure) -> Neighborhood:
+    def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
         """Builds a NeighborGraph from the provided structure according
         to the cutoff distance of this Builder.
 
@@ -47,25 +67,19 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         NeighborGraph
             The resulting NeighborGraph
         """
-        graph = rx.PyGraph()
+        nbs = []
+        for other_site in struct.sites():
+            if curr_site[SITE_ID] != other_site[SITE_ID]:
+                dist = pbc_diff_cart(
+                    np.array(other_site[LOCATION]),
+                    np.array(curr_site[LOCATION]),
+                    struct.lattice,
+                )
+                print(dist)
+                if dist < self.cutoff:
+                    nbs.append((other_site[SITE_ID], dist))
 
-        all_sites = struct.sites()
-
-        for site in struct.sites():
-            graph.add_node(site[SITE_ID])
-
-        for curr_site in tqdm(all_sites):
-            for other_site in struct.sites():
-                if curr_site[SITE_ID] != other_site[SITE_ID]:
-                    dist = pbc_diff_cart(
-                        np.array(other_site[LOCATION]),
-                        np.array(curr_site[LOCATION]),
-                        struct.lattice,
-                    )
-                    if dist < self.cutoff:
-                        graph.add_edge(curr_site[SITE_ID], other_site[SITE_ID], dist)
-
-        return Neighborhood(graph)
+        return nbs
 
 
 class StructureNeighborhoodBuilder(NeighborhoodBuilder):
@@ -109,7 +123,7 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
         neighbor_locs = [loc for loclist in spec.values() for loc in loclist]
         self.distances = EuclideanDistanceMap(neighbor_locs)
 
-    def get(self, struct: PeriodicStructure) -> Neighborhood:
+    def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
         """Given a structure, constructs a NeighborGraph with site connections
         according to the spec.
 
@@ -123,28 +137,15 @@ class StructureNeighborhoodBuilder(NeighborhoodBuilder):
         NeighborGraph
             The resulting NeighborGraph.
         """
-        graph = rx.PyGraph()
 
-        for site in struct.sites():
-            graph.add_node(site[SITE_ID])
+        site_class = curr_site[SITE_CLASS]
+        location = curr_site[LOCATION]
+        site_class_neighbors = self._spec[site_class]
+        nbs = []
+        for neighbor_vec in site_class_neighbors:
+            loc = tuple(s + n for s, n in zip(location, neighbor_vec))
+            nb_site = struct.site_at(loc)
+            if nb_site[SITE_ID] != curr_site[SITE_ID]:
+                nbs.append((nb_site[SITE_ID], self.distances.get_dist(neighbor_vec)))
 
-        all_sites = struct.sites()
-        for site in tqdm(all_sites):
-            site_class = site[SITE_CLASS]
-            location = site[LOCATION]
-            site_class_neighbors = self._spec[site_class]
-            edges = []
-            for neighbor_vec in site_class_neighbors:
-                loc = tuple(s + n for s, n in zip(location, neighbor_vec))
-                nb_site = struct.site_at(loc)
-                if nb_site[SITE_ID] != site[SITE_ID]:
-                    edges.append(
-                        (
-                            nb_site[SITE_ID],
-                            site[SITE_ID],
-                            self.distances.get_dist(neighbor_vec),
-                        )
-                    )
-            graph.add_edges_from(edges)
-
-        return Neighborhood(graph)
+        return nbs

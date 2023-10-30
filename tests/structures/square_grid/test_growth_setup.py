@@ -1,5 +1,5 @@
-from pylattica.square_grid.growth_setup import GrowthSetup
-from pylattica.square_grid.neighborhoods import MooreNbHoodBuilder
+from pylattica.structures.square_grid.growth_setup import GrowthSetup
+from pylattica.structures.square_grid.neighborhoods import MooreNbHoodBuilder
 from pylattica.discrete import PhaseSet
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 from pylattica.core import StateAnalyzer

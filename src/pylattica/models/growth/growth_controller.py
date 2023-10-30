@@ -4,7 +4,7 @@ from ...core.periodic_structure import PeriodicStructure
 from ...core.simulation_state import SimulationState
 from ...discrete import PhaseSet
 from ...discrete.state_constants import DISCRETE_OCCUPANCY, VACANT
-from ...square_grid.neighborhoods import MooreNbHoodBuilder
+from ...structures.square_grid.neighborhoods import MooreNbHoodBuilder
 
 
 class GrowthController(BasicController):

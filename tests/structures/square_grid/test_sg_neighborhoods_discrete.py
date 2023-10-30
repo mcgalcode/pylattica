@@ -1,6 +1,6 @@
 import pytest
 
-from pylattica.square_grid.neighborhoods import (
+from pylattica.structures.square_grid.neighborhoods import (
     CircularNeighborhoodBuilder,
     MooreNbHoodBuilder,
     VonNeumannNbHood2DBuilder,
@@ -10,7 +10,7 @@ from pylattica.square_grid.neighborhoods import (
     VonNeumannNbHood3DBuilder
 )
 from pylattica.core.constants import SITE_ID
-from pylattica.square_grid.structure_builders import SimpleSquare2DStructureBuilder, SimpleSquare3DStructureBuilder
+from pylattica.structures.square_grid.structure_builders import SimpleSquare2DStructureBuilder, SimpleSquare3DStructureBuilder
 
 def test_von_neumann_neighborhood():
     struct = SimpleSquare2DStructureBuilder().build(10)

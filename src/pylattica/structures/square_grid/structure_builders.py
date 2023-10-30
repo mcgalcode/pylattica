@@ -1,14 +1,7 @@
-from abc import abstractmethod, ABC
 from .lattice import SquareGridLattice2D, SquareGridLattice3D
-from ..core import PeriodicStructure
+from ...core.structure_builder import StructureBuilder
 
 SITE_POSITION = 0
-
-
-class StructureBuilder(ABC):
-    @abstractmethod
-    def build(self, size):
-        pass
 
 
 class SimpleSquare2DStructureBuilder(StructureBuilder):
@@ -17,12 +10,9 @@ class SimpleSquare2DStructureBuilder(StructureBuilder):
     def __init__(self):
         self.lattice = SquareGridLattice2D()
 
-        self._motif = {
+        self.motif = {
             SimpleSquare2DStructureBuilder.SITE_CLASS: [(SITE_POSITION, SITE_POSITION)],
         }
-
-    def build(self, size):
-        return PeriodicStructure.build_from(self.lattice, (size, size), self._motif)
 
 
 class SimpleSquare3DStructureBuilder(StructureBuilder):
@@ -30,13 +20,8 @@ class SimpleSquare3DStructureBuilder(StructureBuilder):
 
     def __init__(self):
         self.lattice = SquareGridLattice3D()
-        self._motif = {
+        self.motif = {
             SimpleSquare3DStructureBuilder.SITE_CLASS: [
                 (SITE_POSITION, SITE_POSITION, SITE_POSITION)
             ],
         }
-
-    def build(self, size):
-        return PeriodicStructure.build_from(
-            self.lattice, (size, size, size), self._motif
-        )

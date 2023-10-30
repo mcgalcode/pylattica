@@ -2,7 +2,7 @@ from pylattica.core import Runner
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 from pylattica.models.game_of_life import Maze, Anneal, Diamoeba, Seeds, Life, GameOfLifeController
 from pylattica.discrete import PhaseSet
-from pylattica.square_grid.grid_setup import DiscreteGridSetup
+from pylattica.structures.square_grid.grid_setup import DiscreteGridSetup
 
 def test_gol_variants():
     variants = [Life, Maze, Anneal, Diamoeba, Seeds]

@@ -2,7 +2,7 @@ from typing import Dict
 
 from pylattica.core.analyzer import StateAnalyzer
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
-from pylattica.square_grid import DiscreteGridSetup
+from pylattica.structures.square_grid import DiscreteGridSetup
 
 
 def test_can_instantiate_grid_setup(simple_phase_set):

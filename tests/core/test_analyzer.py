@@ -1,7 +1,7 @@
 from typing import Dict
 from pylattica.core import StateAnalyzer, PeriodicStructure, SimulationState, analyzer
 from pylattica.core.constants import SITE_ID
-from pylattica.square_grid import DiscreteGridSetup
+from pylattica.structures.square_grid import DiscreteGridSetup
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 
 import pytest

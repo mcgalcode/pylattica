@@ -1,5 +1,5 @@
 from pylattica.core import BasicController, SimulationState
-from pylattica.square_grid import MooreNbHoodBuilder
+from pylattica.structures.square_grid import MooreNbHoodBuilder
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 
 

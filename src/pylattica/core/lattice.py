@@ -35,7 +35,7 @@ def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike):
 
 
 def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lattice):
-    """Returns the 'fractional distance' between two coordinates taking into
+    """Returns the Cartesian distance between two coordinates taking into
     account periodic boundary conditions. (from pymatgen)
 
     Args:
@@ -56,7 +56,7 @@ def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lat
     fcoords2 = lattice.get_fractional_coords(cart_coords2)
     frac_dist = pbc_diff_frac(fcoords1, fcoords2)
     return np.round(
-        np.linalg.norm(np.abs(frac_dist) * lattice.vec_lengths), OFFSET_PRECISION
+        np.linalg.norm(lattice.get_cartesian_coords(frac_dist)), OFFSET_PRECISION
     )
 
 
@@ -148,3 +148,10 @@ class Lattice:
 
     def get_scaled_lattice(self, num_cells: ArrayLike) -> Lattice:
         return Lattice(np.array([v * amt for amt, v in zip(num_cells, self.vecs)]))
+
+    def cartesian_periodic_distance(self, loc1, loc2):
+        return pbc_diff_cart(
+            loc1,
+            loc2,
+            self,
+        )

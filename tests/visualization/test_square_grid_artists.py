@@ -1,7 +1,7 @@
 from pylattica.core import Runner, BasicController
 from pylattica.core.simulation_state import SimulationState
 from pylattica.discrete import PhaseSet
-from pylattica.square_grid.grid_setup import DiscreteGridSetup
+from pylattica.structures.square_grid.grid_setup import DiscreteGridSetup
 from pylattica.visualization import DiscreteSquareGridArtist2D, DiscreteSquareGridArtist3D, DiscreteSquareGridResultArtist
 from pylattica.models.game_of_life import Life
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY

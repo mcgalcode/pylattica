@@ -11,7 +11,7 @@ from ..core.constants import LOCATION, SITE_ID
 from ..core.simulation_state import SimulationState
 from ..discrete.discrete_step_analyzer import DiscreteStepAnalyzer
 from ..discrete.state_constants import DISCRETE_OCCUPANCY
-from ..square_grid.structure_builders import (
+from ..structures.square_grid.structure_builders import (
     SimpleSquare2DStructureBuilder,
     SimpleSquare3DStructureBuilder,
 )

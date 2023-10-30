@@ -1,9 +1,10 @@
 import numpy as np
 from pylattica.core import periodic_structure
 from pylattica.core.neighborhoods import Neighborhood, StochasticNeighborhood
-from ..core.coordinate_utils import get_points_in_cube
-from ..core.neighborhood_builders import (
+from ...core.coordinate_utils import get_points_in_cube
+from ...core.neighborhood_builders import (
     NeighborhoodBuilder,
+    StochasticNeighborhoodBuilder,
     StructureNeighborhoodBuilder,
     DistanceNeighborhoodBuilder,
 )
@@ -44,7 +45,7 @@ class CircularNeighborhoodBuilder(DistanceNeighborhoodBuilder):
     pass
 
 
-class PseudoHexagonalNeighborhoodBuilder2D(NeighborhoodBuilder):
+class PseudoHexagonalNeighborhoodBuilder2D(StochasticNeighborhoodBuilder):
     def __init__(self):
         motifs = [
             {
@@ -70,11 +71,8 @@ class PseudoHexagonalNeighborhoodBuilder2D(NeighborhoodBuilder):
         ]
         self.builders = [StructureNeighborhoodBuilder(m) for m in motifs]
 
-    def get(self, struct: periodic_structure) -> Neighborhood:
-        return StochasticNeighborhood([b.get(struct) for b in self.builders])
 
-
-class PseudoHexagonalNeighborhoodBuilder3D(NeighborhoodBuilder):
+class PseudoHexagonalNeighborhoodBuilder3D(StochasticNeighborhoodBuilder):
     def __init__(self):
         common_neighbors = [
             (1, 0, 0),
@@ -116,11 +114,8 @@ class PseudoHexagonalNeighborhoodBuilder3D(NeighborhoodBuilder):
         ]
         self.builders = [StructureNeighborhoodBuilder(m) for m in motifs]
 
-    def get(self, struct: periodic_structure) -> Neighborhood:
-        return StochasticNeighborhood([b.get(struct) for b in self.builders])
 
-
-class PseudoPentagonalNeighborhoodBuilder(Neighborhood):
+class PseudoPentagonalNeighborhoodBuilder(StochasticNeighborhoodBuilder):
     def __init__(self):
         motifs = [
             {
@@ -161,6 +156,3 @@ class PseudoPentagonalNeighborhoodBuilder(Neighborhood):
             },
         ]
         self.builders = [StructureNeighborhoodBuilder(m) for m in motifs]
-
-    def get(self, struct: periodic_structure) -> Neighborhood:
-        return StochasticNeighborhood([b.get(struct) for b in self.builders])

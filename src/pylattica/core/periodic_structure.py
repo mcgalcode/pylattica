@@ -27,7 +27,13 @@ class PeriodicStructure:
     """
 
     @classmethod
-    def build_from(_, lattice: Lattice, num_cells: List[int], site_motif: dict):
+    def build_from(
+        _,
+        lattice: Lattice,
+        num_cells: List[int],
+        site_motif: dict,
+        frac_coords: bool = False,
+    ):
         """Builds a PeriodicStructure by repeating the unit cell num_cell times
         in each dimension. For instance, to build a structure that has 2 unit cells in
         each direction (and itself is three dimensional), the num_cells parameter should be
@@ -68,12 +74,25 @@ class PeriodicStructure:
 
         struct = PeriodicStructure(new_lattice)
 
+        # these are in "fractional" coordinates
         vec_coeffs = get_points_in_box([0 for _ in range(new_lattice.dim)], num_cells)
         for vec_coeff_set in vec_coeffs:
-            point = lattice.matrix @ np.array(vec_coeff_set)
+            if not frac_coords:  # convert lattice points to "cartesian coordinates"
+                point = lattice.matrix @ np.array(vec_coeff_set)
+            else:
+                point = np.array(vec_coeff_set)
+
             for site_class, basis_vecs in site_motif.items():
                 for vec in basis_vecs:
+                    # if the motif is specified in cartesian coordinates, we're good here
                     site_loc = tuple(point + np.array(vec))
+
+                    if (
+                        frac_coords
+                    ):  # convert lattice point back to cartesian coordinates
+                        site_loc = lattice.get_cartesian_coords(site_loc)
+
+                    # site_loc should be in cartesian coordinates at this point
                     struct.add_site(site_class, site_loc)
 
         return struct
@@ -111,7 +130,7 @@ class PeriodicStructure:
             The class of the site to be added. This can be anything, but must be provided
             Think of this as a tag for the site
         location : Tuple[float]
-            The location of the new site
+            The location of the new site in Cartesian coordinates
 
         Returns
         -------
@@ -122,7 +141,7 @@ class PeriodicStructure:
 
         periodized_coords = self.lattice.get_periodized_cartesian_coords(location)
         offset_periodized_coords = tuple(self._transformed_coords(location))
-
+        print(offset_periodized_coords)
         assert (
             self._location_lookup.get(offset_periodized_coords, None) is None
         ), "That site is already occupied"

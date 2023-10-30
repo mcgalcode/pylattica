@@ -4,7 +4,7 @@ import numpy as np
 import math
 
 from pylattica.core.neighborhood_builders import DistanceNeighborhoodBuilder, StructureNeighborhoodBuilder
-from pylattica.square_grid.structure_builders import SimpleSquare2DStructureBuilder
+from pylattica.structures.square_grid.structure_builders import SimpleSquare2DStructureBuilder
 
 def test_distance_nb_builder(square_grid_2D_4x4):
 
