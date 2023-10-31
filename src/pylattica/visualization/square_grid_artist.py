@@ -17,7 +17,7 @@ from ..structures.square_grid.structure_builders import (
 )
 
 
-class SquareGridArtist:
+class SquareGridArtist():
     def __init__(self, legend=None):
         self.legend = legend
 

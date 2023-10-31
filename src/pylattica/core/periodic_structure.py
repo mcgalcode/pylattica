@@ -111,8 +111,11 @@ class PeriodicStructure:
         self._location_lookup = {}
         self._offset_vector = np.array([VEC_OFFSET for _ in range(self.dim)])
 
+    def _get_rounded_coords(self, location: Iterable[float]) -> Iterable[float]:
+        return np.round(location, OFFSET_PRECISION)
+
     def _coords_with_offset(self, location: Iterable[float]) -> Iterable[float]:
-        return np.round(location + self._offset_vector, OFFSET_PRECISION)
+        return self._get_rounded_coords(location + self._offset_vector)
 
     def _transformed_coords(self, location: Iterable[float]) -> Iterable[float]:
         periodized_coords = self.lattice.get_periodized_cartesian_coords(location)
@@ -137,7 +140,7 @@ class PeriodicStructure:
         """
         new_site_id = len(self._sites)
 
-        periodized_coords = self.lattice.get_periodized_cartesian_coords(location)
+        periodized_coords = self._get_rounded_coords(self.lattice.get_periodized_cartesian_coords(location))
         offset_periodized_coords = tuple(self._transformed_coords(location))
 
         assert (
