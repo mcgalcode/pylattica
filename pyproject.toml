@@ -50,6 +50,7 @@ dependencies = [
 [project.optional-dependencies]
 docs = [
     "jupyter_contrib_nbextensions>=0.7.0",
+    "notebook==6.4.12",
     "mkdocs>=1.4.0",
     "mkdocs-autorefs>=0.4.1",
     "mkdocs-jupyter>=0.24.6",
