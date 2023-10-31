@@ -1,9 +1,63 @@
+from __future__ import annotations
+
 from typing import List, Tuple
 
 import numpy as np
+from numpy.typing import ArrayLike
+from .constants import OFFSET_PRECISION
+import math
 
-from .coordinate_utils import get_points_in_box
-from .periodic_structure import PeriodicStructure
+
+def periodize(frac_coords):
+    return frac_coords - np.floor(frac_coords)
+
+
+def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike):
+    """Returns the 'fractional distance' between two coordinates taking into
+    account periodic boundary conditions. (from pymatgen)
+
+    Args:
+        fcoords1: First set of fractional coordinates. e.g., [0.5, 0.6,
+            0.7] or [[1.1, 1.2, 4.3], [0.5, 0.6, 0.7]]. It can be a single
+            coord or any array of coords.
+        fcoords2: Second set of fractional coordinates.
+        pbc: a tuple defining the periodic boundary conditions along the three
+            axis of the lattice.
+
+    Returns:
+        Fractional distance. Each coordinate must have the property that
+        abs(a) <= 0.5. Examples:
+        pbc_diff([0.1, 0.1, 0.1], [0.3, 0.5, 0.9]) = [-0.2, -0.4, 0.2]
+        pbc_diff([0.9, 0.1, 1.01], [0.3, 0.5, 0.9]) = [-0.4, -0.4, 0.11]
+    """
+    fdist = np.subtract(fcoords1, fcoords2)
+    return fdist - np.round(fdist)
+
+
+def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lattice):
+    """Returns the Cartesian distance between two coordinates taking into
+    account periodic boundary conditions. (from pymatgen)
+
+    Args:
+        fcoords1: First set of fractional coordinates. e.g., [0.5, 0.6,
+            0.7] or [[1.1, 1.2, 4.3], [0.5, 0.6, 0.7]]. It can be a single
+            coord or any array of coords.
+        fcoords2: Second set of fractional coordinates.
+        pbc: a tuple defining the periodic boundary conditions along the three
+            axis of the lattice.
+
+    Returns:
+        Fractional distance. Each coordinate must have the property that
+        abs(a) <= 0.5. Examples:
+        pbc_diff([0.1, 0.1, 0.1], [0.3, 0.5, 0.9]) = [-0.2, -0.4, 0.2]
+        pbc_diff([0.9, 0.1, 1.01], [0.3, 0.5, 0.9]) = [-0.4, -0.4, 0.11]
+    """
+    fcoords1 = lattice.get_fractional_coords(cart_coords1)
+    fcoords2 = lattice.get_fractional_coords(cart_coords2)
+    frac_dist = pbc_diff_frac(fcoords1, fcoords2)
+    return np.round(
+        np.linalg.norm(lattice.get_cartesian_coords(frac_dist)), OFFSET_PRECISION
+    )
 
 
 class Lattice:
@@ -11,7 +65,7 @@ class Lattice:
     be used to create PeriodicStructure instances which are filled with
     a given motif. The usage flow for this class is:
 
-    1) Define your lattice by specifying the lattice vectors and instatiating this class
+    1) Define your lattice by specifying the lattice vectors and instantiating this class
     2) Define a motif of sites, which is a dictionary mapping each site class to the
     basis vectors that point to the site locations
     3) Use build_from to generate a periodic structure by repeating the unit cell
@@ -33,79 +87,71 @@ class Lattice:
         vecs : List[Tuple[float]]
             A list of vectors establishing the unit cell of the lattice. Any dimension is accepted.
         """
+
+        # This set up of matrix and inversion matrix is taken from pymatgen
+        # I would prefer to use the pymatgen lattice directly, but it is hardcoded
+        # to utilize 3 dimensions - i.e. no game of life, 2D Ising, etc
+
         self.vecs = np.array(vecs)
+
+        dim = int(math.sqrt(len(np.array(self.vecs).flatten())))
+        mat = np.array(self.vecs, dtype=np.float64).reshape((dim, dim))
+        mat.setflags(write=False)
+
+        self._matrix: np.ndarray = mat
+        self._inv_matrix: np.ndarray | None = None
+
         self.dim = len(vecs[0])
-        self._vec_lengths = [np.linalg.norm(np.array(vec)) for vec in vecs]
+        self.vec_lengths = [np.linalg.norm(np.array(vec)) for vec in vecs]
         assert (
             len(list(set(len(v) for v in vecs))) == 1
         ), "Lattice instantiated with vectors of unequal dimension"
 
-    def build_from(self, num_cells: List[int], site_motif: dict) -> PeriodicStructure:
-        """Builds a PeriodicStructure lattice by repeating the unit cell num_cell times
-        in each dimension. For instance, to build a structure that has 2 unit cells in
-        each direction (and itself is three dimensional), the num_cells parameter should be
+    @property
+    def matrix(self) -> np.ndarray:
+        """Copy of matrix representing the Lattice. (Taken from pymatgen)"""
+        return self._matrix
 
-        [2, 2, 2]
+    @property
+    def inv_matrix(self) -> np.ndarray:
+        """Inverse of lattice matrix. (Taken from pymatgen)"""
+        if self._inv_matrix is None:
+            self._inv_matrix = np.linalg.inv(self._matrix)
+            self._inv_matrix.setflags(write=False)
+        return self._inv_matrix
 
-        Lattice sites must also be specified by the site_motif parameter. This allows
-        specification of which sites are where in the unit cell. For instance, if my 2D
-        lattice has two types of sites, A and B, and each type exists in two different
-        places, I might use the following site_motif:
+    def get_cartesian_coords(self, fractional_coords: ArrayLike) -> np.ndarray:
+        """Returns the Cartesian coordinates given fractional coordinates. (taken from pymatgen)
 
-        {
-            "A": [
-                [0.2, 0.2],
-                [0.4, 0.4]
-            ],
-            "B": [
-                [0.6, 0.6],
-                [0.8, 0.8]
-            ]
-        }
+        Args:
+            fractional_coords (dimx1 array): Fractional coords.
 
-        Parameters
-        ----------
-        num_cells : List[int]
-            As described above, a list of the number of repetitions of the unit cell
-            in each direction.
-        site_motif : dict
-            A dictionary mapping string site classes to lists of the locations within
-            the unit cell at which a site of that type exists.
-
-        Returns
-        -------
-        PeriodicStructure
-            The structure resulting from the lattice tiling and motif filling specified.
+        Returns:
+            Cartesian coordinates
         """
-        bounds = np.array([l * n for n, l in zip(num_cells, self._vec_lengths)])
-        struct = self.initialize_structure(bounds)
+        return np.dot(fractional_coords, self._matrix)
 
-        vec_coeffs = get_points_in_box([0 for _ in range(self.dim)], num_cells)
+    def get_fractional_coords(self, cart_coords: ArrayLike) -> np.ndarray:
+        """Returns the fractional coordinates given Cartesian coordinates. (taken from pymatgen)
 
-        for vec_coeff_set in vec_coeffs:
-            point = np.zeros(self.dim)
+        Args:
+            cart_coords (dimx1 array): Cartesian coords.
 
-            for vec_coeff, vec in zip(vec_coeff_set, self.vecs):
-                point = point + (vec_coeff * vec)
-
-            for site_class, basis_vecs in site_motif.items():
-                for vec in basis_vecs:
-                    site_loc = tuple(point + np.array(vec))
-                    struct.add_site(site_class, site_loc)
-
-        return struct
-
-    def initialize_structure(self, bounds: np.ndarray) -> PeriodicStructure:
-        """Instantiates the structure that is being built and filled out by this lattice.
-
-        Parameters
-        ----------
-        bounds : np.ndarray
-            The extent of the structure along each direction
-
-        Returns
-        -------
-        PeriodicStructure
-            The correctly sized (but as of yet unfilled) resulting structure.
+        Returns:
+            Fractional coordinates.
         """
-        return PeriodicStructure(bounds)
+        return np.dot(cart_coords, self.inv_matrix)
+
+    def get_periodized_cartesian_coords(self, cart_coords: ArrayLike) -> np.ndarray:
+        frac = self.get_fractional_coords(cart_coords)
+        return self.get_cartesian_coords(periodize(frac))
+
+    def get_scaled_lattice(self, num_cells: ArrayLike) -> Lattice:
+        return Lattice(np.array([v * amt for amt, v in zip(num_cells, self.vecs)]))
+
+    def cartesian_periodic_distance(self, loc1, loc2):
+        return pbc_diff_cart(
+            loc1,
+            loc2,
+            self,
+        )

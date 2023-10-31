@@ -1,7 +1,5 @@
 from typing import List
 
-import numpy as np
-
 from ..core import SimulationState, StateAnalyzer
 from .state_constants import DISCRETE_OCCUPANCY
 
@@ -81,7 +79,7 @@ class DiscreteStepAnalyzer(StateAnalyzer):
         int
             The number of phases identified.
         """
-        return len(np.unique(step.state)) - 1
+        return len(self.phases_present(step))
 
     def phases_present(self, state: SimulationState) -> List[str]:
         """Returns a list of the phases present in the specified state.

@@ -6,7 +6,7 @@ watch:
 nav:
   - Home:
     - index.md
-    - Reference: reference/core/runner.md
+    - Reference: reference/core/lattice.md
     - Notebooks: ./examples/game_of_life.ipynb
   - Notebooks:
     - Game Of Life: ./examples/game_of_life.ipynb
@@ -15,7 +15,9 @@ nav:
     - Life Like Demos: ./examples/life_like_demos.ipynb
   - Reference:
     - Core:
-      - Runner: reference/core/runner.md
+      - Runner:
+        - SynchronousRunner: reference/core/runner/synchronous_runner.md
+        - AsynchronousRunner: reference/core/runner/asynchronous_runner.md
       - PeriodicStructure: reference/core/periodic_structure.md
       - Lattice: reference/core/lattice.md
       - Coordinate Utilities: reference/core/coordinate_utils.md
@@ -26,17 +28,25 @@ nav:
       - Analyzer: reference/core/analyzer.md
       - BasicController: reference/core/basic_controller.md
       - DistanceMap: reference/core/distance_map.md
+      - StructureBuilder: reference/core/structure_builder.md
+      - Simulation: reference/core/simulation.md
     - Atomic:
-      - AtomicStructure: reference/atomic/atomic_structure.md
+      - PymatgenStructConverter: reference/atomic/pymatgen_struct_converter.md
     - Discrete:
       - DiscreteStepAnalyzer: reference/discrete/discrete_step_analyzer.md
       - DiscreteStateResultAnalyzer: reference/discrete/discrete_state_result_analyzer.md
       - PhaseSet: reference/discrete/phase_set.md
-    - SquareGrid:
-      - GridSetup: reference/square_grid/grid_setup.md
-      - Lattice: reference/square_grid/lattice.md
-      - Neighorboods: reference/square_grid/neighborhoods.md
-      - StructureBuilders: reference/square_grid/structure_builders.md
+    - Structures:
+      - SquareGrid:
+        - GridSetup: reference/structures/square_grid/grid_setup.md
+        - GrowthSetup: reference/structures/square_grid/growth_setup.md
+        - Lattice: reference/structures/square_grid/lattice.md
+        - Neighorboods: reference/structures/square_grid/neighborhoods.md
+        - StructureBuilders: reference/structures/square_grid/structure_builders.md
+      - Honeycomb:
+        - Lattice: reference/structures/honeycomb/lattice.md
+        - Neighorboods: reference/structures/honeycomb/neighborhoods.md
+        - StructureBuilders: reference/structures/honeycomb/structure_builders.md
     - Visualization:
       - SquareGridArtist: reference/visualization/square_grid_artist.md
       - SquareGridResultArtist: reference/visualization/square_grid_result_artist.md

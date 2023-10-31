@@ -7,7 +7,7 @@ import rustworkx as rx
 class AbstractNeighborhood(ABC):
     @abstractmethod
     def neighbors_of(self, site_id: int, include_weights: bool = False) -> List[int]:
-        pass
+        pass  # pragma: no cover
 
 
 class Neighborhood(AbstractNeighborhood):

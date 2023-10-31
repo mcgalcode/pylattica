@@ -11,7 +11,7 @@ from ..core.constants import LOCATION, SITE_ID
 from ..core.simulation_state import SimulationState
 from ..discrete.discrete_step_analyzer import DiscreteStepAnalyzer
 from ..discrete.state_constants import DISCRETE_OCCUPANCY
-from ..square_grid.structure_builders import (
+from ..structures.square_grid.structure_builders import (
     SimpleSquare2DStructureBuilder,
     SimpleSquare3DStructureBuilder,
 )
@@ -102,7 +102,7 @@ class DiscreteSquareGridArtist2D(DiscreteSquareGridArtist):
         if legend is None:
             legend = self.get_legend(state)
 
-        state_size = int(struct.bounds[0])
+        state_size = int(struct.lattice.vec_lengths[0])
         width = state_size + 6
 
         legend_border_width = 5

@@ -1,74 +1,11 @@
-from functools import lru_cache
-from numbers import Number
 from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
 
-from .constants import LOCATION, SITE_CLASS, SITE_ID
+from .coordinate_utils import get_points_in_box
+from .lattice import Lattice
+from .constants import LOCATION, SITE_CLASS, SITE_ID, OFFSET_PRECISION
 
-
-@lru_cache
-def get_pt_in_range(bound: float, pt: float) -> float:
-    """Returns the periodic image of a 1D value.
-
-    Parameters
-    ----------
-    bound : float
-        The upper bound of the range (lower bound is assumed zero)
-    pt : float
-        The value to return to within the range
-
-    Returns
-    -------
-    float
-        The transformed value
-    """
-    return pt % bound
-
-
-@lru_cache
-def get_periodic_point(bounds: Iterable[Number], pt: Iterable[Number]) -> Tuple[Number]:
-    """Given a point and a list of upper bounds (assuming zero lower bounds),
-    returns the point, unchanged, if it lies inside the two or three
-    dimensional square region defined by the bounds provided, or the periodic
-    image of the point within the bounds if the point lies outside the bounds.
-
-    For example, if the bounds are (5, 5, 5) and the point is (2, 3, 6),
-    the periodized version of the point is (2, 3, 1).
-
-    Parameters
-    ----------
-    bounds : Iterable[Number]
-        The upper boundaries along each dimension of the periodic image
-    pt : Iterable[Number]
-        The point to move into the origina image
-
-    Returns
-    -------
-    tuple[Number]
-        The transformed point
-    """
-    return tuple(get_pt_in_range(b, p) for b, p in zip(bounds, pt))
-
-
-def float_loc(loc: Iterable[Number]) -> Tuple[float]:
-    """Returns a new list with each element of an iterable of numerics
-    cast as a float.
-
-    Parameters
-    ----------
-    loc : Iterable[Number]
-        A location represented by an arbitrary iterable of numbers
-
-    Returns
-    -------
-    Tuple[float]
-        The same location represented as a tuple of floats
-    """
-    return tuple(loc)
-
-
-OFFSET_PRECISION = 3
 VEC_OFFSET = 0.001
 
 
@@ -81,51 +18,104 @@ class PeriodicStructure:
 
     Attributes
     ----------
-    bounds : Iterable[Number]
-        The extent of this structure in each dimension in real units. Lower bounds are
-        assumed to be zero. For instance, a cubic structure of length 2 in
-        each direction would have bounds of (2, 2, 2)
+    lattice : Lattice
+        The periodic lattice in which this structure exists
     dim : int
         The dimensionality of the structure
     """
 
-    def __init__(self, bounds: Iterable[Number]):
-        """Instantiates a structure with the specified bounds.
-        The dimensionaliity is inferred by the dimensionality of the bounds.
+    @classmethod
+    def build_from(
+        _,
+        lattice: Lattice,
+        num_cells: List[int],
+        site_motif: dict,
+        frac_coords: bool = False,
+    ):
+        """Builds a PeriodicStructure by repeating the unit cell num_cell times
+        in each dimension. For instance, to build a structure that has 2 unit cells in
+        each direction (and itself is three dimensional), the num_cells parameter should be
+
+        [2, 2, 2]
+
+        Lattice sites must also be specified by the site_motif parameter. This allows
+        specification of which sites are where in the unit cell. For instance, if my 2D
+        lattice has two types of sites, A and B, and each type exists in two different
+        places, I might use the following site_motif:
+
+        {
+            "A": [
+                [0.2, 0.2],
+                [0.4, 0.4]
+            ],
+            "B": [
+                [0.6, 0.6],
+                [0.8, 0.8]
+            ]
+        }
 
         Parameters
         ----------
-        bounds : Iterable[Number]
+        num_cells : List[int]
+            As described above, a list of the number of repetitions of the unit cell
+            in each direction.
+        site_motif : dict
+            A dictionary mapping string site classes to lists of the locations within
+            the unit cell at which a site of that type exists.
+
+        Returns
+        -------
+        PeriodicStructure
+            The structure resulting from the lattice tiling and motif filling specified.
+        """
+        new_lattice = lattice.get_scaled_lattice(num_cells)
+
+        struct = PeriodicStructure(new_lattice)
+
+        # these are in "fractional" coordinates
+        vec_coeffs = get_points_in_box([0 for _ in range(new_lattice.dim)], num_cells)
+        for vec_coeff_set in vec_coeffs:
+            if not frac_coords:  # convert lattice points to "cartesian coordinates"
+                point = lattice.matrix @ np.array(vec_coeff_set)
+            else:
+                point = np.array(vec_coeff_set)
+
+            for site_class, basis_vecs in site_motif.items():
+                for vec in basis_vecs:
+                    # if the motif is specified in cartesian coordinates, we're good here
+                    site_loc = tuple(point + np.array(vec))
+
+                    if (
+                        frac_coords
+                    ):  # convert lattice point back to cartesian coordinates
+                        site_loc = lattice.get_cartesian_coords(site_loc)
+
+                    # site_loc should be in cartesian coordinates at this point
+                    struct.add_site(site_class, site_loc)
+
+        return struct
+
+    def __init__(self, lattice: Lattice):
+        """Instantiates a structure with the specified lattice.
+        The dimensionaliity is inferred by the dimensionality of the lattice.
+
+        Parameters
+        ----------
+        lattice : Lattice
             _description_
         """
-        self.bounds = tuple(bounds)
-        self.dim = len(bounds)
+        self.lattice = lattice
+        self.dim = lattice.dim
         self._sites = {}
         self.site_ids = []
         self._location_lookup = {}
         self._offset_vector = np.array([VEC_OFFSET for _ in range(self.dim)])
 
-    def periodized_coords(self, location: Tuple[float]) -> Tuple[float]:
-        """Returns the periodic image of a point within this structure.
-
-        Parameters
-        ----------
-        location : Tuple[float]
-            The point to be periodi
-
-        Returns
-        -------
-        Tuple[float]
-            The periodized point
-        """
-        periodic_point = get_periodic_point(self.bounds, location)
-        return periodic_point
-
     def _coords_with_offset(self, location: Iterable[float]) -> Iterable[float]:
-        return tuple(s + VEC_OFFSET for s in location)
+        return np.round(location + self._offset_vector, OFFSET_PRECISION)
 
     def _transformed_coords(self, location: Iterable[float]) -> Iterable[float]:
-        periodized_coords = self.periodized_coords(location)
+        periodized_coords = self.lattice.get_periodized_cartesian_coords(location)
         offset_periodized_coords = self._coords_with_offset(periodized_coords)
         return offset_periodized_coords
 
@@ -138,7 +128,7 @@ class PeriodicStructure:
             The class of the site to be added. This can be anything, but must be provided
             Think of this as a tag for the site
         location : Tuple[float]
-            The location of the new site
+            The location of the new site in Cartesian coordinates
 
         Returns
         -------
@@ -146,9 +136,9 @@ class PeriodicStructure:
             The ID of the site. This can be used to retrieve the site later
         """
         new_site_id = len(self._sites)
-        periodized_coords = self.periodized_coords(location)
 
-        offset_periodized_coords = self._coords_with_offset(periodized_coords)
+        periodized_coords = self.lattice.get_periodized_cartesian_coords(location)
+        offset_periodized_coords = tuple(self._transformed_coords(location))
 
         assert (
             self._location_lookup.get(offset_periodized_coords, None) is None
@@ -156,7 +146,7 @@ class PeriodicStructure:
 
         self._sites[new_site_id] = {
             SITE_CLASS: site_class,
-            LOCATION: periodized_coords,
+            LOCATION: tuple(periodized_coords),
             SITE_ID: new_site_id,
         }
 
@@ -177,14 +167,19 @@ class PeriodicStructure:
         int
             A dictionary with keys "site_class", "location", and "id" representing the site.
         """
-        location = tuple(location)
-        _transformed_coords = self._transformed_coords(location)
+        _transformed_coords = tuple(self._transformed_coords(location))
         site_id = self._location_lookup.get(_transformed_coords)
 
         if site_id is not None:
             return self.get_site(site_id)
+        else:
+            return None
 
-        return None
+    def site_class(self, site_id: int) -> str:
+        return self.get_site(site_id)[SITE_CLASS]
+
+    def site_location(self, site_id: int) -> str:
+        return self.get_site(site_id)[LOCATION]
 
     def get_site(self, site_id: int) -> Dict:
         """Returns the site with the specified ID.
@@ -218,4 +213,4 @@ class PeriodicStructure:
         if site_class is None:
             return all_sites
 
-        return [site for site in all_sites if site[SITE_ID] == site_class]
+        return [site for site in all_sites if site[SITE_CLASS] == site_class]
