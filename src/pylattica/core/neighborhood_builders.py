@@ -124,7 +124,7 @@ class AnnularNeighborhoodBuilder(NeighborhoodBuilder):
                     struct.lattice,
                 )
 
-                if dist < self.outer_radius and dist > self.inner_radius:
+                if self.inner_radius < dist < self.outer_radius:
                     nbs.append((other_site[SITE_ID], dist))
 
         return nbs

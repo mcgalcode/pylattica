@@ -1,8 +1,6 @@
 from ...core.structure_builder import StructureBuilder
 from .lattice import RhombohedralLattice
 
-import math
-
 
 class HoneycombTilingBuilder(StructureBuilder):
     SITE_CLASS = "A"

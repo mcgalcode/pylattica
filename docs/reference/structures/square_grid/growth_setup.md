@@ -1,0 +1,1 @@
+::: pylattica.structures.square_grid.growth_setup

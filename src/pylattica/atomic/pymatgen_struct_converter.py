@@ -22,7 +22,6 @@ class PymatgenStructureConverter:
         Lattice
             A pylattica lattice
         """
-        pmg_lat = pmg_lat
         pyl_lat = PylLattice(pmg_lat.matrix)
         return pyl_lat
 

@@ -30,7 +30,7 @@ class AsynchronousRunner(Runner):
 
     def _run(
         self,
-        initial_state: SimulationState,
+        _: SimulationState,
         result: SimulationResult,
         live_state: SimulationState,
         controller: BasicController,

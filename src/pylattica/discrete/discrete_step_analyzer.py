@@ -1,7 +1,5 @@
 from typing import List
 
-import numpy as np
-
 from ..core import SimulationState, StateAnalyzer
 from .state_constants import DISCRETE_OCCUPANCY
 

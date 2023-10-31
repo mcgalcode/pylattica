@@ -1,1 +1,0 @@
-::: pylattica.square_grid.structure_builders

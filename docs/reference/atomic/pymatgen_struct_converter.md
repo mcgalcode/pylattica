@@ -1,0 +1,1 @@
+::: pylattica.atomic.pymatgen_struct_converter

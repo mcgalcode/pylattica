@@ -1,0 +1,1 @@
+::: pylattica.structures.honeycomb.neighborhoods

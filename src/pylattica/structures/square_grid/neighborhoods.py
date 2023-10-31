@@ -1,9 +1,6 @@
 import numpy as np
-from pylattica.core import periodic_structure
-from pylattica.core.neighborhoods import Neighborhood, StochasticNeighborhood
 from ...core.coordinate_utils import get_points_in_cube
 from ...core.neighborhood_builders import (
-    NeighborhoodBuilder,
     StochasticNeighborhoodBuilder,
     MotifNeighborhoodBuilder,
     DistanceNeighborhoodBuilder,

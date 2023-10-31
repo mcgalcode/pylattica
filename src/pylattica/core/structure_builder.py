@@ -1,6 +1,6 @@
 from typing import Tuple, Union
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from .periodic_structure import PeriodicStructure
 from .lattice import Lattice
 
@@ -13,12 +13,13 @@ class StructureBuilder(ABC):
         self.motif = motif
 
     def build(self, size: Union[Tuple[int], int]):
-        if type(size) == tuple:
+        if isinstance(size, tuple):
             if not len(size) == self.lattice.dim:
                 raise ValueError(
-                    f"Desired structure dimensions, {size}, does not match dimensionality of lattice: {self.lattice.dim}"
+                    f"Desired structure dimensions, {size}, does not match "
+                    "dimensionality of lattice: {self.lattice.dim}"
                 )
-        elif type(size) == int:
+        elif isinstance(size, int):
             size = [size for _ in range(self.lattice.dim)]
 
         return PeriodicStructure.build_from(
