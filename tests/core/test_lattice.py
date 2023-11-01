@@ -3,10 +3,18 @@ import pytest
 import numpy as np
 
 from pylattica.core import Lattice, PeriodicStructure
+from pylattica.core.lattice  import periodize
 from pylattica.core.constants import SITE_ID
+
+def assert_points_equal(pt1, pt2):
+    assert (np.array(pt1) == np.array(pt2)).all()
 
 def test_instantiate_lattice(square_2D_basis_vecs):
     assert Lattice(square_2D_basis_vecs) is not None
+
+def test_basic_points(square_2D_basis_vecs):
+    lat = Lattice(square_2D_basis_vecs)
+    assert_points_equal(lat.get_cartesian_coords((1.5, 0.5)), (1.5, 0.5))
 
 def test_can_build_simple_2x2_grid(square_2D_lattice, simple_motif):
     structure = PeriodicStructure.build_from(square_2D_lattice, [2, 2], simple_motif)
@@ -122,9 +130,6 @@ def test_canted_lattice_pbc_distance():
     assert scaled.cartesian_periodic_distance(pt4, pt5) == 0.0
     assert scaled.cartesian_periodic_distance(pt6, pt7) == 1
     
-    
-
-
 def test_canted_rectangular_lattice_point_conversions():
     lattice = Lattice(
         [[1, 0],
@@ -150,3 +155,30 @@ def test_canted_rectangular_lattice_point_conversions():
     assert (np.array([3/4, 1/4]) == lattice.get_cartesian_coords(pt1)).all()
     assert (np.array([5/4, 3/4]) == lattice.get_cartesian_coords(pt2)).all()
     assert (np.array([1/2, 1/2]) == lattice.get_cartesian_coords(pt3)).all()
+
+def test_periodizing_point():
+    pt1 = (0.5, 1.5, 0.8)
+    assert (np.array((0.5, 0.5, 0.8)) == periodize(pt1)).all()
+
+    pt2 = (0, 0, 0)
+    assert (np.array((0, 0, 0)) == periodize(pt2)).all()
+
+    pt3 = (1.5, 0.8, -0.5)
+    assert (np.array((1.5, 0.8, -0.5)) == periodize(pt3, False)).all()
+
+    assert (np.array((1.5, 0.8, 0.5)) == periodize(pt3, (False, False, True))).all()
+    assert (np.array((0.5, 0.8, 0.5)) == periodize(pt3, (True, False, True))).all()
+
+    pt4 = (1.5, 1.5)
+    assert_points_equal((0.5, 1.5), periodize(pt4, (True, False)))
+
+def test_nonperiodic_lattice(square_2D_basis_vecs):
+    lat = Lattice(square_2D_basis_vecs, False)
+
+    assert_points_equal(lat.get_periodized_cartesian_coords([1.5, 1.5]), [1.5, 1.5])
+
+    lat = Lattice(square_2D_basis_vecs, True)
+    assert_points_equal(lat.get_periodized_cartesian_coords([1.5, 1.5]), [0.5, 0.5])
+
+    lat_slab = Lattice(square_2D_basis_vecs, (True, False))
+    assert_points_equal(lat_slab.get_periodized_cartesian_coords([1.5, 1.5]), [0.5, 1.5])
