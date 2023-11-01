@@ -1,10 +1,16 @@
 from pymatgen.core.structure import Structure as PmgStructure
 from pymatgen.core.lattice import Lattice as PmgLattice
 
-from ..core import Lattice as PylLattice, StructureBuilder, PeriodicStructure, SimulationState
+from ..core import (
+    Lattice as PylLattice,
+    StructureBuilder,
+    PeriodicStructure,
+    SimulationState,
+)
 from typing import Tuple
 from ..discrete.state_constants import DISCRETE_OCCUPANCY
 from ..core.constants import SITE_ID
+
 
 class PymatgenStructureConverter:
     """A PymatgenStructureConverter provides utilities for converting pylattica
@@ -60,7 +66,7 @@ class PymatgenStructureConverter:
         struct_builder = StructureBuilder(lat, struct_motif)
         struct_builder.frac_coords = True
         return struct_builder
-    
+
     def to_pylattica_structure_and_state(
         self, pmg_struct: PmgStructure
     ) -> Tuple[PeriodicStructure, SimulationState]:
@@ -84,10 +90,7 @@ class PymatgenStructureConverter:
         state = SimulationState.from_struct(struct)
         for site in pmg_struct.sites:
             site_id = struct.site_at(site.coords)[SITE_ID]
-            state.set_site_state(site_id, {
-                DISCRETE_OCCUPANCY: site.species_string
-            })
-
+            state.set_site_state(site_id, {DISCRETE_OCCUPANCY: site.species_string})
 
         return struct, state
 

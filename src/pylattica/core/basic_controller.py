@@ -4,6 +4,7 @@ import random
 from .simulation_result import SimulationResult
 from .simulation_state import SimulationState
 
+
 class BasicController(ABC):
     """The base class which all Controllers extend. Every new type of
     simulation will involve creating a new Controller class. The controller

@@ -140,7 +140,9 @@ class PeriodicStructure:
         """
         new_site_id = len(self._sites)
 
-        periodized_coords = self._get_rounded_coords(self.lattice.get_periodized_cartesian_coords(location))
+        periodized_coords = self._get_rounded_coords(
+            self.lattice.get_periodized_cartesian_coords(location)
+        )
         offset_periodized_coords = tuple(self._transformed_coords(location))
 
         assert (
