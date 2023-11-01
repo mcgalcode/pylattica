@@ -11,7 +11,7 @@ def test_simple_controller(square_grid_2D_4x4: PeriodicStructure):
         def get_state_update(self, site_id: int, prev_state: SimulationState):
             return {}
 
-    sc = SimpleController(square_grid_2D_4x4)
+    sc = SimpleController()
     state = SimulationState.from_struct(square_grid_2D_4x4)
 
     assert type(sc.get_random_site(state)) == int

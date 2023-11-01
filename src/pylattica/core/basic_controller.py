@@ -3,7 +3,6 @@ import random
 
 from .simulation_result import SimulationResult
 from .simulation_state import SimulationState
-from .periodic_structure import PeriodicStructure
 
 
 class BasicController(ABC):
@@ -17,11 +16,6 @@ class BasicController(ABC):
     the site at which the update rule should be applied. It is up to the
     user to decide what updates should be produced using this information.
     """
-
-    is_async = False
-
-    def __init__(self, struct: PeriodicStructure):
-        self.structure = struct
 
     @abstractmethod
     def get_state_update(self, site_id: int, prev_state: SimulationState):

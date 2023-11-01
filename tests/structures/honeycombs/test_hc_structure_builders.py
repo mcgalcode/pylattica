@@ -5,7 +5,7 @@ import numpy as np
 from pylattica.structures.honeycomb import HoneycombTilingBuilder
 from pylattica.structures.honeycomb.lattice import ROOT_3
 from pylattica.core.constants import LOCATION
-
+from pylattica.core.periodic_structure import OFFSET_PRECISION
 
 def test_small_honeycomb_tiling_builder():
     builder = HoneycombTilingBuilder()
@@ -16,8 +16,8 @@ def test_small_honeycomb_tiling_builder():
 
     site_0_cart = tiling.get_site(0)[LOCATION]
     site_0_frac = tiling.lattice.get_fractional_coords(site_0_cart)
-    assert (np.array(site_0_frac) == np.array([0.5, 0.5])).all()
-    assert (np.array(site_0_cart) == np.array([3/4, ROOT_3 / 4])).all()
+    assert np.allclose(np.array(site_0_frac),np.array([0.5, 0.5]), atol=OFFSET_PRECISION)
+    assert np.allclose(np.array(site_0_cart),np.array([3/4, ROOT_3 / 4]), atol=OFFSET_PRECISION)
 
 def test_medium_honeycomb_tiling_builder_uneven_size():
     builder = HoneycombTilingBuilder()
@@ -25,13 +25,13 @@ def test_medium_honeycomb_tiling_builder_uneven_size():
     tiling2 = builder.build((2,1))
     site_0_cart = tiling2.get_site(0)[LOCATION]
     site_0_frac = tiling2.lattice.get_fractional_coords(site_0_cart)
-    assert (np.array(site_0_frac) == np.array([0.25, 0.5])).all()
-    assert (np.array(site_0_cart) == np.array([3/4, ROOT_3 / 4])).all()
+    assert np.allclose(np.array(site_0_frac), np.array([0.25, 0.5]), atol=OFFSET_PRECISION)
+    assert np.allclose(np.array(site_0_cart), np.array([3/4, ROOT_3 / 4]), atol=OFFSET_PRECISION)
 
     site_1_cart = tiling2.get_site(1)[LOCATION]
     site_1_frac = tiling2.lattice.get_fractional_coords(site_1_cart)
-    assert (np.array(site_1_frac) == np.array([3 / 4, 0.5])).all()
-    assert (np.array(site_1_cart) == np.array([7/4, ROOT_3 / 4])).all()
+    assert np.allclose(np.array(site_1_frac), np.array([3 / 4, 0.5]), atol=OFFSET_PRECISION)
+    assert np.allclose(np.array(site_1_cart), np.array([7/4, ROOT_3 / 4]), atol=OFFSET_PRECISION)
 
 
 def test_medium_honeycomb_tiling_builder_even_size():

@@ -25,7 +25,7 @@ def test_simple_async_controller(square_grid_2D_4x4: PeriodicStructure):
     
     runner = AsynchronousRunner()
 
-    controller = SimpleAsyncController(square_grid_2D_4x4)
+    controller = SimpleAsyncController()
     result = runner.run(initial_state, controller=controller, num_steps = 10)
 
     last_step = result.last_step
@@ -57,7 +57,7 @@ def test_simple_async_controller_async_flag(square_grid_2D_4x4: PeriodicStructur
     
     runner = AsynchronousRunner()
 
-    controller = SimpleAsyncController(square_grid_2D_4x4)
+    controller = SimpleAsyncController()
     result = runner.run(initial_state, controller=controller, num_steps = 10)
 
     last_step = result.last_step

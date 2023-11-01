@@ -1,9 +1,11 @@
 import pytest
 
 from pylattica.atomic.pymatgen_struct_converter import PymatgenStructureConverter
-from pylattica.core.constants import SITE_CLASS, LOCATION
+from pylattica.core.constants import SITE_CLASS, LOCATION, SITE_ID
 from pymatgen.core.structure import Structure as PmgStructure
 from pylattica.core import PeriodicStructure
+from pylattica.core.periodic_structure import OFFSET_PRECISION
+from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 
 import numpy as np
 
@@ -20,7 +22,7 @@ def test_can_convert_lattice(zr_pmg_struct: PmgStructure):
     assert np.allclose(lattice.vecs[1], zr_pmg_struct.lattice.matrix[1])
     assert np.allclose(lattice.vecs[2], zr_pmg_struct.lattice.matrix[2])
 
-def test_can_convert_pmg_struct(zr_pmg_struct: PmgStructure):
+def test_can_convert_pmg_struct_to_pyl_struct_builder(zr_pmg_struct: PmgStructure):
     converter = PymatgenStructureConverter()
 
     struct_builder = converter.to_pylattica_structure_builder(zr_pmg_struct)
@@ -32,11 +34,27 @@ def test_can_convert_pmg_struct(zr_pmg_struct: PmgStructure):
     species_label = zr_pmg_struct.sites[0].species_string
     assert struct.site_class(0) == species_label
 
-    # brittle - relies on the order in which sites are enumerated
-    assert np.allclose(struct.site_location(0),zr_pmg_struct.sites[0].coords)
-    assert np.allclose(struct.site_location(1),zr_pmg_struct.sites[1].coords)
+    tol = OFFSET_PRECISION
 
-    assert np.allclose(struct.lattice.get_fractional_coords(struct.site_location(1)), zr_pmg_struct.sites[1].frac_coords)
+    # brittle - relies on the order in which sites are enumerated
+    assert np.allclose(struct.site_location(0),zr_pmg_struct.sites[0].coords, atol=OFFSET_PRECISION)
+    assert np.allclose(struct.site_location(1),zr_pmg_struct.sites[1].coords, atol=OFFSET_PRECISION)
+
+    assert np.allclose(struct.lattice.get_fractional_coords(struct.site_location(1)), zr_pmg_struct.sites[1].frac_coords, atol=OFFSET_PRECISION)
+
+def test_can_convert_pmg_struct_to_pyl_struct_and_state(zr_pmg_struct: PmgStructure):
+    zr_pmg_struct.make_supercell((2,2,2))
+    assert zr_pmg_struct.num_sites == 16
+
+    converter = PymatgenStructureConverter()
+    pyl_struct, pyl_state = converter.to_pylattica_structure_and_state(zr_pmg_struct)
+
+    for site in zr_pmg_struct.sites:
+        pyl_site = pyl_struct.site_at(site.coords)
+        assert pyl_site is not None
+        sid = pyl_site[SITE_ID]
+        assert pyl_state.get_site_state(sid) is not None
+        assert pyl_state.get_site_state(sid)[DISCRETE_OCCUPANCY] == site.species_string
 
 def test_can_convert_pyl_lat(pyl_struct: PeriodicStructure):
     converter = PymatgenStructureConverter()
