@@ -8,6 +8,9 @@ nav:
     - index.md
     - Reference: reference/core/lattice.md
     - Notebooks: ./examples/game_of_life.ipynb
+    - Guides: ./guides/index.md
+  - Guides:
+    - Lattices: ./guides/constructing_lattices.ipynb
   - Notebooks:
     - Game Of Life: ./examples/game_of_life.ipynb
     - Simulation State: ./examples/simulation_state.ipynb
