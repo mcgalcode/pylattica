@@ -26,7 +26,7 @@ def test_parallel_runner(square_grid_2D_4x4: PeriodicStructure):
     
     runner = SynchronousRunner(parallel=True)
 
-    controller = SimpleParallelController(square_grid_2D_4x4)
+    controller = SimpleParallelController()
     result = runner.run(initial_state, controller=controller, num_steps = 1000)
 
     last_step = result.last_step
@@ -56,7 +56,7 @@ def test_parallel_runner_speed(square_grid_2D_4x4: PeriodicStructure):
     parallel_runner = SynchronousRunner(parallel=True)
     series_runner = SynchronousRunner()
 
-    controller = SimpleParallelController(square_grid_2D_4x4)
+    controller = SimpleParallelController()
 
     num_steps = 1000
 
