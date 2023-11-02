@@ -98,7 +98,7 @@ class Lattice:
         self.vecs = np.array(vecs)
 
         if not isinstance(periodic, tuple):
-            self.periodic = tuple([periodic for _ in vecs])
+            self.periodic = tuple(periodic for _ in vecs)
         else:
             self.periodic = periodic
 
