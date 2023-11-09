@@ -33,3 +33,19 @@ def test_structure_returns_sites(square_2x2_2D_grid_in_test):
 
     all_sites = square_2x2_2D_grid_in_test.sites("A")
     assert len(all_sites) == 4
+
+def test_build_structure_from_list_motif(square_2D_lattice):
+    motif = [(
+        0.5, 0.5
+    )]
+
+    struct = PeriodicStructure.build_from(
+        square_2D_lattice,
+        num_cells=(3,3),
+        site_motif=motif
+    )
+
+    assert len(struct.site_ids) == 9
+    assert struct.site_at((0.5, 0.5)) is not None
+    assert struct.site_at((-0.5, 2.5)) is not None
+    assert struct.site_at((0.25, 0.25)) is None

@@ -1,4 +1,4 @@
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Tuple, Union
 
 import numpy as np
 
@@ -7,7 +7,7 @@ from .lattice import Lattice
 from .constants import LOCATION, SITE_CLASS, SITE_ID, OFFSET_PRECISION
 
 VEC_OFFSET = 0.001
-
+DEFAULT_SITE_CLASS = "A"
 
 class PeriodicStructure:
     """
@@ -29,7 +29,7 @@ class PeriodicStructure:
         _,
         lattice: Lattice,
         num_cells: List[int],
-        site_motif: dict,
+        site_motif: Union[Dict, List],
         frac_coords: bool = False,
     ):
         """Builds a PeriodicStructure by repeating the unit cell num_cell times
@@ -71,6 +71,11 @@ class PeriodicStructure:
         new_lattice = lattice.get_scaled_lattice(num_cells)
 
         struct = PeriodicStructure(new_lattice)
+
+        if not isinstance(site_motif, dict):
+            site_motif = {
+                DEFAULT_SITE_CLASS: site_motif
+            }
 
         # these are in "fractional" coordinates
         vec_coeffs = get_points_in_box([0 for _ in range(new_lattice.dim)], num_cells)
