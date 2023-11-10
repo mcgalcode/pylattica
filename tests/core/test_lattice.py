@@ -109,6 +109,37 @@ def test_rectangular_lattice_pbc_distance():
     assert scaled.cartesian_periodic_distance(pt1, pt3) == 0.0
     assert scaled.cartesian_periodic_distance(pt2, pt3) == 0.25
 
+def test_square_lattice_non_pbc_distance():
+    lattice = Lattice(
+        [[1, 0],
+        [0, 1]],
+        periodic=False
+    )
+
+    pt1 = (0.1, 0.5)
+    pt2 = (0.9, 0.5)
+    pt3 = (1.5, 0.5)
+
+    assert lattice.cartesian_periodic_distance(pt1, pt2) == 0.8
+    assert lattice.cartesian_periodic_distance(pt1, pt3) == 1.4
+    assert lattice.cartesian_periodic_distance(pt2, pt3) == 0.6
+
+
+def test_square_lattice_non_pbc_coords():
+    lattice = Lattice(
+        [[1, 0],
+        [0, 1]],
+        periodic=False
+    )
+
+    pt1 = (0.1, 0.5)
+    pt2 = (0.9, 0.5)
+    pt3 = (1.5, 0.5)
+
+    assert_points_equal(lattice.get_periodized_cartesian_coords(pt1), pt1)
+    assert_points_equal(lattice.get_periodized_cartesian_coords(pt2), pt2)
+    assert_points_equal(lattice.get_periodized_cartesian_coords(pt3), (1.5, 0.5))
+
 def test_canted_lattice_pbc_distance():
     lattice = Lattice(
         [[1, 0],
