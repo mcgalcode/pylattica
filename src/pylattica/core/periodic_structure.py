@@ -9,6 +9,7 @@ from .constants import LOCATION, SITE_CLASS, SITE_ID, OFFSET_PRECISION
 VEC_OFFSET = 0.001
 DEFAULT_SITE_CLASS = "A"
 
+
 class PeriodicStructure:
     """
     Represents a periodic arrangement of sites. Assigns
@@ -73,9 +74,7 @@ class PeriodicStructure:
         struct = PeriodicStructure(new_lattice)
 
         if not isinstance(site_motif, dict):
-            site_motif = {
-                DEFAULT_SITE_CLASS: site_motif
-            }
+            site_motif = {DEFAULT_SITE_CLASS: site_motif}
 
         # these are in "fractional" coordinates
         vec_coeffs = get_points_in_box([0 for _ in range(new_lattice.dim)], num_cells)

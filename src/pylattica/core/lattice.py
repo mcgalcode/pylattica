@@ -15,7 +15,7 @@ def periodize(frac_coords, periodic=True):
     return frac_coords - np.floor(frac_coords) * np.array(periodic, dtype=int)
 
 
-def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike):
+def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike, periodic=True):
     """Returns the 'fractional distance' between two coordinates taking into
     account periodic boundary conditions. (from pymatgen)
 
@@ -33,8 +33,11 @@ def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike):
         pbc_diff([0.1, 0.1, 0.1], [0.3, 0.5, 0.9]) = [-0.2, -0.4, 0.2]
         pbc_diff([0.9, 0.1, 1.01], [0.3, 0.5, 0.9]) = [-0.4, -0.4, 0.11]
     """
+    if not isinstance(periodic, tuple):
+        periodic = [periodic for _ in fcoords1]
+
     fdist = np.subtract(fcoords1, fcoords2)
-    return fdist - np.round(fdist)
+    return fdist - np.round(fdist) * np.array(periodic, dtype=int)
 
 
 def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lattice):
@@ -57,7 +60,7 @@ def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lat
     """
     fcoords1 = lattice.get_fractional_coords(cart_coords1)
     fcoords2 = lattice.get_fractional_coords(cart_coords2)
-    frac_dist = pbc_diff_frac(fcoords1, fcoords2)
+    frac_dist = pbc_diff_frac(fcoords1, fcoords2, lattice.periodic)
     return np.round(
         np.linalg.norm(lattice.get_cartesian_coords(frac_dist)), OFFSET_PRECISION
     )
