@@ -140,3 +140,5 @@ dmypy.json
 
 docs_build
 examples/wip*
+
+*.ai
