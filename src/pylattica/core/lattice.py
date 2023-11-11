@@ -158,7 +158,9 @@ class Lattice:
         return self.get_cartesian_coords(periodize(frac, self.periodic))
 
     def get_scaled_lattice(self, num_cells: ArrayLike) -> Lattice:
-        return Lattice(np.array([v * amt for amt, v in zip(num_cells, self.vecs)]), self.periodic)
+        return Lattice(
+            np.array([v * amt for amt, v in zip(num_cells, self.vecs)]), self.periodic
+        )
 
     def cartesian_periodic_distance(self, loc1, loc2):
         return pbc_diff_cart(

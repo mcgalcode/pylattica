@@ -12,14 +12,14 @@ from .periodic_structure import PeriodicStructure
 from .lattice import pbc_diff_cart
 
 
-class NeighborhoodBuilder():
-    def get(self, struct: PeriodicStructure, site_class = None) -> Neighborhood:
+class NeighborhoodBuilder:
+    def get(self, struct: PeriodicStructure, site_class=None) -> Neighborhood:
         graph = rx.PyDiGraph()
 
         if site_class is None:
             sites = struct.sites()
         else:
-            sites = struct.sites(site_class = site_class)
+            sites = struct.sites(site_class=site_class)
 
         for site in struct.sites():
             graph.add_node(site[SITE_ID])
@@ -36,7 +36,6 @@ class NeighborhoodBuilder():
 
 
 class StochasticNeighborhoodBuilder(NeighborhoodBuilder):
-
     def __init__(self, builders):
         self.builders = builders
 
@@ -200,8 +199,8 @@ class MotifNeighborhoodBuilder(NeighborhoodBuilder):
                 nbs.append((nb_id, self.distances.get_dist(neighbor_vec)))
         return nbs
 
-class SiteClassNeighborhoodBuilder(NeighborhoodBuilder):
 
+class SiteClassNeighborhoodBuilder(NeighborhoodBuilder):
     def __init__(self, nb_builders: Dict[str, NeighborhoodBuilder]):
         self._builders = nb_builders
 
@@ -210,5 +209,5 @@ class SiteClassNeighborhoodBuilder(NeighborhoodBuilder):
         for sclass, builder in self._builders.items():
             nbhood = builder.get(struct, site_class=sclass)
             nbhood_map[sclass] = nbhood
-            
+
         return SiteClassNeighborhood(struct, nbhood_map)

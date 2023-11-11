@@ -44,7 +44,8 @@ class CircularNeighborhoodBuilder(DistanceNeighborhoodBuilder):
 
 class PseudoHexagonalNeighborhoodBuilder2D(StochasticNeighborhoodBuilder):
     def __init__(self):
-        motifs = [[
+        motifs = [
+            [
                 (1, 0),
                 (0, 1),
                 (-1, 0),
@@ -59,7 +60,7 @@ class PseudoHexagonalNeighborhoodBuilder2D(StochasticNeighborhoodBuilder):
                 (0, -1),
                 (-1, 1),
                 (1, -1),
-            ]
+            ],
         ]
         super().__init__([MotifNeighborhoodBuilder(m) for m in motifs])
 
@@ -94,7 +95,7 @@ class PseudoHexagonalNeighborhoodBuilder3D(StochasticNeighborhoodBuilder):
                 *common_neighbors,
                 (1, -1, 1),
                 (-1, 1, -1),
-            ]
+            ],
         ]
         super().__init__([MotifNeighborhoodBuilder(m) for m in motifs])
 
@@ -108,24 +109,27 @@ class PseudoPentagonalNeighborhoodBuilder(StochasticNeighborhoodBuilder):
                 (-1, -1),
                 (0, -1),
                 (1, -1),
-            ],[
+            ],
+            [
                 (-1, 1),
                 (0, 1),
                 (1, 1),
                 (-1, 0),
                 (1, 0),
-            ],[
+            ],
+            [
                 (0, 1),
                 (1, 1),
                 (1, 0),
                 (0, -1),
                 (1, -1),
-            ],[
+            ],
+            [
                 (-1, 1),
                 (0, 1),
                 (-1, 0),
                 (-1, -1),
                 (0, -1),
-            ]
+            ],
         ]
         self.builders = [MotifNeighborhoodBuilder(m) for m in motifs]
