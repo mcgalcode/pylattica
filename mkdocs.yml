@@ -8,7 +8,7 @@ nav:
     - index.md
     - Reference: reference/core/lattice.md
     - Notebooks: ./examples/game_of_life.ipynb
-    - Guides: ./guides/index.md
+    - Guides: ./guides/constructing_lattices.ipynb
   - Guides:
     - Lattices: ./guides/constructing_lattices.ipynb
     - Periodic Structures: ./guides/periodic_structures.ipynb
