@@ -6,6 +6,7 @@ from ...core.neighborhood_builders import (
     DistanceNeighborhoodBuilder,
 )
 
+
 class VonNeumannNbHood2DBuilder(MotifNeighborhoodBuilder):
     def __init__(self, size=1):
         points = get_points_in_cube(-size, size + 1, 2)
