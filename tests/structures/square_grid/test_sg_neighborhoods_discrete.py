@@ -60,7 +60,7 @@ def test_pseudo_pentagonal_nb_hood():
     nb_builder = PseudoPentagonalNeighborhoodBuilder()
     nbh = nb_builder.get(struct)
     nbs = nbh.neighbors_of(0)
-    assert len(nbs) == 8
+    assert len(nbs) == 5
 
 def test_pseudo_hexagonal_nb_3d_hood():
     struct = SimpleSquare3DStructureBuilder().build(10)

@@ -213,3 +213,24 @@ def test_nonperiodic_lattice(square_2D_basis_vecs):
 
     lat_slab = Lattice(square_2D_basis_vecs, (True, False))
     assert_points_equal(lat_slab.get_periodized_cartesian_coords([1.5, 1.5]), [0.5, 1.5])
+
+
+def test_partially_periodic_lattice(square_2D_basis_vecs):
+    lat = Lattice(square_2D_basis_vecs, (True, False)).get_scaled_lattice((3,3))
+
+    assert_points_equal(lat.get_periodized_cartesian_coords((-0.5, 1.5)), (2.5, 1.5))
+    assert_points_equal(lat.get_periodized_cartesian_coords((1.5, -0.5)), (1.5, -0.5))
+    assert_points_equal(lat.get_periodized_cartesian_coords((-0.5, -0.5)), (2.5, -0.5))
+
+def test_scaling_lattice_retains_periodicity(square_2D_basis_vecs):
+    lat = Lattice(square_2D_basis_vecs, False)
+    scaled = lat.get_scaled_lattice((2,2))
+    assert scaled.periodic == (False, False)
+
+    lat = Lattice(square_2D_basis_vecs, (False, True))
+    scaled = lat.get_scaled_lattice((2,2))
+    assert scaled.periodic == (False, True)
+
+    lat = Lattice(square_2D_basis_vecs, True)
+    scaled = lat.get_scaled_lattice((2,2))
+    assert scaled.periodic == (True, True)

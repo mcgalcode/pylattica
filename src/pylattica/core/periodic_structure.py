@@ -10,7 +10,7 @@ VEC_OFFSET = 0.001
 DEFAULT_SITE_CLASS = "A"
 
 
-class PeriodicStructure:
+class PeriodicStructure():
     """
     Represents a periodic arrangement of sites. Assigns
     identifiers to sites so that they can be referred to elsewhere.
@@ -183,6 +183,20 @@ class PeriodicStructure:
             return self.get_site(site_id)
         else:
             return None
+    
+    def id_at(self, location: Tuple[float]) -> Dict:
+        site = self.site_at(location)
+        if site is None:
+            return None
+        else:
+            return site[SITE_ID]
+    
+    def class_at(self, location: Tuple[float]) -> Dict:
+        site = self.site_at(location)
+        if site is None:
+            return None
+        else:
+            return site[SITE_CLASS]        
 
     def site_class(self, site_id: int) -> str:
         return self.get_site(site_id)[SITE_CLASS]
@@ -204,6 +218,16 @@ class PeriodicStructure:
             A dictionary with keys "site_class", "location", and "id" representing the site.
         """
         return self._sites.get(site_id)
+    
+    def all_site_classes(self) -> List[str]:
+        """Returns a list of all the site classes present in this structure.
+
+        Returns
+        -------
+        List[str]
+            The site classes in this structure. Each class appears once in this list.
+        """
+        return list(set([site[SITE_CLASS] for site in self.sites()]))
 
     def sites(self, site_class: str = None) -> List[Dict]:
         """Returns a list of the sites with the specified site class.

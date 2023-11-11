@@ -19,7 +19,7 @@ class StructureBuilder(ABC):
                     f"Desired structure dimensions, {size}, does not match "
                     "dimensionality of lattice: {self.lattice.dim}"
                 )
-        elif isinstance(size, int):
+        else:
             size = [size for _ in range(self.lattice.dim)]
 
         return PeriodicStructure.build_from(

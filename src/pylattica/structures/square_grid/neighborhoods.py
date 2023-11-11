@@ -17,7 +17,7 @@ class VonNeumannNbHood2DBuilder(MotifNeighborhoodBuilder):
             if sum(np.abs(p) for p in point) <= size:
                 filtered_points.append(point)
 
-        super().__init__({SimpleSquare2DStructureBuilder.SITE_CLASS: filtered_points})
+        super().__init__(filtered_points)
 
 
 class VonNeumannNbHood3DBuilder(MotifNeighborhoodBuilder):
@@ -29,13 +29,13 @@ class VonNeumannNbHood3DBuilder(MotifNeighborhoodBuilder):
             if sum(np.abs(p) for p in point) <= size:
                 filtered_points.append(point)
 
-        super().__init__({SimpleSquare2DStructureBuilder.SITE_CLASS: filtered_points})
+        super().__init__(filtered_points)
 
 
 class MooreNbHoodBuilder(MotifNeighborhoodBuilder):
     def __init__(self, size=1, dim=2):
         points = get_points_in_cube(-size, size + 1, dim)
-        super().__init__({SimpleSquare2DStructureBuilder.SITE_CLASS: points})
+        super().__init__(points)
 
 
 class CircularNeighborhoodBuilder(DistanceNeighborhoodBuilder):
@@ -44,29 +44,24 @@ class CircularNeighborhoodBuilder(DistanceNeighborhoodBuilder):
 
 class PseudoHexagonalNeighborhoodBuilder2D(StochasticNeighborhoodBuilder):
     def __init__(self):
-        motifs = [
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    (1, 0),
-                    (0, 1),
-                    (-1, 0),
-                    (0, -1),
-                    (1, 1),
-                    (-1, -1),
-                ]
-            },
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    (1, 0),
-                    (0, 1),
-                    (-1, 0),
-                    (0, -1),
-                    (-1, 1),
-                    (1, -1),
-                ]
-            },
+        motifs = [[
+                (1, 0),
+                (0, 1),
+                (-1, 0),
+                (0, -1),
+                (1, 1),
+                (-1, -1),
+            ],
+            [
+                (1, 0),
+                (0, 1),
+                (-1, 0),
+                (0, -1),
+                (-1, 1),
+                (1, -1),
+            ]
         ]
-        self.builders = [MotifNeighborhoodBuilder(m) for m in motifs]
+        super().__init__([MotifNeighborhoodBuilder(m) for m in motifs])
 
 
 class PseudoHexagonalNeighborhoodBuilder3D(StochasticNeighborhoodBuilder):
@@ -80,76 +75,57 @@ class PseudoHexagonalNeighborhoodBuilder3D(StochasticNeighborhoodBuilder):
             (0, 0, -1),
         ]
         motifs = [
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    *common_neighbors,
-                    (-1, -1, 1),
-                    (1, 1, -1),
-                ]
-            },
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    *common_neighbors,
-                    (-1, 1, 1),
-                    (1, -1, -1),
-                ]
-            },
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    *common_neighbors,
-                    (1, 1, 1),
-                    (-1, -1, -1),
-                ]
-            },
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    *common_neighbors,
-                    (1, -1, 1),
-                    (-1, 1, -1),
-                ]
-            },
+            [
+                *common_neighbors,
+                (-1, -1, 1),
+                (1, 1, -1),
+            ],
+            [
+                *common_neighbors,
+                (-1, 1, 1),
+                (1, -1, -1),
+            ],
+            [
+                *common_neighbors,
+                (1, 1, 1),
+                (-1, -1, -1),
+            ],
+            [
+                *common_neighbors,
+                (1, -1, 1),
+                (-1, 1, -1),
+            ]
         ]
-        self.builders = [MotifNeighborhoodBuilder(m) for m in motifs]
+        super().__init__([MotifNeighborhoodBuilder(m) for m in motifs])
 
 
 class PseudoPentagonalNeighborhoodBuilder(StochasticNeighborhoodBuilder):
     def __init__(self):
         motifs = [
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    (-1, 0),
-                    (1, 0),
-                    (-1, -1),
-                    (0, -1),
-                    (1, -1),
-                ]
-            },
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    (-1, 1),
-                    (0, 1),
-                    (1, 1),
-                    (-1, 0),
-                    (1, 0),
-                ]
-            },
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    (0, 1),
-                    (1, 1),
-                    (1, 0),
-                    (0, -1),
-                    (1, -1),
-                ]
-            },
-            {
-                SimpleSquare2DStructureBuilder.SITE_CLASS: [
-                    (-1, 1),
-                    (0, 1),
-                    (-1, 0),
-                    (-1, -1),
-                    (0, -1),
-                ]
-            },
+            [
+                (-1, 0),
+                (1, 0),
+                (-1, -1),
+                (0, -1),
+                (1, -1),
+            ],[
+                (-1, 1),
+                (0, 1),
+                (1, 1),
+                (-1, 0),
+                (1, 0),
+            ],[
+                (0, 1),
+                (1, 1),
+                (1, 0),
+                (0, -1),
+                (1, -1),
+            ],[
+                (-1, 1),
+                (0, 1),
+                (-1, 0),
+                (-1, -1),
+                (0, -1),
+            ]
         ]
         self.builders = [MotifNeighborhoodBuilder(m) for m in motifs]
