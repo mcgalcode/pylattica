@@ -9,7 +9,7 @@ THIS_DIR = Path(__file__).parent
 
 @pytest.fixture()
 def zr_pmg_struct():
-    return Structure.from_file(THIS_DIR / "./Zr.cif")
+    return Structure.from_file(THIS_DIR / "./Zr.json")
 
 @pytest.fixture()
 def pyl_struct():
