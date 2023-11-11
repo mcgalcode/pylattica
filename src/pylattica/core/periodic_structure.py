@@ -227,7 +227,7 @@ class PeriodicStructure:
         List[str]
             The site classes in this structure. Each class appears once in this list.
         """
-        return list(set([site[SITE_CLASS] for site in self.sites()]))
+        return list({site[SITE_CLASS] for site in self.sites()})
 
     def sites(self, site_class: str = None) -> List[Dict]:
         """Returns a list of the sites with the specified site class.

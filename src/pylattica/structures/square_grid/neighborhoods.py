@@ -5,8 +5,6 @@ from ...core.neighborhood_builders import (
     MotifNeighborhoodBuilder,
     DistanceNeighborhoodBuilder,
 )
-from .structure_builders import SimpleSquare2DStructureBuilder
-
 
 class VonNeumannNbHood2DBuilder(MotifNeighborhoodBuilder):
     def __init__(self, size=1):

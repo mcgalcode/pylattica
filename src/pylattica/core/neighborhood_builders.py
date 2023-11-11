@@ -1,11 +1,12 @@
-from abc import ABC, abstractmethod
 from typing import Dict, List, Tuple
 
 import numpy as np
 import rustworkx as rx
 from tqdm import tqdm
 
-from .constants import LOCATION, SITE_CLASS, SITE_ID
+from abc import abstractmethod
+
+from .constants import LOCATION, SITE_ID
 from .distance_map import EuclideanDistanceMap
 from .neighborhoods import Neighborhood, StochasticNeighborhood, SiteClassNeighborhood
 from .periodic_structure import PeriodicStructure
@@ -31,6 +32,7 @@ class NeighborhoodBuilder:
 
         return Neighborhood(graph)
 
+    @abstractmethod
     def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
         pass  # pragma: no cover
 
