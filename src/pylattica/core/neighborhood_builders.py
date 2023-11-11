@@ -1,27 +1,31 @@
-from abc import ABC, abstractmethod
 from typing import Dict, List, Tuple
 
 import numpy as np
 import rustworkx as rx
 from tqdm import tqdm
 
-from .constants import LOCATION, SITE_CLASS, SITE_ID
+from abc import abstractmethod
+
+from .constants import LOCATION, SITE_ID
 from .distance_map import EuclideanDistanceMap
-from .neighborhoods import Neighborhood, StochasticNeighborhood
+from .neighborhoods import Neighborhood, StochasticNeighborhood, SiteClassNeighborhood
 from .periodic_structure import PeriodicStructure
 from .lattice import pbc_diff_cart
 
 
-class NeighborhoodBuilder(ABC):
-    def get(self, struct: PeriodicStructure) -> Neighborhood:
-        graph = rx.PyGraph()
+class NeighborhoodBuilder:
+    def get(self, struct: PeriodicStructure, site_class=None) -> Neighborhood:
+        graph = rx.PyDiGraph()
 
-        all_sites = struct.sites()
+        if site_class is None:
+            sites = struct.sites()
+        else:
+            sites = struct.sites(site_class=site_class)
 
         for site in struct.sites():
             graph.add_node(site[SITE_ID])
 
-        for curr_site in tqdm(all_sites):
+        for curr_site in tqdm(sites):
             nbs = self.get_neighbors(curr_site, struct)
             for nb_id, weight in nbs:
                 graph.add_edge(curr_site[SITE_ID], nb_id, weight)
@@ -33,7 +37,10 @@ class NeighborhoodBuilder(ABC):
         pass  # pragma: no cover
 
 
-class StochasticNeighborhoodBuilder(ABC):
+class StochasticNeighborhoodBuilder(NeighborhoodBuilder):
+    def __init__(self, builders):
+        self.builders = builders
+
     def get(self, struct: PeriodicStructure) -> Neighborhood:
         return StochasticNeighborhood([b.get(struct) for b in self.builders])
 
@@ -157,23 +164,22 @@ class MotifNeighborhoodBuilder(NeighborhoodBuilder):
     list B sites as their neighbors, and the B sites list A sites as their neighbors.
     """
 
-    def __init__(self, spec: Dict[str, List[List[float]]]):
-        """Instantiates the MotifNeighborhoodBuilder by a spec as described in
+    def __init__(self, motif: List[List[float]]):
+        """Instantiates the MotifNeighborhoodBuilder by a motif as described in
         the docstring for the class.
 
         Parameters
         ----------
-        spec : Dict[str, List[List[float]]]
+        motif : Dict[str, List[List[float]]]
             See class docstring.
         """
-        self._spec = spec
+        self._motif = motif
 
-        neighbor_locs = [loc for loclist in spec.values() for loc in loclist]
-        self.distances = EuclideanDistanceMap(neighbor_locs)
+        self.distances = EuclideanDistanceMap(motif)
 
     def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
         """Given a structure, constructs a NeighborGraph with site connections
-        according to the spec.
+        according to the motif.
 
         Parameters
         ----------
@@ -186,14 +192,24 @@ class MotifNeighborhoodBuilder(NeighborhoodBuilder):
             The resulting NeighborGraph.
         """
 
-        site_class = curr_site[SITE_CLASS]
         location = curr_site[LOCATION]
-        site_class_neighbors = self._spec[site_class]
         nbs = []
-        for neighbor_vec in site_class_neighbors:
+        for neighbor_vec in self._motif:
             loc = tuple(s + n for s, n in zip(location, neighbor_vec))
-            nb_site = struct.site_at(loc)
-            if nb_site[SITE_ID] != curr_site[SITE_ID]:
-                nbs.append((nb_site[SITE_ID], self.distances.get_dist(neighbor_vec)))
-
+            nb_id = struct.id_at(loc)
+            if nb_id != curr_site[SITE_ID]:
+                nbs.append((nb_id, self.distances.get_dist(neighbor_vec)))
         return nbs
+
+
+class SiteClassNeighborhoodBuilder(NeighborhoodBuilder):
+    def __init__(self, nb_builders: Dict[str, NeighborhoodBuilder]):
+        self._builders = nb_builders
+
+    def get(self, struct: PeriodicStructure) -> Neighborhood:
+        nbhood_map = {}
+        for sclass, builder in self._builders.items():
+            nbhood = builder.get(struct, site_class=sclass)
+            nbhood_map[sclass] = nbhood
+
+        return SiteClassNeighborhood(struct, nbhood_map)

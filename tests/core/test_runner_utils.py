@@ -131,3 +131,8 @@ def test_merge_updates_specific_site_overwrite(curr_updates):
     }
 
     assert updated_updates == expected
+
+def test_merge_updates_bad_args():
+
+    with pytest.raises(ValueError, match="Bad combination"):
+        merge_updates({}, None, None)

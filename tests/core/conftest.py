@@ -6,8 +6,8 @@ from pylattica.core import PeriodicStructure
 @pytest.fixture(scope="module")
 def square_2D_basis_vecs():
     return [
-        (0, 1),
-        (1, 0)
+        (1, 0),
+        (0, 1)
     ]
 
 @pytest.fixture(scope="module")

@@ -1,7 +1,9 @@
 import random
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Dict
 import rustworkx as rx
+
+from .periodic_structure import PeriodicStructure
 
 
 class AbstractNeighborhood(ABC):
@@ -48,14 +50,37 @@ class Neighborhood(AbstractNeighborhood):
         return list(nbs)
 
 
-class StochasticNeighborhood(AbstractNeighborhood):
+class MultiNeighborhood(AbstractNeighborhood):
+    def neighbors_of(self, site_id, include_weights: bool = False) -> List[int]:
+        selected_neighborhood = self._get_nbhood(site_id)
+
+        if selected_neighborhood is None:
+            return []
+        else:
+            return selected_neighborhood.neighbors_of(
+                site_id, include_weights=include_weights
+            )
+
+
+class StochasticNeighborhood(MultiNeighborhood):
     """A NeighborhoodGraph for stochastic neighborhoods."""
 
     def __init__(self, neighborhoods: List[Neighborhood]):
         self._neighborhoods = neighborhoods
 
-    def neighbors_of(self, site_id, include_weights: bool = False) -> List[int]:
-        selected_neighborhood = random.choice(self._neighborhoods)
-        return list(
-            selected_neighborhood.neighbors_of(site_id, include_weights=include_weights)
-        )
+    def _get_nbhood(self, _) -> List[int]:
+        return random.choice(self._neighborhoods)
+
+
+class SiteClassNeighborhood(MultiNeighborhood):
+    """A Neighborhood that distinguished neighbors of sites based on their class"""
+
+    def __init__(
+        self, structure: PeriodicStructure, neighborhoods: Dict[str, Neighborhood]
+    ):
+        self._struct = structure
+        self._nbhoods = neighborhoods
+
+    def _get_nbhood(self, site_id: int) -> List[int]:
+        site_class = self._struct.site_class(site_id)
+        return self._nbhoods.get(site_class)

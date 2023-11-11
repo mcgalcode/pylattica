@@ -8,11 +8,14 @@ from .constants import OFFSET_PRECISION
 import math
 
 
-def periodize(frac_coords):
-    return frac_coords - np.floor(frac_coords)
+def periodize(frac_coords, periodic=True):
+    if not isinstance(periodic, tuple):
+        periodic = [periodic for _ in frac_coords]
+
+    return frac_coords - np.floor(frac_coords) * np.array(periodic, dtype=int)
 
 
-def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike):
+def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike, periodic=True):
     """Returns the 'fractional distance' between two coordinates taking into
     account periodic boundary conditions. (from pymatgen)
 
@@ -25,13 +28,16 @@ def pbc_diff_frac(fcoords1: ArrayLike, fcoords2: ArrayLike):
             axis of the lattice.
 
     Returns:
-        Fractional distance. Each coordinate must have the property that
+        Fractional distance. Each coordinate must have the  operty that
         abs(a) <= 0.5. Examples:
         pbc_diff([0.1, 0.1, 0.1], [0.3, 0.5, 0.9]) = [-0.2, -0.4, 0.2]
         pbc_diff([0.9, 0.1, 1.01], [0.3, 0.5, 0.9]) = [-0.4, -0.4, 0.11]
     """
+    if not isinstance(periodic, tuple):
+        periodic = [periodic for _ in fcoords1]
+
     fdist = np.subtract(fcoords1, fcoords2)
-    return fdist - np.round(fdist)
+    return fdist - np.round(fdist) * np.array(periodic, dtype=int)
 
 
 def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lattice):
@@ -54,7 +60,7 @@ def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lat
     """
     fcoords1 = lattice.get_fractional_coords(cart_coords1)
     fcoords2 = lattice.get_fractional_coords(cart_coords2)
-    frac_dist = pbc_diff_frac(fcoords1, fcoords2)
+    frac_dist = pbc_diff_frac(fcoords1, fcoords2, lattice.periodic)
     return np.round(
         np.linalg.norm(lattice.get_cartesian_coords(frac_dist)), OFFSET_PRECISION
     )
@@ -78,7 +84,7 @@ class Lattice:
         The lattice vectors defining the unit cell of this lattice.
     """
 
-    def __init__(self, vecs: List[Tuple[float]]):
+    def __init__(self, vecs: List[Tuple[float]], periodic=True):
         """Initializes a lattice with the vectors defining its unit cell provided.
         The dimension of the lattice is inferred from the dimension of the lattice vectors.
 
@@ -93,6 +99,11 @@ class Lattice:
         # to utilize 3 dimensions - i.e. no game of life, 2D Ising, etc
 
         self.vecs = np.array(vecs)
+
+        if not isinstance(periodic, tuple):
+            self.periodic = tuple(periodic for _ in vecs)
+        else:
+            self.periodic = periodic
 
         dim = int(math.sqrt(len(np.array(self.vecs).flatten())))
         mat = np.array(self.vecs, dtype=np.float64).reshape((dim, dim))
@@ -144,10 +155,12 @@ class Lattice:
 
     def get_periodized_cartesian_coords(self, cart_coords: ArrayLike) -> np.ndarray:
         frac = self.get_fractional_coords(cart_coords)
-        return self.get_cartesian_coords(periodize(frac))
+        return self.get_cartesian_coords(periodize(frac, self.periodic))
 
     def get_scaled_lattice(self, num_cells: ArrayLike) -> Lattice:
-        return Lattice(np.array([v * amt for amt, v in zip(num_cells, self.vecs)]))
+        return Lattice(
+            np.array([v * amt for amt, v in zip(num_cells, self.vecs)]), self.periodic
+        )
 
     def cartesian_periodic_distance(self, loc1, loc2):
         return pbc_diff_cart(

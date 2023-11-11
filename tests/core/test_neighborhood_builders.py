@@ -48,10 +48,7 @@ def test_annular_nb_hood_builder():
 
 
 def test_struct_nb_hood_builder(square_grid_2D_4x4):
-    site_class = SimpleSquare2DStructureBuilder.SITE_CLASS
-    builder = MotifNeighborhoodBuilder({
-        site_class: [(0, 1), (0, -1)]
-    })
+    builder = MotifNeighborhoodBuilder([(0, 1), (0, -1)])
 
     nbhood = builder.get(square_grid_2D_4x4)
 

@@ -1,4 +1,4 @@
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Tuple, Union
 
 import numpy as np
 
@@ -7,6 +7,7 @@ from .lattice import Lattice
 from .constants import LOCATION, SITE_CLASS, SITE_ID, OFFSET_PRECISION
 
 VEC_OFFSET = 0.001
+DEFAULT_SITE_CLASS = "A"
 
 
 class PeriodicStructure:
@@ -29,7 +30,7 @@ class PeriodicStructure:
         _,
         lattice: Lattice,
         num_cells: List[int],
-        site_motif: dict,
+        site_motif: Union[Dict, List],
         frac_coords: bool = False,
     ):
         """Builds a PeriodicStructure by repeating the unit cell num_cell times
@@ -71,6 +72,9 @@ class PeriodicStructure:
         new_lattice = lattice.get_scaled_lattice(num_cells)
 
         struct = PeriodicStructure(new_lattice)
+
+        if not isinstance(site_motif, dict):
+            site_motif = {DEFAULT_SITE_CLASS: site_motif}
 
         # these are in "fractional" coordinates
         vec_coeffs = get_points_in_box([0 for _ in range(new_lattice.dim)], num_cells)
@@ -180,6 +184,20 @@ class PeriodicStructure:
         else:
             return None
 
+    def id_at(self, location: Tuple[float]) -> Dict:
+        site = self.site_at(location)
+        if site is None:
+            return None
+        else:
+            return site[SITE_ID]
+
+    def class_at(self, location: Tuple[float]) -> Dict:
+        site = self.site_at(location)
+        if site is None:
+            return None
+        else:
+            return site[SITE_CLASS]
+
     def site_class(self, site_id: int) -> str:
         return self.get_site(site_id)[SITE_CLASS]
 
@@ -200,6 +218,16 @@ class PeriodicStructure:
             A dictionary with keys "site_class", "location", and "id" representing the site.
         """
         return self._sites.get(site_id)
+
+    def all_site_classes(self) -> List[str]:
+        """Returns a list of all the site classes present in this structure.
+
+        Returns
+        -------
+        List[str]
+            The site classes in this structure. Each class appears once in this list.
+        """
+        return list({site[SITE_CLASS] for site in self.sites()})
 
     def sites(self, site_class: str = None) -> List[Dict]:
         """Returns a list of the sites with the specified site class.

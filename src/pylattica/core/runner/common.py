@@ -18,5 +18,7 @@ def merge_updates(new_updates, curr_updates=None, site_id=None):
     # if these updates only apply to a single site
     elif site_id is not None:
         curr_updates[SITES].update({site_id: new_updates})
+    else:
+        raise ValueError("Bad combination of arguments for merge_updates")
 
     return curr_updates
