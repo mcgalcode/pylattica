@@ -2,7 +2,7 @@ from pylattica.core import SynchronousRunner, BasicController
 from pylattica.core.simulation_state import SimulationState
 from pylattica.discrete import PhaseSet
 from pylattica.structures.square_grid.grid_setup import DiscreteGridSetup
-from pylattica.visualization import SquareGridArtist2D, SquareGridArtist3D, DiscreteSquareGridResultArtist, DiscreteCellArtist
+from pylattica.visualization import SquareGridArtist2D, SquareGridArtist3D, ResultArtist, DiscreteCellArtist
 from pylattica.models.game_of_life import Life
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 
@@ -30,7 +30,7 @@ def test_result_artist():
     cell_artist = DiscreteCellArtist.from_discrete_state(result.last_step)
     step_artist = SquareGridArtist2D(simulation.structure, cell_artist)
     step_artist.get_img(result.last_step, cell_size=5)
-    result_artist = DiscreteSquareGridResultArtist(step_artist, result)
+    result_artist = ResultArtist(step_artist, result)
     result_artist.to_gif("out.gif", cell_size=5)
     os.remove("out.gif")
 
