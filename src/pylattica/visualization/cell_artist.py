@@ -73,7 +73,7 @@ class DiscreteCellArtist(CellArtist):
 
         return display_phases
 
-    def __init__(self, color_map=None, state_key = DISCRETE_OCCUPANCY, legend = None):
+    def __init__(self, color_map=None, state_key=DISCRETE_OCCUPANCY, legend=None):
         self.color_map = color_map
         self._state_key = state_key
         self.legend = legend
@@ -87,7 +87,7 @@ class DiscreteCellArtist(CellArtist):
     def get_color_from_cell_state(self, cell_state: Dict):
         phase_name = cell_state[self._state_key]
         if phase_name not in self.color_map:
-            return (0,0,0)
+            return (0, 0, 0)
         else:
             return self.color_map[phase_name]
 
