@@ -78,6 +78,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#controllers-and-update-rules" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -648,6 +653,19 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Controllers and Update Rules
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -658,6 +676,46 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-simple-example" class="md-nav__link">
+    A simple example
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-multiple-site-states-at-once" class="md-nav__link">
+    Updating Multiple Site States at Once
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-multiple-sites-and-the-general-state" class="md-nav__link">
+    Updating Multiple Sites and the General State
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1789,6 +1847,37 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-simple-example" class="md-nav__link">
+    A simple example
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-multiple-site-states-at-once" class="md-nav__link">
+    Updating Multiple Site States at Once
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-multiple-sites-and-the-general-state" class="md-nav__link">
+    Updating Multiple Sites and the General State
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1805,8 +1894,6 @@
   
   
 
-
-  <h1>Controllers and Update Rules</h1>
 
 <script>
 (function (global, factory) {
@@ -2215,7 +2302,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-1">
@@ -2228,11 +2315,351 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="o">%</span><span class="n">load_ext</span> <span class="n">autoreload</span>
+<span class="o">%</span><span class="n">autoreload</span> <span class="mi">2</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1"></div>
+<div class="clipboard-copy-txt" id="cell-1">%load_ext autoreload
+%autoreload 2</div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f5e2e73b-370b-4989-99dd-ee37c05b11fb">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h1 id="controllers-and-update-rules">Controllers and Update Rules<a class="anchor-link" href="#controllers-and-update-rules">¶</a></h1><p>In <code>pylattica</code>, the rule for evolving a simulation is defined in a subclass of <code>BasicController</code> which is implemented by the user. This is an extremely lightweight class which is given to the <code>Runner</code> in order to evolve a simulation (see the Runners guide for more details on running a simulation).</p>
+<p>In this guide, we will illustrate the following:</p>
+<ul>
+<li>Implementing a simple update rule</li>
+<li>Returning updates for multiple sites</li>
+<li>Returning updates for the general simulation state</li>
+</ul>
+<h2 id="a-simple-example">A simple example<a class="anchor-link" href="#a-simple-example">¶</a></h2><p>In our toy simulation, the state stored at each state will be a single integer. We will represent this state like this:</p>
+<pre><code>{ "value": 1 }
+</code></pre>
+<p>Where <code>"value"</code> is an arbitrarily chosen key for our state value, and <code>1</code> is the current integer value.</p>
+<p>Additionally, in this toy simulation, the value of the state at each site is incremented by 1 during each simulation step. Here's how we would use a <code>BasicController</code> subclass to implement this.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=75b16f2c-8e39-4554-9c15-9e9d310c89ce">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy for="cell-2">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.core</span> <span class="kn">import</span> <span class="n">BasicController</span><span class="p">,</span> <span class="n">SimulationState</span>
+
+<span class="k">class</span> <span class="nc">ToyController</span><span class="p">(</span><span class="n">BasicController</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">get_state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">prev_state</span><span class="p">:</span> <span class="n">SimulationState</span><span class="p">):</span>
+        <span class="c1"># retrieve the previous state for the site that needs to be updated</span>
+        <span class="n">previous_site_state</span> <span class="o">=</span> <span class="n">prev_state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="n">site_id</span><span class="p">)</span>
+        <span class="n">old_value</span> <span class="o">=</span> <span class="n">previous_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
+        
+        <span class="c1"># compute the new value</span>
+        <span class="n">new_value</span> <span class="o">=</span> <span class="n">old_value</span> <span class="o">+</span> <span class="mi">1</span>
+        
+        <span class="c1"># return a dictionary of updates that should be applied to the state at that site</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"value"</span><span class="p">:</span> <span class="n">new_value</span>
+        <span class="p">}</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-2">from pylattica.core import BasicController, SimulationState
+
+class ToyController(BasicController):
+    
+    def get_state_update(self, site_id: int, prev_state: SimulationState):
+        # retrieve the previous state for the site that needs to be updated
+        previous_site_state = prev_state.get_site_state(site_id)
+        old_value = previous_state.get("value")
+        
+        # compute the new value
+        new_value = old_value + 1
+        
+        # return a dictionary of updates that should be applied to the state at that site
+        return {
+            "value": new_value
+        }</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0b158e0e-c69f-4051-b563-59884952c636">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>The key observation to make here is that the update rule is implemented in a method called <code>get_state_update</code> that takes two arguments - the ID of the state whose updates should be computed and returned, and the previous state of the simulation.</p>
+<p>There are two salient features of this system:</p>
+<ol>
+<li><code>pylattica</code> makes no assumptions about how you will use the previous <code>SimulationState</code> to compute the updates. For example, you could ignore it or you could use it in conjunction with a <code>Neighborhood</code>.</li>
+<li>The return value of this function is a dictionary that represents the updates that should be applied to the state. If each site had a state dictionary with multiple keys (i.e. something in addition to <code>"value"</code>,), those keys would remain unchanged by this update rule.</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7589c114-32a3-4ff6-9a95-17a7cc949f43">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="updating-multiple-site-states-at-once">Updating Multiple Site States at Once<a class="anchor-link" href="#updating-multiple-site-states-at-once">¶</a></h2><p>Sometimes a simulation update rule will need to update the values of multiple site states during each application of the update rule (note that this will require use of the <code>AsynchronousRunner</code> - as described in the Runners guide).</p>
+<p>For example, you might need to implement an update rule that updates multiple sites at once to achieve conservation of some quantity in your simulation state.</p>
+<p>To do this, you can return a more complex form of the update dictionary, shown below.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c8d91d12-29b0-4297-b11d-61bb8d95e35a">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy for="cell-3">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.core</span> <span class="kn">import</span> <span class="n">BasicController</span><span class="p">,</span> <span class="n">SimulationState</span>
+
+<span class="k">class</span> <span class="nc">MultiSiteUpdate</span><span class="p">(</span><span class="n">BasicController</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">get_state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">prev_state</span><span class="p">:</span> <span class="n">SimulationState</span><span class="p">):</span>
+        <span class="c1"># rename the first site for readability</span>
+        <span class="n">site_1_id</span> <span class="o">=</span> <span class="n">site_id</span>
+        
+        <span class="c1"># determine the other site that will be updated in conjunction with the one identified by site_id</span>
+        <span class="n">site_2_id</span> <span class="o">=</span> <span class="n">site_id</span> <span class="o">+</span> <span class="mi">1</span>
+        
+        <span class="c1"># retrieve the two states</span>
+        <span class="n">site_1_prev_state</span> <span class="o">=</span> <span class="n">prev_state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="n">site_1_id</span><span class="p">)</span>
+        <span class="n">site_1_old_val</span> <span class="o">=</span> <span class="n">site_1_prev_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
+        
+        <span class="n">site_2_prev_state</span> <span class="o">=</span> <span class="n">prev_state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="n">site_2_id</span><span class="p">)</span>
+        <span class="n">site_2_old_val</span> <span class="o">=</span> <span class="n">site_2_prev_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
+        
+        <span class="c1"># compute the new value</span>
+        <span class="n">new_site_1_val</span> <span class="o">=</span> <span class="n">site_1_old_val</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">new_site_2_val</span> <span class="o">=</span> <span class="n">site_2_old_val</span> <span class="o">-</span> <span class="mi">1</span>
+        
+        <span class="c1"># return a dictionary of updates that should be applied to the state at that site</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">site_1_id</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"value"</span><span class="p">:</span> <span class="n">new_site_1_val</span>
+            <span class="p">},</span>
+            <span class="n">site_2_id</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"value"</span><span class="p">:</span> <span class="n">new_site_2_val</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-3">from pylattica.core import BasicController, SimulationState
+
+class MultiSiteUpdate(BasicController):
+    
+    def get_state_update(self, site_id: int, prev_state: SimulationState):
+        # rename the first site for readability
+        site_1_id = site_id
+        
+        # determine the other site that will be updated in conjunction with the one identified by site_id
+        site_2_id = site_id + 1
+        
+        # retrieve the two states
+        site_1_prev_state = prev_state.get_site_state(site_1_id)
+        site_1_old_val = site_1_prev_state.get("value")
+        
+        site_2_prev_state = prev_state.get_site_state(site_2_id)
+        site_2_old_val = site_2_prev_state.get("value")
+        
+        # compute the new value
+        new_site_1_val = site_1_old_val + 1
+        new_site_2_val = site_2_old_val - 1
+        
+        # return a dictionary of updates that should be applied to the state at that site
+        return {
+            site_1_id: {
+                "value": new_site_1_val
+            },
+            site_2_id: {
+                "value": new_site_2_val
+            }
+        }</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8f5e1b9a-44ed-45e7-b871-e478ae327ce8">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Let's highlight the form of the return value for this controller:</p>
+<pre><code>{
+    site_1_id: {
+        "value": new_site_1_val
+    },
+    site_2_id: {
+        "value": new_site_2_val
+    }
+}
+</code></pre>
+<p>In this case, the updates dictionary being returned has a top level of keys specifying the IDs of sites to which the updates should be applied. This format lets us express that this single invocation of the update rule should yield changes to both site 1 and site 2 (given by <code>new_site_1_val</code> and <code>new_site_2_val</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fb3c9ca7-2143-4c42-a7be-5dfa7c8948b2">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="updating-multiple-sites-and-the-general-state">Updating Multiple Sites and the General State<a class="anchor-link" href="#updating-multiple-sites-and-the-general-state">¶</a></h2><p>In addition to per-site state values, <code>pylattica</code> also supports accounting for an additional state dictionary that applies to the entire simulation. This is called the <em>general state</em>.</p>
+<blockquote>
+<p><strong>NOTE</strong>: If you use the <em>general state</em>, you should also use the <code>AsynchronousRunner</code> to avoid applying conflicting updates to the general state at the same time.</p>
+</blockquote>
+<p>For example, below we implement a toy controller that increments both the site specific state, and a similar value in the general state called <code>"general_value"</code>.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a4152e4d-cc30-4ba7-b9fd-1b244b8f6623">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy for="cell-4">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.core</span> <span class="kn">import</span> <span class="n">BasicController</span><span class="p">,</span> <span class="n">SimulationState</span>
+<span class="kn">from</span> <span class="nn">pylattica.core.simulation_state</span> <span class="kn">import</span> <span class="n">SITES</span><span class="p">,</span> <span class="n">GENERAL</span>
+
+<span class="k">class</span> <span class="nc">GeneralStateController</span><span class="p">(</span><span class="n">BasicController</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">get_state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">prev_state</span><span class="p">:</span> <span class="n">SimulationState</span><span class="p">):</span>
+        <span class="c1"># retrieve the previous state for the site that needs to be updated</span>
+        <span class="n">previous_site_state</span> <span class="o">=</span> <span class="n">prev_state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="n">site_id</span><span class="p">)</span>
+        <span class="n">old_value</span> <span class="o">=</span> <span class="n">previous_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
+        
+        <span class="n">previous_general_value</span> <span class="o">=</span> <span class="n">prev_state</span><span class="o">.</span><span class="n">get_general_state</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"general_value"</span><span class="p">)</span>
+        
+        <span class="c1"># compute the new value</span>
+        <span class="n">new_value</span> <span class="o">=</span> <span class="n">old_value</span> <span class="o">+</span> <span class="mi">1</span>
+        
+        <span class="n">new_general_value</span> <span class="o">=</span> <span class="n">previous_general_value</span> <span class="o">+</span> <span class="mi">1</span>
+        
+        <span class="c1"># return a dictionary of updates that should be applied to the state at that site</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">SITES</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">site_id</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"value"</span><span class="p">:</span> <span class="n">new_value</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="n">GENERAL</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"general_value"</span><span class="p">:</span> <span class="n">new_general_value</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-4">from pylattica.core import BasicController, SimulationState
+from pylattica.core.simulation_state import SITES, GENERAL
+
+class GeneralStateController(BasicController):
+    
+    def get_state_update(self, site_id: int, prev_state: SimulationState):
+        # retrieve the previous state for the site that needs to be updated
+        previous_site_state = prev_state.get_site_state(site_id)
+        old_value = previous_state.get("value")
+        
+        previous_general_value = prev_state.get_general_state().get("general_value")
+        
+        # compute the new value
+        new_value = old_value + 1
+        
+        new_general_value = previous_general_value + 1
+        
+        # return a dictionary of updates that should be applied to the state at that site
+        return {
+            SITES: {
+                site_id: {
+                    "value": new_value
+                }
+            },
+            GENERAL: {
+                "general_value": new_general_value
+            }
+        }</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8bee24d0-3e6f-4bee-9e58-62602457b30e">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>We had to import the <code>SITES</code> and <code>GENERAL</code> constants from <code>pylattica</code> in order to specify the form of this dictionary.</p>
+<p>Note that the dictionary under the <code>SITES</code> key is a mapping of site IDs to state updates. If we wanted to update multiple sites in addition to the general state, we could use a return value of something like this:</p>
+<pre><code>{
+    SITES: {
+        site_id_1: {
+            "value": new_value
+        },
+        site_id_2: {
+            "value": new_value_2
+        }
+    },
+    GENERAL: {
+        "general_value": new_general_value
+    }
+}
+</code></pre>
 </div>
 </div>
 </div>
