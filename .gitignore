@@ -142,3 +142,7 @@ docs_build
 examples/wip*
 
 *.ai
+
+paper/paper.pdf
+paper/paper.jats
+paper/media
