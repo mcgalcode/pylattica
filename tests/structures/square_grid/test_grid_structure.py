@@ -21,4 +21,4 @@ def test_grid_does_not_have_unexpected_points(square_grid_2D_2x2):
     assert square_grid_2D_2x2.site_at((-12.001, 1)) is None
 
 def test_retrieved_site_has_correct_location(square_grid_2D_2x2):
-    assert square_grid_2D_2x2.site_at((0, 0))[LOCATION] == (0,0)
+    assert (square_grid_2D_2x2.site_at((0, 0))[LOCATION] == (0,0)).all()

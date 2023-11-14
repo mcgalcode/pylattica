@@ -1,0 +1,1 @@
+::: pylattica.visualization.square_grid_artist_2D

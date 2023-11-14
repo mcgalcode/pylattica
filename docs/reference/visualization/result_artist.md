@@ -1,0 +1,1 @@
+::: pylattica.visualization.result_artist

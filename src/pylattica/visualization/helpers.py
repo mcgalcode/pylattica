@@ -1,6 +1,6 @@
 import typing
 
-from ..core import COLORS
+from .colors import COLORS
 
 
 def color_map(phases):
