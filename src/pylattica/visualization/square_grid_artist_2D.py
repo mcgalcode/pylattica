@@ -8,7 +8,6 @@ from .cell_artist import CellArtist
 
 
 class SquareGridArtist2D(StructureArtist):
-    
     def _draw_image(self, state: SimulationState, **kwargs):
         label = kwargs.get("label", None)
         cell_size = kwargs.get("cell_size", 20)

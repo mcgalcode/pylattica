@@ -36,6 +36,7 @@ def pbc_diff_frac_vec(fcoords1: ArrayLike, fcoords2: ArrayLike, periodic):
     fdist = np.subtract(fcoords1, fcoords2)
     return fdist - np.round(fdist) * periodic
 
+
 def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lattice):
     """Returns the Cartesian distance between two coordinates taking into
     account periodic boundary conditions. (from pymatgen)
@@ -100,7 +101,7 @@ class Lattice:
             self.periodic = tuple(periodic for _ in vecs)
         else:
             self.periodic = periodic
-        
+
         self._periodic_bool = np.array(periodic, dtype=int)
 
         dim = int(math.sqrt(len(np.array(self.vecs).flatten())))

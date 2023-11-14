@@ -10,8 +10,8 @@ from ..core import SimulationResult
 from ..core import SimulationState
 from typing import Dict
 
-class CellArtist:
 
+class CellArtist:
     @abstractmethod
     def get_color_from_cell_state(self, cell_state: Dict):
         pass
@@ -27,11 +27,11 @@ class CellArtist:
             if label not in legend:
                 color = self.get_color_from_cell_state(state)
                 legend[label] = color
-        
+
         return legend
 
-class DiscreteCellArtist(CellArtist):
 
+class DiscreteCellArtist(CellArtist):
     @classmethod
     def from_phase_list(cls, phases):
         color_map = cls.build_color_map_from_phase_list(phases)
@@ -42,9 +42,11 @@ class DiscreteCellArtist(CellArtist):
         analyzer = DiscreteStepAnalyzer()
         phases = analyzer.phases_present(state)
         return cls.from_phase_list(phases)
-    
+
     @classmethod
-    def from_discrete_result(cls, result: SimulationResult) -> typing.Dict[str, typing.Tuple[int, int, int]]:
+    def from_discrete_result(
+        cls, result: SimulationResult
+    ) -> typing.Dict[str, typing.Tuple[int, int, int]]:
         """Returns a map of phases to colors that can be used to visualize the phases
 
         Returns:
@@ -71,12 +73,12 @@ class DiscreteCellArtist(CellArtist):
 
         return display_phases
 
-    def __init__(self, color_map = None):
+    def __init__(self, color_map=None):
         self.color_map = color_map
 
     def get_color_from_cell_state(self, cell_state: Dict):
         phase_name = cell_state[DISCRETE_OCCUPANCY]
         return self.color_map[phase_name]
-    
+
     def get_cell_legend_label(self, cell_state: Dict):
         return cell_state[DISCRETE_OCCUPANCY]

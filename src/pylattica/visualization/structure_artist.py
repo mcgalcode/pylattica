@@ -3,15 +3,15 @@ from abc import abstractmethod
 from pylattica.core import SimulationState, PeriodicStructure
 from .cell_artist import CellArtist
 
-class StructureArtist:
 
+class StructureArtist:
     def __init__(self, structure: PeriodicStructure, cell_artist: CellArtist):
         self.structure = structure
         self.cell_artist = cell_artist
 
     @abstractmethod
     def get_cell_color_from_state(self, state):
-        pass # pragma: no cover
+        pass  # pragma: no cover
 
     def jupyter_show_state(self, state: SimulationState, **kwargs):
         img = self._draw_image(state, **kwargs)

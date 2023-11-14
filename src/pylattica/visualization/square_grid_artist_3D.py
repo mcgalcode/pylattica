@@ -10,7 +10,6 @@ from PIL import Image
 
 
 class SquareGridArtist3D(StructureArtist):
-
     def _draw_image(self, state: SimulationState, **kwargs):
         shell_only = kwargs.get("shell_only", False)
 
@@ -34,7 +33,7 @@ class SquareGridArtist3D(StructureArtist):
 
                 if color_str not in dataset:
                     dataset[color_str] = np.zeros(shape)
-                
+
                 shifted_loc = tuple(int(i) for i in loc)
                 dataset[color_str][shifted_loc] = 1
                 dataset["empty"][shifted_loc] = 0
