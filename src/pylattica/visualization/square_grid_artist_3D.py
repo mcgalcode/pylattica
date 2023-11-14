@@ -1,5 +1,4 @@
 from .structure_artist import StructureArtist
-from .cell_artist import CellArtist
 from ..core import SimulationState
 from ..core.periodic_structure import LOCATION, SITE_ID
 

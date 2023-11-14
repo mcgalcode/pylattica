@@ -4,7 +4,6 @@ from ..core.constants import LOCATION, SITE_ID
 from ..core.simulation_state import SimulationState
 
 from .structure_artist import StructureArtist
-from .cell_artist import CellArtist
 
 
 class SquareGridArtist2D(StructureArtist):
