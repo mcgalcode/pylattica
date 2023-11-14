@@ -10,6 +10,8 @@ It's likely that this demonstration does not illustrate everything you need for 
 - [Periodic Structures](./periodic_structures.ipynb)
 - [Building Neighborhoods](./neighborhoods.ipynb)
 - [Representing Simulation State](./neighborhoods.ipynb)
+- [Controllers and Update Rules](./controllers_and_update_rules.ipynb)
+- [Runners](./runners.ipynb)
 - [Working With Square Grids](./square_grids.ipynb)
 
 Finally, if all else fails, the [Reference](../reference/core/lattice.md) provides individual method-level detail for the use of this library.

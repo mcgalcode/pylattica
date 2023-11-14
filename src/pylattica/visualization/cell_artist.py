@@ -33,19 +33,19 @@ class CellArtist:
 
 class DiscreteCellArtist(CellArtist):
     @classmethod
-    def from_phase_list(cls, phases):
+    def from_phase_list(cls, phases, **kwargs):
         color_map = cls.build_color_map_from_phase_list(phases)
-        return cls(color_map)
+        return cls(color_map, **kwargs)
 
     @classmethod
-    def from_discrete_state(cls, state: SimulationState):
+    def from_discrete_state(cls, state: SimulationState, **kwargs):
         analyzer = DiscreteStepAnalyzer()
         phases = analyzer.phases_present(state)
-        return cls.from_phase_list(phases)
+        return cls.from_phase_list(phases, **kwargs)
 
     @classmethod
     def from_discrete_result(
-        cls, result: SimulationResult
+        cls, result: SimulationResult, **kwargs
     ) -> typing.Dict[str, typing.Tuple[int, int, int]]:
         """Returns a map of phases to colors that can be used to visualize the phases
 
@@ -54,7 +54,7 @@ class DiscreteCellArtist(CellArtist):
             color values
         """
         analyzer = DiscreteResultAnalyzer(result)
-        return cls.from_phase_list(analyzer.all_phases())
+        return cls.from_phase_list(analyzer.all_phases(), **kwargs)
 
     @classmethod
     def build_color_map_from_phase_list(cls, phases):
@@ -73,12 +73,23 @@ class DiscreteCellArtist(CellArtist):
 
         return display_phases
 
-    def __init__(self, color_map=None):
+    def __init__(self, color_map=None, state_key = DISCRETE_OCCUPANCY, legend = None):
         self.color_map = color_map
+        self._state_key = state_key
+        self.legend = legend
+
+    def get_legend(self, simulation_state: SimulationState):
+        if self.legend is None:
+            return super().get_legend(simulation_state)
+        else:
+            return self.legend
 
     def get_color_from_cell_state(self, cell_state: Dict):
-        phase_name = cell_state[DISCRETE_OCCUPANCY]
-        return self.color_map[phase_name]
+        phase_name = cell_state[self._state_key]
+        if phase_name not in self.color_map:
+            return (0,0,0)
+        else:
+            return self.color_map[phase_name]
 
     def get_cell_legend_label(self, cell_state: Dict):
-        return cell_state[DISCRETE_OCCUPANCY]
+        return str(cell_state[self._state_key])
