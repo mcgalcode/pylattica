@@ -29,7 +29,7 @@ def test_result_artist():
     controller = Life(structure = simulation.structure)
     runner = SynchronousRunner(parallel=True)
     result = runner.run(simulation.state, controller, 10, verbose=False)
-    cell_artist = DiscreteCellArtist.from_discrete_state(result.last_step)
+    cell_artist = DiscreteCellArtist.from_discrete_result(result.last_step)
     step_artist = SquareGridArtist2D(simulation.structure, cell_artist)
     step_artist.get_img(result.last_step, cell_size=5)
     result_artist = ResultArtist(step_artist, result)

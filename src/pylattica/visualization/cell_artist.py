@@ -14,11 +14,11 @@ from typing import Dict
 class CellArtist:
     @abstractmethod
     def get_color_from_cell_state(self, cell_state: Dict):
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def get_cell_legend_label(self, cell_state: Dict):
-        pass
+        pass  # pragma: no cover
 
     def get_legend(self, simulation_state: SimulationState):
         legend = {}
