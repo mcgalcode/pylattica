@@ -68,10 +68,10 @@ plotting = ["graphistry==0.28.0"]
 tests = ["pytest==7.1.3", "pytest-cov==4.0.0"]
 
 [project.urls]
-homepage = "https://genesis-efrc.github.io/reaction-network/"
-documentation = "https://genesis-efrc.github.io/reaction-network/"
-repository = "https://github.com/GENESIS-EFRC/reaction-network"
-changelog = "https://github.com/GENESIS-EFRC/reaction-network/blob/main/docs/CHANGELOG.md"
+homepage = "https://mcgalcode.github.io/pylattica/"
+documentation = "https://mcgalcode.github.io/pylattica/"
+repository = "https://github.com/mcgalcode/pylattica"
+changelog = "https://github.com/mcgalcode/pylattica/blob/main/docs/CHANGELOG.md"
 
 [tool.coverage.run]
 include = ["src/*"]
