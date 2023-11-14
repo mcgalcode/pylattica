@@ -17,8 +17,8 @@ nav:
     - Periodic Structures: ./guides/periodic_structures.ipynb
     - Neighborhoods: ./guides/neighborhoods.ipynb
     - Simulation States: ./guides/simulation_state.ipynb
-    - Controllers and Update Rules: ./guides/controllers_and_update_rules.ipynb
-    - Runners: ./guides/runners.ipynb
+    # - Controllers and Update Rules: ./guides/controllers_and_update_rules.ipynb
+    # - Runners: ./guides/runners.ipynb
     - Square Grids: ./guides/square_grids.ipynb
     - Examples:
       - Life Like Demos: ./examples/life_like_demos.ipynb
