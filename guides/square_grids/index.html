@@ -2465,7 +2465,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-2">
@@ -2479,10 +2479,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.discrete</span> <span class="kn">import</span> <span class="n">PhaseSet</span>
-<span class="kn">from</span> <span class="nn">pylattica.square_grid</span> <span class="kn">import</span> <span class="n">DiscreteGridSetup</span>
+<span class="kn">from</span> <span class="nn">pylattica.structures.square_grid</span> <span class="kn">import</span> <span class="n">DiscreteGridSetup</span>
+<span class="kn">from</span> <span class="nn">pylattica.visualization</span> <span class="kn">import</span> <span class="n">SquareGridArtist2D</span><span class="p">,</span> <span class="n">DiscreteCellArtist</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-2">from pylattica.discrete import PhaseSet
-from pylattica.square_grid import DiscreteGridSetup</div>
+from pylattica.structures.square_grid import DiscreteGridSetup
+from pylattica.visualization import SquareGridArtist2D, DiscreteCellArtist</div>
 </div>
 </div>
 </div>
@@ -2516,7 +2518,7 @@ from pylattica.square_grid import DiscreteGridSetup</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-3">
@@ -2554,7 +2556,7 @@ from pylattica.square_grid import DiscreteGridSetup</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
 <clipboard-copy for="cell-4">
@@ -2570,48 +2572,6 @@ from pylattica.square_grid import DiscreteGridSetup</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">setup</span> <span class="o">=</span> <span class="n">DiscreteGridSetup</span><span class="p">(</span><span class="n">phases</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-4">setup = DiscreteGridSetup(phases)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=793f5e42-8f3a-4655-b53b-05c19cc14571">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>We will also create a <code>DiscreteSquareGridArtist2D</code> to visualize each of the states in this demonstration.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=3e6450b8-109a-4d5b-9b46-c05e486a77d6">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy for="cell-5">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.visualization</span> <span class="kn">import</span> <span class="n">DiscreteSquareGridArtist2D</span>
-
-<span class="n">step_artist</span> <span class="o">=</span> <span class="n">DiscreteSquareGridArtist2D</span><span class="p">()</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-5">from pylattica.visualization import DiscreteSquareGridArtist2D
-
-step_artist = DiscreteSquareGridArtist2D()</div>
 </div>
 </div>
 </div>
@@ -2645,10 +2605,10 @@ step_artist = DiscreteSquareGridArtist2D()</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [29]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-6">
+<clipboard-copy for="cell-5">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2662,12 +2622,18 @@ step_artist = DiscreteSquareGridArtist2D()</div>
 <span class="n">phases_to_include</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"B"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">,</span> <span class="s2">"D"</span><span class="p">]</span>
 
 <span class="n">simulation</span> <span class="o">=</span> <span class="n">setup</span><span class="o">.</span><span class="n">setup_noise</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="n">phases_to_include</span><span class="p">)</span>
+
+<span class="n">cell_artist</span> <span class="o">=</span> <span class="n">DiscreteCellArtist</span><span class="o">.</span><span class="n">from_discrete_state</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+<span class="n">step_artist</span> <span class="o">=</span> <span class="n">SquareGridArtist2D</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span> <span class="n">cell_artist</span><span class="o">=</span><span class="n">cell_artist</span><span class="p">)</span>
 <span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">simulation_side_length = 40
+<div class="clipboard-copy-txt" id="cell-5">simulation_side_length = 40
 phases_to_include = ["B", "C", "D"]
 
 simulation = setup.setup_noise(60, phases_to_include)
+
+cell_artist = DiscreteCellArtist.from_discrete_state(simulation.state)
+step_artist = SquareGridArtist2D(simulation.structure, cell_artist=cell_artist)
 step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </div>
@@ -2680,7 +2646,7 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
-<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
 "/>
 </div>
 </div>
@@ -2704,10 +2670,10 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-7">
+<clipboard-copy for="cell-6">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2722,13 +2688,19 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <span class="n">right_phase</span> <span class="o">=</span> <span class="s2">"B"</span>
 
 <span class="n">simulation</span> <span class="o">=</span> <span class="n">setup</span><span class="o">.</span><span class="n">setup_interface</span><span class="p">(</span><span class="n">simulation_side_length</span><span class="p">,</span> <span class="n">left_phase</span><span class="p">,</span> <span class="n">right_phase</span><span class="p">)</span>
+
+<span class="n">cell_artist</span> <span class="o">=</span> <span class="n">DiscreteCellArtist</span><span class="o">.</span><span class="n">from_discrete_state</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+<span class="n">step_artist</span> <span class="o">=</span> <span class="n">SquareGridArtist2D</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span> <span class="n">cell_artist</span><span class="o">=</span><span class="n">cell_artist</span><span class="p">)</span>
 <span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7">simulation_side_length = 60
+<div class="clipboard-copy-txt" id="cell-6">simulation_side_length = 60
 left_phase = "A"
 right_phase = "B"
 
 simulation = setup.setup_interface(simulation_side_length, left_phase, right_phase)
+
+cell_artist = DiscreteCellArtist.from_discrete_state(simulation.state)
+step_artist = SquareGridArtist2D(simulation.structure, cell_artist=cell_artist)
 step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </div>
@@ -2741,7 +2713,7 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
-<img alt="No description has been provided for this image" class="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAU8AAAEsCAIAAADMz6ZRAAAD/klEQVR4nO3asU0DMRiAUYwYhJ5ZoIN1EOtQwizUsIkpIkURouGSiFjfe0WUu8JJ8+n3WTeu5vMVK7t9v/vvv8BRPu8fDy/HGGf6oZszrQtsdvv2enj59fB0kmWvT7IKcPnUDhVqhwrP7bCAOef+++ZjPLXDxfm6//j1/hhjzjnn3Ba8nTwsYzfhN892tcMydp0f7ur/RO1QoXZYxpE7ead0cHnGy88bY2zewO+Z7bCMI1+hVzssYDfYDz83UDssw2yHnG3j3SkdLGA/1Y8Z72Y7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhXfz8Qs5tguXgQAAAAASUVORK5CYII=
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAU8AAAEsCAIAAADMz6ZRAAAD8klEQVR4nO3bMU4CURRAUb5xIW5IS9ej27F0L/bsZCyIZKImJjMQ+bnnFAQoPjQ3b3gTxsP724GZHR8//vsrsMtyeFm/HGNc6YPur3QusNm3GXx8er7IsXcXOQW4fWqHCrVDhd/tMIFlWc7PN6/x1A435+d9ljHGOvhtXMnDNHbenFM7TOA02NePG6gdpmG2Q8V5qm8b77Z0cHvG6+9vf+3qtg15sx2msSf1g9phIqfObemAP6gdprHzSt6WDiZwkT+9m+1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VHwCie0t42P0V3EAAAAASUVORK5CYII=
 "/>
 </div>
 </div>
@@ -2765,10 +2737,10 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-8">
+<clipboard-copy for="cell-7">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2793,9 +2765,12 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
     <span class="n">nuc_ratios</span><span class="o">=</span><span class="n">site_ratios</span><span class="p">,</span>
     <span class="n">buffer</span><span class="o">=</span><span class="n">buffer</span>
 <span class="p">)</span>
+
+<span class="n">cell_artist</span> <span class="o">=</span> <span class="n">DiscreteCellArtist</span><span class="o">.</span><span class="n">from_discrete_state</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+<span class="n">step_artist</span> <span class="o">=</span> <span class="n">SquareGridArtist2D</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span> <span class="n">cell_artist</span><span class="o">=</span><span class="n">cell_artist</span><span class="p">)</span>
 <span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8">simulation_side_length = 60
+<div class="clipboard-copy-txt" id="cell-7">simulation_side_length = 60
 total_num_sites = 100
 background_phase = "A"
 site_phases = ["B", "C"]
@@ -2810,6 +2785,9 @@ simulation = setup.setup_random_sites(
     nuc_ratios=site_ratios,
     buffer=buffer
 )
+
+cell_artist = DiscreteCellArtist.from_discrete_state(simulation.state)
+step_artist = SquareGridArtist2D(simulation.structure, cell_artist=cell_artist)
 step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </div>
@@ -2822,14 +2800,14 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>100%|████████████████████████████████████████| 3600/3600 [00:00&lt;00:00, 27226.70it/s]
+<pre>100%|███████████████████████████████████| 3600/3600 [00:00&lt;00:00, 5413.62it/s]
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
-<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
 "/>
 </div>
 </div>
@@ -2853,10 +2831,10 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-9">
+<clipboard-copy for="cell-8">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2877,9 +2855,12 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
     <span class="n">bulk_phase</span> <span class="o">=</span> <span class="n">background_phase</span><span class="p">,</span>
     <span class="n">particle_phase</span> <span class="o">=</span> <span class="n">particle_phase</span>
 <span class="p">)</span>
+
+<span class="n">cell_artist</span> <span class="o">=</span> <span class="n">DiscreteCellArtist</span><span class="o">.</span><span class="n">from_discrete_state</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+<span class="n">step_artist</span> <span class="o">=</span> <span class="n">SquareGridArtist2D</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span> <span class="n">cell_artist</span><span class="o">=</span><span class="n">cell_artist</span><span class="p">)</span>
 <span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9">simulation_side_length = 60
+<div class="clipboard-copy-txt" id="cell-8">simulation_side_length = 60
 particle_radius = 10
 background_phase = "A"
 particle_phase = "B"
@@ -2890,6 +2871,9 @@ simulation = setup.setup_particle(
     bulk_phase = background_phase,
     particle_phase = particle_phase
 )
+
+cell_artist = DiscreteCellArtist.from_discrete_state(simulation.state)
+step_artist = SquareGridArtist2D(simulation.structure, cell_artist=cell_artist)
 step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </div>
@@ -2902,7 +2886,7 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
-<img alt="No description has been provided for this image" class="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAU8AAAEsCAIAAADMz6ZRAAAEcElEQVR4nO3bQU7bUBRAUbtiIZmzFhh2O22302FZS+bZiTtAiqKoQsIktX/uOQOEMwgG6eqZp595Wn5MwHaW6efl5TzPd/pBT3d6X2C1w5/fl5en1+83edtvN3kXYP/UDhVqhwr/t8MAlmU5f796jad22J3Ty/Gfr8/zvCzLsizrgvckD8N4n/CrZ7vaYRjvnV8+1X+K2qFC7TCMLz7J29LB/sy/rl+Y59UP8GdmOwzji0fo1Q4DeB/sl19XUDsMw2yHnHXj3ZYOBnCe6l8Z72Y7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VT1vfANM0TYe3561vYZqm6fRy3PoWuCOzHSrUDhVqhwq1Q4Ut3TZ2spa7cnVXlnYPxmyHCrVDhdqhQu1QYUt3L/vcw33Kx7+CHd5wzHaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhwlu5mHuDw3Kf4eOxwzHaoUDtUqB0q1A4VtnTr1dZyH7O02z+zHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUPF09Y3MLDTy/Hy8vD2vNWd7MHVX4MdMtuhQu1QoXaoUDtU2NLdTG1pZy03HLMdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0qnKW7l4+Pmg1x0s5puQdjtkOF2qFC7VChdqiwpdvGPj8eay332Mx2qFA7VKgdKtQOFbZ0u2A9xn9gtkOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqh4q/lv1U/AnBzcQAAAAASUVORK5CYII=
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAU8AAAEsCAIAAADMz6ZRAAAEZ0lEQVR4nO3bMW4aURRA0ZnIC6H3WkiX7CfbSRmvhTrsxCmsWAhFRB7AM597TmEZivG3pauHH8O8+/VzAtbze//t9OE8z3f6QU93ui6w2NkMPn79fpPLfrnJVYDtUztUqB0q/N8OA3h9fX3/fvEaT+2wOcf94eyZeZ5Pg1/GK3kYxpVvzqkdBvA22E+/LqB2GIbZDhXvU33ZeLelg+2Zf/z76b+7umVD3myHYVyT+qR2GMhb57Z0wH+oHYZx5St5WzoYwE0+9G62Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1Q8bT2AZimaTruD2sfYZqmaffyvPYRuCOzHSrUDhVqhwq1Q4Ut3To2spY7c3YqS7sHY7ZDhdqhQu1QoXaosKW7l23u4T7k8q9ghzccsx0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrcS3czD3Dz3If4eOxwzHaoUDtUqB0q1A4VtnTL1dZyl1nabZ/ZDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qHiae0DDGz38nz68Lg/rHWSLTj7a7BBZjtUqB0q1A4VaocKW7qbqS3trOWGY7ZDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOFe+nu5fKtZkPcaeduuQdjtkOF2qFC7VChdqiwpVvHNj8eay332Mx2qFA7VKgdKtQOFbZ0m2A9xicw26FC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q4XaoULtUKF2qFA7VKgdKtQOFWqHCrVDhdqhQu1QoXaoUDtUqB0q1A4VaocKtUOF2qFC7VChdqhQO1SoHSrUDhVqhwq1Q8UfH6FT9fhOA3oAAAAASUVORK5CYII=
 "/>
 </div>
 </div>
@@ -2937,10 +2921,10 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [27]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-10">
+<clipboard-copy for="cell-9">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2950,8 +2934,8 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.square_grid.growth_setup</span> <span class="kn">import</span> <span class="n">GrowthSetup</span>
-<span class="kn">from</span> <span class="nn">pylattica.square_grid.neighborhoods</span> <span class="kn">import</span> <span class="n">MooreNbHoodBuilder</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.structures.square_grid.growth_setup</span> <span class="kn">import</span> <span class="n">GrowthSetup</span>
+<span class="kn">from</span> <span class="nn">pylattica.structures.square_grid.neighborhoods</span> <span class="kn">import</span> <span class="n">MooreNbHoodBuilder</span>
 
 <span class="n">simulation_side_length</span> <span class="o">=</span> <span class="mi">60</span>
 <span class="n">total_num_sites</span> <span class="o">=</span> <span class="mi">20</span>
@@ -2968,10 +2952,13 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
     <span class="n">buffer</span><span class="o">=</span><span class="n">buffer</span><span class="p">,</span>
     <span class="n">nb_builder</span><span class="o">=</span><span class="n">MooreNbHoodBuilder</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="p">)</span>
+
+<span class="n">cell_artist</span> <span class="o">=</span> <span class="n">DiscreteCellArtist</span><span class="o">.</span><span class="n">from_discrete_state</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+<span class="n">step_artist</span> <span class="o">=</span> <span class="n">SquareGridArtist2D</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span> <span class="n">cell_artist</span><span class="o">=</span><span class="n">cell_artist</span><span class="p">)</span>
 <span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-10">from pylattica.square_grid.growth_setup import GrowthSetup
-from pylattica.square_grid.neighborhoods import MooreNbHoodBuilder
+<div class="clipboard-copy-txt" id="cell-9">from pylattica.structures.square_grid.growth_setup import GrowthSetup
+from pylattica.structures.square_grid.neighborhoods import MooreNbHoodBuilder
 
 simulation_side_length = 60
 total_num_sites = 20
@@ -2988,6 +2975,9 @@ simulation = growth_setup.grow(
     buffer=buffer,
     nb_builder=MooreNbHoodBuilder(1)
 )
+
+cell_artist = DiscreteCellArtist.from_discrete_state(simulation.state)
+step_artist = SquareGridArtist2D(simulation.structure, cell_artist=cell_artist)
 step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </div>
@@ -3000,16 +2990,16 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>100%|████████████████████████████████████████| 3600/3600 [00:00&lt;00:00, 26207.53it/s]
-100%|████████████████████████████████████████| 3600/3600 [00:00&lt;00:00, 69427.11it/s]
-100%|███████████████████████████████████████████████| 60/60 [00:00&lt;00:00, 73.34it/s]
+<pre>100%|███████████████████████████████████| 3600/3600 [00:00&lt;00:00, 5371.84it/s]
+100%|██████████████████████████████████| 3600/3600 [00:00&lt;00:00, 14857.60it/s]
+100%|████████████████████████████████████████| 60/60 [00:00&lt;00:00, 288.28it/s]
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
-<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
 "/>
 </div>
 </div>
@@ -3033,10 +3023,10 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [28]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-11">
+<clipboard-copy for="cell-10">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3046,7 +3036,7 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.square_grid.neighborhoods</span> <span class="kn">import</span> <span class="n">VonNeumannNbHood2DBuilder</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.structures.square_grid.neighborhoods</span> <span class="kn">import</span> <span class="n">VonNeumannNbHood2DBuilder</span>
 
 <span class="n">simulation</span> <span class="o">=</span> <span class="n">growth_setup</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span>
     <span class="n">simulation_side_length</span><span class="p">,</span>
@@ -3056,9 +3046,12 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
     <span class="n">buffer</span><span class="o">=</span><span class="n">buffer</span><span class="p">,</span>
     <span class="n">nb_builder</span><span class="o">=</span><span class="n">VonNeumannNbHood2DBuilder</span><span class="p">()</span>
 <span class="p">)</span>
+
+<span class="n">cell_artist</span> <span class="o">=</span> <span class="n">DiscreteCellArtist</span><span class="o">.</span><span class="n">from_discrete_state</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+<span class="n">step_artist</span> <span class="o">=</span> <span class="n">SquareGridArtist2D</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span> <span class="n">cell_artist</span><span class="o">=</span><span class="n">cell_artist</span><span class="p">)</span>
 <span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-11">from pylattica.square_grid.neighborhoods import VonNeumannNbHood2DBuilder
+<div class="clipboard-copy-txt" id="cell-10">from pylattica.structures.square_grid.neighborhoods import VonNeumannNbHood2DBuilder
 
 simulation = growth_setup.grow(
     simulation_side_length,
@@ -3068,6 +3061,9 @@ simulation = growth_setup.grow(
     buffer=buffer,
     nb_builder=VonNeumannNbHood2DBuilder()
 )
+
+cell_artist = DiscreteCellArtist.from_discrete_state(simulation.state)
+step_artist = SquareGridArtist2D(simulation.structure, cell_artist=cell_artist)
 step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </div>
@@ -3080,16 +3076,16 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>100%|████████████████████████████████████████| 3600/3600 [00:00&lt;00:00, 25675.96it/s]
-100%|███████████████████████████████████████| 3600/3600 [00:00&lt;00:00, 112919.59it/s]
-100%|███████████████████████████████████████████████| 60/60 [00:00&lt;00:00, 73.53it/s]
+<pre>100%|███████████████████████████████████| 3600/3600 [00:00&lt;00:00, 4911.42it/s]
+100%|██████████████████████████████████| 3600/3600 [00:00&lt;00:00, 26419.10it/s]
+100%|████████████████████████████████████████| 60/60 [00:00&lt;00:00, 280.44it/s]
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
-<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
 "/>
 </div>
 </div>
@@ -3113,10 +3109,10 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [30]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-12">
+<clipboard-copy for="cell-11">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3126,7 +3122,7 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.square_grid.neighborhoods</span> <span class="kn">import</span> <span class="n">CircularNeighborhoodBuilder</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">pylattica.core.neighborhood_builders</span> <span class="kn">import</span> <span class="n">DistanceNeighborhoodBuilder</span>
 
 <span class="n">simulation</span> <span class="o">=</span> <span class="n">growth_setup</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span>
     <span class="n">simulation_side_length</span><span class="p">,</span>
@@ -3134,11 +3130,14 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
     <span class="n">num_sites_desired</span><span class="o">=</span><span class="n">total_num_sites</span><span class="p">,</span>
     <span class="n">nuc_species</span><span class="o">=</span><span class="n">site_phases</span><span class="p">,</span>
     <span class="n">buffer</span><span class="o">=</span><span class="n">buffer</span><span class="p">,</span>
-    <span class="n">nb_builder</span><span class="o">=</span><span class="n">CircularNeighborhoodBuilder</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">nb_builder</span><span class="o">=</span><span class="n">DistanceNeighborhoodBuilder</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="p">)</span>
+
+<span class="n">cell_artist</span> <span class="o">=</span> <span class="n">DiscreteCellArtist</span><span class="o">.</span><span class="n">from_discrete_state</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+<span class="n">step_artist</span> <span class="o">=</span> <span class="n">SquareGridArtist2D</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span> <span class="n">cell_artist</span><span class="o">=</span><span class="n">cell_artist</span><span class="p">)</span>
 <span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-12">from pylattica.square_grid.neighborhoods import CircularNeighborhoodBuilder
+<div class="clipboard-copy-txt" id="cell-11">from pylattica.core.neighborhood_builders import DistanceNeighborhoodBuilder
 
 simulation = growth_setup.grow(
     simulation_side_length,
@@ -3146,8 +3145,11 @@ simulation = growth_setup.grow(
     num_sites_desired=total_num_sites,
     nuc_species=site_phases,
     buffer=buffer,
-    nb_builder=CircularNeighborhoodBuilder(5)
+    nb_builder=DistanceNeighborhoodBuilder(5)
 )
+
+cell_artist = DiscreteCellArtist.from_discrete_state(simulation.state)
+step_artist = SquareGridArtist2D(simulation.structure, cell_artist=cell_artist)
 step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 </div>
 </div>
@@ -3160,16 +3162,16 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>100%|████████████████████████████████████████| 3600/3600 [00:00&lt;00:00, 25775.24it/s]
-100%|███████████████████████████████████████████| 3600/3600 [00:55&lt;00:00, 64.40it/s]
-100%|███████████████████████████████████████████████| 60/60 [00:00&lt;00:00, 64.06it/s]
+<pre>100%|███████████████████████████████████| 3600/3600 [00:00&lt;00:00, 4786.48it/s]
+100%|█████████████████████████████████████| 3600/3600 [02:03&lt;00:00, 29.27it/s]
+100%|████████████████████████████████████████| 60/60 [00:00&lt;00:00, 242.33it/s]
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
-<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,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
 "/>
 </div>
 </div>
@@ -3205,10 +3207,10 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-13">
+<clipboard-copy for="cell-12">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3224,7 +3226,7 @@ step_artist.jupyter_show(simulation.state, cell_size=5)</div>
 
 <span class="n">simulation</span> <span class="o">=</span> <span class="n">setup</span><span class="o">.</span><span class="n">setup_interface</span><span class="p">(</span><span class="n">simulation_side_length</span><span class="p">,</span> <span class="n">left_phase</span><span class="p">,</span> <span class="n">right_phase</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-13">simulation_side_length = 4
+<div class="clipboard-copy-txt" id="cell-12">simulation_side_length = 4
 left_phase = "A"
 right_phase = "B"
 
@@ -3245,16 +3247,16 @@ simulation = setup.setup_interface(simulation_side_length, left_phase, right_pha
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a0edc804-c86f-4494-9b5c-63c59ff54a5c">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a0edc804-c86f-4494-9b5c-63c59ff54a5c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-14">
+<clipboard-copy for="cell-13">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3266,7 +3268,34 @@ simulation = setup.setup_interface(simulation_side_length, left_phase, right_pha
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">sites</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-14">simulation.structure.sites()</div>
+<div class="clipboard-copy-txt" id="cell-13">simulation.structure.sites()</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>[{'_site_class': '_A', '_location': array([0., 0.]), '_site_id': 0},
+ {'_site_class': '_A', '_location': array([1., 0.]), '_site_id': 1},
+ {'_site_class': '_A', '_location': array([2., 0.]), '_site_id': 2},
+ {'_site_class': '_A', '_location': array([3., 0.]), '_site_id': 3},
+ {'_site_class': '_A', '_location': array([0., 1.]), '_site_id': 4},
+ {'_site_class': '_A', '_location': array([1., 1.]), '_site_id': 5},
+ {'_site_class': '_A', '_location': array([2., 1.]), '_site_id': 6},
+ {'_site_class': '_A', '_location': array([3., 1.]), '_site_id': 7},
+ {'_site_class': '_A', '_location': array([0., 2.]), '_site_id': 8},
+ {'_site_class': '_A', '_location': array([1., 2.]), '_site_id': 9},
+ {'_site_class': '_A', '_location': array([2., 2.]), '_site_id': 10},
+ {'_site_class': '_A', '_location': array([3., 2.]), '_site_id': 11},
+ {'_site_class': '_A', '_location': array([0., 3.]), '_site_id': 12},
+ {'_site_class': '_A', '_location': array([1., 3.]), '_site_id': 13},
+ {'_site_class': '_A', '_location': array([2., 3.]), '_site_id': 14},
+ {'_site_class': '_A', '_location': array([3., 3.]), '_site_id': 15}]</pre>
 </div>
 </div>
 </div>
@@ -3306,16 +3335,16 @@ simulation = setup.setup_interface(simulation_side_length, left_phase, right_pha
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=e07fb834-ea76-4423-9f60-afa305728160">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e07fb834-ea76-4423-9f60-afa305728160">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-15">
+<clipboard-copy for="cell-14">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3328,8 +3357,21 @@ simulation = setup.setup_interface(simulation_side_length, left_phase, right_pha
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">site</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">sites</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Site </span><span class="si">{</span><span class="n">site</span><span class="p">[</span><span class="s2">"_site_id"</span><span class="p">]</span><span class="si">}</span><span class="s1"> is at </span><span class="si">{</span><span class="n">site</span><span class="p">[</span><span class="s2">"_location"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-15">site = simulation.structure.sites()[0]
+<div class="clipboard-copy-txt" id="cell-14">site = simulation.structure.sites()[0]
 print(f'Site {site["_site_id"]} is at {site["_location"]}')</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Site 0 is at [0. 0.]
+</pre>
 </div>
 </div>
 </div>
@@ -3346,16 +3388,16 @@ print(f'Site {site["_site_id"]} is at {site["_location"]}')</div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=178bbdba-eecf-4330-9280-b189c32c363e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=178bbdba-eecf-4330-9280-b189c32c363e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-16">
+<clipboard-copy for="cell-15">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3367,7 +3409,19 @@ print(f'Site {site["_site_id"]} is at {site["_location"]}')</div>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get_site_state</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-16">simulation.state.get_site_state(0)</div>
+<div class="clipboard-copy-txt" id="cell-15">simulation.state.get_site_state(0)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[24]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>{'_site_id': 0, 'DISCRETE_OCCUPANCY': 'A'}</pre>
 </div>
 </div>
 </div>
@@ -3384,16 +3438,16 @@ print(f'Site {site["_site_id"]} is at {site["_location"]}')</div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=329b1087-5daf-41ff-ac1e-d86c96afcc39">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=329b1087-5daf-41ff-ac1e-d86c96afcc39">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [28]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-17">
+<clipboard-copy for="cell-16">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -3403,9 +3457,26 @@ print(f'Site {site["_site_id"]} is at {site["_location"]}')</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">cell_artist</span> <span class="o">=</span> <span class="n">DiscreteCellArtist</span><span class="o">.</span><span class="n">from_discrete_state</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+<span class="n">step_artist</span> <span class="o">=</span> <span class="n">SquareGridArtist2D</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span> <span class="n">cell_artist</span><span class="o">=</span><span class="n">cell_artist</span><span class="p">)</span>
+<span class="n">step_artist</span><span class="o">.</span><span class="n">jupyter_show</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">cell_size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-17">step_artist.jupyter_show(simulation.state, cell_size=24)</div>
+<div class="clipboard-copy-txt" id="cell-16">cell_artist = DiscreteCellArtist.from_discrete_state(simulation.state)
+step_artist = SquareGridArtist2D(simulation.structure, cell_artist=cell_artist)
+step_artist.jupyter_show(simulation.state, cell_size=30)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATEAAAB4CAIAAAAVJ1IvAAAB9ElEQVR4nO3dMU4CURRAUca4EDeEpevR7Vi6F3p2MhYYxNJE8q955xSEachrbt5kmIHt6eP98N+cj6fVI/zafni9Pdy2bdEg1D2sHgD4QZPQoklo0SS0aBJaNAktj6sH4Nv9vpc6P7/c6ZP5c/YktGgSWjQJLZqEFk1CiyahRZPQoklo0SS0uI9nrn3fr+89Y91hT86lwyZNTqfMGk3OdTl3vX2lQJPT2ZM1muSLVRnhuutc1w1pVabYk9CiSWjRJLRoElo0CS2ahBZNQosmoUWT0KJJaNEktGgSWjQJLZ4LCTkfT6tHYD17Elo0CS2ahBZNQosmoUWT0KJJaNEktGgSWtzHM5f/1WqyJ6e71OhH0Ds0Od2lRnuyQ5PT2ZM1moQWTU7n3LXGdde5dNhkT0KLJqFFk9CiSWjRJLRoElo0CS2ahBZNQosmoUWT0KJJaNEktHgupGR7Wz0B69mT0KJJaNEktGgSWjQJLZqEFk1CiyahRZPQoklo0SS0aBJaNAktmoQWTUKLJqFFk9CiSWjRJLRoElo0CS2ahBZNQosmoUWT0KJJaNEktGgSWjQJLZqEFk1CiyahRZPQoklo0SS0aBJaNAktmoQWTUKLJqFFk9CiSWjRJLRoElo0CS2ahBZNQosmoUWT0KJJaNEktGgSWj4BjJ0piNwbrF8AAAAASUVORK5CYII=
+"/>
 </div>
 </div>
 </div>
