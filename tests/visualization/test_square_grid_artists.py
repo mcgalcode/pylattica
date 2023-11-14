@@ -18,7 +18,9 @@ def test_step_artist():
     result = runner.run(simulation.state, controller, 10, verbose=False)
     cell_artist = DiscreteCellArtist.from_discrete_state(result.last_step)
     artist = SquareGridArtist2D(simulation.structure, cell_artist)
-    artist.get_img(result.last_step, cell_size=5)
+    artist.get_img(result.last_step, cell_size=5, label="test img")
+    artist.save_img(result.last_step, "tmp.png")
+    os.remove("tmp.png")
 
 def test_result_artist():
     phases = PhaseSet(["dead", "alive"])
