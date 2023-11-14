@@ -23,11 +23,11 @@ date: 23 October 2023
 bibliography: paper.bib
 ---
 
-## Summary
+# Summary
 
 `pylattica` provides a simple and flexible framework for prototyping lattice-based simulations such as atomistic Monte Carlo simulations or cellular automata. It is differentiated from other lattice simulation packages by i) its agnosticism toward the form of the update rule, simulation structure, neighborhood structure, and simulation state and ii) its interoperability with the `pymatgen` package which allows modeling of arbitrary crystalline systems (i.e. not only two or three dimensional square grids), and makes it particularly well suited to applications in materials science and chemistry.
 
-## Statement of need
+# Statement of need
 
 Cellular automata [@bays_introduction_2010], lattice-gas automata [@boghosian_lattice_1999], and atomistic Monte Carlo models [@andersen_practical_2019] are all simulations in which a system, represented by an arrangement of connected sites, evolves over time according to an update rule which determines the future state of a site by considering its current state and the state of its neighbors. For example, in the classic "Game of Life" cellular automaton [@gardner_mathematical_1970], sites in a 2D square grid switch between "dead" and "alive" during each timestep based on the number of living neighbors surrounding them. In lattice Monte Carlo simulations for vacancy diffusion in crystalline solid materials, atoms move between neighboring sites at rates partially determined by the occupancy of their neighbors [@haley_vacancy_2006].
 
@@ -37,9 +37,9 @@ The goal of `pylattica` is to synthesize the essential elements of these valuabl
 
 Because `pylattica` is particularly focused on enabling fast iteration on simulation features during development, it prioritizes flexibility and application agnosticism over performance. Therefore, it is most appropriately used in cases when the developer needs to prototype and experiment with various forms of their model, or in cases when performance is not of the utmost importance.
 
-## Package Overview
+# Package Overview
 
-### Simulation representation
+## Simulation representation
 
 In lattice models, a system is represented by a network of connected sites, frequently a two or three dimensional square grid, with some state value assigned to each site. In `pylattica`, this representation is accomplished by the combination of three entities, which separate the dominant concerns (illustrated schematically in \autoref{fig_1}):
 
@@ -51,7 +51,7 @@ Of these three entities, only a `SimulationState` is required to run a simulatio
 
 ![\label{fig_1}Schematic showing an example state, a structure labeled with site IDs, and a possible  neighborhood for site 13 in a simulation with a two dimensional grid structure.](./composite.png)
 
-### Constructing Neighborhoods
+## Constructing Neighborhoods
 
 `pylattica` supports two and three dimensional square grid simulation structures out of the box (though any simulation structure can be created), and provides convenience methods for building them. Additionally, it provides a number of `NeighborhoodBuilder` classes which encode methods for specifying site neighbors in `Structure`s. Support for the following neighborhood types is provided:
 
@@ -63,7 +63,7 @@ Of these three entities, only a `SimulationState` is required to run a simulatio
 - Annular (arbitrary structure)
 - Motif-based (arbitrary structure)
 
-### Simulation Execution
+## Simulation Execution
 
 Running a simulation entails applying an “update rule” to sites in the simulation. `pylattica` only requires that the update rule accept a site identifier and the current simulation state as input and provide a collection of intended state changes as output. This rule is implemented by the user in the `get_state_update` method on a `Controller` class. In most cases, a `Neighborhood` object will be used to consider the state of neighboring sites when calculating the intended changes, though this is not required. The flexibility provided by this arrangement makes it straightforward to iterate on the definition of the rule while developing a simulation.
 
@@ -75,18 +75,18 @@ The simulation is evolved by providing the `Controller` and a desired number of 
 The result of a simulation run is an instance of `SimulationResult`, which stores the state at every step in the simulation as a list of `SimulationState`s. It can be easily serialized for storage on a filesystem or a document store, like MongoDB.
 
 
-### Visualization and Analysis
+## Visualization and Analysis
 
-![\label{fig_2}Example visualizations of two and three dimensional square grid simulation states.](./vizeg.png)
+![\label{fig_2} Example visualizations of two and three dimensional square grid simulation states.](./vizeg.png)
 
 `pylattica` provides basic utilities for analyzing the state of the simulation. These tools provide functionality for filtering and counting sites in a SimulationStep by arbitrary criteria (implemented as a function of the site’s state). Further specialized support is provided for simulation states in which the state of each site is a single discrete label (as is the case in traditional cellular automata).
 
 In the case of simulations with two- and three-dimensional square grid structures, `pylattica` provides visualization tools which convert `SimulationState`s into PNG images (as shown in \autoref{fig_2}) and `SimulationResult`s into animated GIFs.
 
-### Crystal Structure Support and pymatgen
+## Crystal Structure Support and pymatgen
 
 `pylattica` was developed with simulations of crystalline materials in mind. As a result, it supports simulation `Structure`s defined with periodic boundaries and lattices with arbitrarily shaped unit cells. In service of developing simulations of real crystalline materials, it provides utility functions for defining neighborhoods in periodic space based on displacement motifs (e.g. octahedral or tetrahedral neighbors) and supports converting `pymatgen.Structure` objects to `pylattica` `Structure`s. This feature is intended to enable more seamless integration with existing materials science workflows.
 
-### Acknowledgments
+# Acknowledgments
 
 This work was primarily funded and intellectually led by the Materials Project, which is funded by the U.S. Department of Energy, Office of Science, Office of Basic Energy Sciences, Materials Sciences and Engineering Division, under Contract no. DE-AC02-05-CH11231: Materials Project program KC23MP. It also received support from the U.S. Department of Energy, Office of Science, Office of Basic Energy Sciences, Materials Sciences and Engineering Division, under Contract No. DE-AC02-05CH11231 within the Data Science for Data-Driven Synthesis Science grant (KCD2S2). MCG acknowledges Matthew J. McDermott and Bryant Li for useful discussions during the development of this work. 
