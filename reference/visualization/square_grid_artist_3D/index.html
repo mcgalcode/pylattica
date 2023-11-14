@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../coordinate_utils/">
+        <link rel="prev" href="../square_grid_artist_2D/">
       
       
-        <link rel="next" href="../neighborhood_builders/">
+        <link rel="next" href="../result_artist/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Neighborhoods - pylattica documentation</title>
+        <title>SquareGridArtist3D - pylattica documentation</title>
       
     
     
@@ -79,7 +79,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pylattica.core.neighborhoods" class="md-skip">
+        <a href="#pylattica.visualization.square_grid_artist_3D" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Neighborhoods
+              SquareGridArtist3D
             
           </span>
         </div>
@@ -259,7 +259,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../runner/synchronous_runner/" class="md-tabs__link">
+        <a href="../../core/runner/synchronous_runner/" class="md-tabs__link">
           
   
   Reference
@@ -403,7 +403,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../lattice/" class="md-nav__link">
+      <a href="../../core/lattice/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -799,20 +799,18 @@
                 
   
   
-    
-  
   
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
         
           
           <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
@@ -826,7 +824,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
             Core
@@ -875,7 +873,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../runner/synchronous_runner/" class="md-nav__link">
+      <a href="../../core/runner/synchronous_runner/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -895,7 +893,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../runner/asynchronous_runner/" class="md-nav__link">
+      <a href="../../core/runner/asynchronous_runner/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -923,7 +921,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../periodic_structure/" class="md-nav__link">
+      <a href="../../core/periodic_structure/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -943,7 +941,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../lattice/" class="md-nav__link">
+      <a href="../../core/lattice/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -963,7 +961,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../coordinate_utils/" class="md-nav__link">
+      <a href="../../core/coordinate_utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -981,27 +979,9 @@
                 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Neighborhoods
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../core/neighborhood/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1010,92 +990,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods" class="md-nav__link">
-    pylattica.core.neighborhoods
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood" class="md-nav__link">
-    Neighborhood
-  </a>
-  
-    <nav class="md-nav" aria-label="Neighborhood">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood.__init__" class="md-nav__link">
-    __init__()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood.neighbors_of" class="md-nav__link">
-    neighbors_of()
-  </a>
-  
-    <nav class="md-nav" aria-label="neighbors_of()">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood.neighbors_of--parameters" class="md-nav__link">
-    Parameters
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood.neighbors_of--returns" class="md-nav__link">
-    Returns
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.SiteClassNeighborhood" class="md-nav__link">
-    SiteClassNeighborhood
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.StochasticNeighborhood" class="md-nav__link">
-    StochasticNeighborhood
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1107,7 +1001,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../neighborhood_builders/" class="md-nav__link">
+      <a href="../../core/neighborhood_builders/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1127,7 +1021,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../simulation_result/" class="md-nav__link">
+      <a href="../../core/simulation_result/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1147,7 +1041,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../simulation_state/" class="md-nav__link">
+      <a href="../../core/simulation_state/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1167,7 +1061,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../analyzer/" class="md-nav__link">
+      <a href="../../core/analyzer/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1187,7 +1081,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../basic_controller/" class="md-nav__link">
+      <a href="../../core/basic_controller/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1207,7 +1101,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../distance_map/" class="md-nav__link">
+      <a href="../../core/distance_map/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1227,7 +1121,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../structure_builder/" class="md-nav__link">
+      <a href="../../core/structure_builder/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1247,7 +1141,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../simulation/" class="md-nav__link">
+      <a href="../../core/simulation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1733,18 +1627,20 @@
                 
   
   
+    
+  
   
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
         
           
           <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
@@ -1758,7 +1654,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_5">
             <span class="md-nav__icon md-icon"></span>
             Visualization
@@ -1771,7 +1667,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../visualization/square_grid_artist_2D/" class="md-nav__link">
+      <a href="../square_grid_artist_2D/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1789,9 +1685,27 @@
                 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../visualization/square_grid_artist_3D/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    SquareGridArtist3D
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1800,6 +1714,31 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pylattica.visualization.square_grid_artist_3D" class="md-nav__link">
+    pylattica.visualization.square_grid_artist_3D
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1811,7 +1750,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../visualization/result_artist/" class="md-nav__link">
+      <a href="../result_artist/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1884,69 +1823,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods" class="md-nav__link">
-    pylattica.core.neighborhoods
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood" class="md-nav__link">
-    Neighborhood
-  </a>
-  
-    <nav class="md-nav" aria-label="Neighborhood">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood.__init__" class="md-nav__link">
-    __init__()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood.neighbors_of" class="md-nav__link">
-    neighbors_of()
-  </a>
-  
-    <nav class="md-nav" aria-label="neighbors_of()">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood.neighbors_of--parameters" class="md-nav__link">
-    Parameters
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.Neighborhood.neighbors_of--returns" class="md-nav__link">
-    Returns
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.SiteClassNeighborhood" class="md-nav__link">
-    SiteClassNeighborhood
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pylattica.core.neighborhoods.StochasticNeighborhood" class="md-nav__link">
-    StochasticNeighborhood
+  <a href="#pylattica.visualization.square_grid_artist_3D" class="md-nav__link">
+    pylattica.visualization.square_grid_artist_3D
   </a>
   
 </li>
@@ -1969,12 +1847,12 @@
   
 
 
-  <h1>Neighborhoods</h1>
+  <h1>SquareGridArtist3D</h1>
 
 <div class="doc doc-object doc-module">
 
 
-<a id="pylattica.core.neighborhoods"></a>
+<a id="pylattica.visualization.square_grid_artist_3D"></a>
   <div class="doc doc-contents first">
 
   
@@ -1987,364 +1865,6 @@
 
 
 
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="pylattica.core.neighborhoods.Neighborhood" class="doc doc-heading">
-        <code>Neighborhood</code>
-
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code><span title="pylattica.core.neighborhoods.AbstractNeighborhood">AbstractNeighborhood</span></code></p>
-
-  
-      <p>A specific Neighborhood. An instance of this classes corresponds
-to a particular SimulationState. It stores a map of each site_id
-in the SimulationState to the IDs of the sites which are it's neighbors.</p>
-
-
-        <details class="quote">
-          <summary>Source code in <code>pylattica/core/neighborhoods.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Neighborhood</span><span class="p">(</span><span class="n">AbstractNeighborhood</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A specific Neighborhood. An instance of this classes corresponds</span>
-<span class="sd">    to a particular SimulationState. It stores a map of each site_id</span>
-<span class="sd">    in the SimulationState to the IDs of the sites which are it&#39;s neighbors.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">rx</span><span class="o">.</span><span class="n">PyGraph</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates a NeighborhoodGraph.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span> <span class="o">=</span> <span class="n">graph</span>
-
-    <span class="k">def</span> <span class="nf">neighbors_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">include_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves a list of the IDs of the sites which are neighbors of the</span>
-<span class="sd">        provided site. Optionally includes the weights of the connections to those</span>
-<span class="sd">        neighbors.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        site_id : int</span>
-<span class="sd">            The site for which neighbors should be retrieved</span>
-<span class="sd">        include_weights : bool, optional</span>
-<span class="sd">            Whether or not weights if the neighbor connections should</span>
-<span class="sd">            be included, by default False</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list[int]</span>
-<span class="sd">            Either a list of site IDs, or a list of tuples of (site ID, connection weight)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">nbs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">site_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">include_weights</span><span class="p">:</span>
-            <span class="n">weighted_nbs</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="p">(</span><span class="n">nb_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span><span class="n">site_id</span><span class="p">,</span> <span class="n">nb_id</span><span class="p">))</span> <span class="k">for</span> <span class="n">nb_id</span> <span class="ow">in</span> <span class="n">nbs</span>
-            <span class="p">]</span>
-            <span class="k">return</span> <span class="n">weighted_nbs</span>
-
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">nbs</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="pylattica.core.neighborhoods.Neighborhood.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Instantiates a NeighborhoodGraph.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>pylattica/core/neighborhoods.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">rx</span><span class="o">.</span><span class="n">PyGraph</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiates a NeighborhoodGraph.&quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span> <span class="o">=</span> <span class="n">graph</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="pylattica.core.neighborhoods.Neighborhood.neighbors_of" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">neighbors_of</span><span class="p">(</span><span class="n">site_id</span><span class="p">,</span> <span class="n">include_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Retrieves a list of the IDs of the sites which are neighbors of the
-provided site. Optionally includes the weights of the connections to those
-neighbors.</p>
-<h5 id="pylattica.core.neighborhoods.Neighborhood.neighbors_of--parameters">Parameters</h5>
-
-<details class="site_id-">
-  <summary>int</summary>
-  <p>The site for which neighbors should be retrieved</p>
-</details>
-<details class="include_weights-">
-  <summary>bool, optional</summary>
-  <p>Whether or not weights if the neighbor connections should
-be included, by default False</p>
-</details>      <h5 id="pylattica.core.neighborhoods.Neighborhood.neighbors_of--returns">Returns</h5>
-<p>list[int]
-    Either a list of site IDs, or a list of tuples of (site ID, connection weight)</p>
-
-      <details class="quote">
-        <summary>Source code in <code>pylattica/core/neighborhoods.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">neighbors_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">include_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieves a list of the IDs of the sites which are neighbors of the</span>
-<span class="sd">    provided site. Optionally includes the weights of the connections to those</span>
-<span class="sd">    neighbors.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    site_id : int</span>
-<span class="sd">        The site for which neighbors should be retrieved</span>
-<span class="sd">    include_weights : bool, optional</span>
-<span class="sd">        Whether or not weights if the neighbor connections should</span>
-<span class="sd">        be included, by default False</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    list[int]</span>
-<span class="sd">        Either a list of site IDs, or a list of tuples of (site ID, connection weight)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nbs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">site_id</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">include_weights</span><span class="p">:</span>
-        <span class="n">weighted_nbs</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="n">nb_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span><span class="n">site_id</span><span class="p">,</span> <span class="n">nb_id</span><span class="p">))</span> <span class="k">for</span> <span class="n">nb_id</span> <span class="ow">in</span> <span class="n">nbs</span>
-        <span class="p">]</span>
-        <span class="k">return</span> <span class="n">weighted_nbs</span>
-
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">nbs</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="pylattica.core.neighborhoods.SiteClassNeighborhood" class="doc doc-heading">
-        <code>SiteClassNeighborhood</code>
-
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code><span title="pylattica.core.neighborhoods.MultiNeighborhood">MultiNeighborhood</span></code></p>
-
-  
-      <p>A Neighborhood that distinguished neighbors of sites based on their class</p>
-
-
-        <details class="quote">
-          <summary>Source code in <code>pylattica/core/neighborhoods.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SiteClassNeighborhood</span><span class="p">(</span><span class="n">MultiNeighborhood</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Neighborhood that distinguished neighbors of sites based on their class&quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">structure</span><span class="p">:</span> <span class="n">PeriodicStructure</span><span class="p">,</span> <span class="n">neighborhoods</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Neighborhood</span><span class="p">]</span>
-    <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_struct</span> <span class="o">=</span> <span class="n">structure</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_nbhoods</span> <span class="o">=</span> <span class="n">neighborhoods</span>
-
-    <span class="k">def</span> <span class="nf">_get_nbhood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="n">site_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_struct</span><span class="o">.</span><span class="n">site_class</span><span class="p">(</span><span class="n">site_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nbhoods</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">site_class</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="pylattica.core.neighborhoods.StochasticNeighborhood" class="doc doc-heading">
-        <code>StochasticNeighborhood</code>
-
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code><span title="pylattica.core.neighborhoods.MultiNeighborhood">MultiNeighborhood</span></code></p>
-
-  
-      <p>A NeighborhoodGraph for stochastic neighborhoods.</p>
-
-
-        <details class="quote">
-          <summary>Source code in <code>pylattica/core/neighborhoods.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">StochasticNeighborhood</span><span class="p">(</span><span class="n">MultiNeighborhood</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A NeighborhoodGraph for stochastic neighborhoods.&quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhoods</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Neighborhood</span><span class="p">]):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_neighborhoods</span> <span class="o">=</span> <span class="n">neighborhoods</span>
-
-    <span class="k">def</span> <span class="nf">_get_nbhood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_neighborhoods</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-  </div>
-
-</div>
 
 
 
