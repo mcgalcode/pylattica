@@ -50,9 +50,11 @@ class ResultArtist:
         Args:
             step_no (int): The step of the simulation to visualize
         """
-        label = f"Step {step_no}" # pragma: no cover
-        step = self.result.get_step(step_no) # pragma: no cover
-        self._step_artist.jupyter_show(step, label=label, cell_size=cell_size) # pragma: no cover
+        label = f"Step {step_no}"  # pragma: no cover
+        step = self.result.get_step(step_no)  # pragma: no cover
+        self._step_artist.jupyter_show(
+            step, label=label, cell_size=cell_size
+        )  # pragma: no cover
 
     def jupyter_play(
         self,
@@ -66,13 +68,13 @@ class ResultArtist:
             cell_size (int, optional): The sidelength of a grid cell in pixels. Defaults to 20.
             wait (int, optional): The time duration between frames in the animation. Defaults to 1.
         """
-        from IPython.display import clear_output, display # pragma: no cover
+        from IPython.display import clear_output, display  # pragma: no cover
 
-        imgs = self._get_images(cell_size=cell_size) # pragma: no cover
-        for img in imgs: # pragma: no cover
-            clear_output() # pragma: no cover
-            display(img) # pragma: no cover
-            time.sleep(wait) # pragma: no cover
+        imgs = self._get_images(cell_size=cell_size)  # pragma: no cover
+        for img in imgs:  # pragma: no cover
+            clear_output()  # pragma: no cover
+            display(img)  # pragma: no cover
+            time.sleep(wait)  # pragma: no cover
 
     def to_gif(self, filename: str, **kwargs) -> None:
         """Saves the areaction result as an animated GIF.

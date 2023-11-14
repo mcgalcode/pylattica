@@ -10,9 +10,10 @@ class StructureArtist:
         self.cell_artist = cell_artist
 
     def jupyter_show(self, state: SimulationState, **kwargs):
-        from IPython.display import display # pragma: no cover
-        img = self.get_img(state, **kwargs) # pragma: no cover
-        display(img) # pragma: no cover
+        from IPython.display import display  # pragma: no cover
+
+        img = self.get_img(state, **kwargs)  # pragma: no cover
+        display(img)  # pragma: no cover
 
     def get_img(self, state: SimulationState, **kwargs):
         return self._draw_image(state, **kwargs)
@@ -29,7 +30,7 @@ class StructureArtist:
         img = self.get_img(state, **kwargs)
         img.save(filename)
         return filename
-    
+
     @abstractmethod
     def _draw_image(self, state: SimulationState, **kwargs):
-        pass # pragma: no cover
+        pass  # pragma: no cover
