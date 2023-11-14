@@ -10,16 +10,17 @@ nav:
     - Notebooks: ./examples/game_of_life.ipynb
     - Guides: ./guides/constructing_lattices.ipynb
   - Guides:
+    - Getting Started: ./guides/index.md
     - Lattices: ./guides/constructing_lattices.ipynb
     - Periodic Structures: ./guides/periodic_structures.ipynb
     - Neighborhoods: ./guides/neighborhoods.ipynb
     - Controllers and Update Rules: ./guides/controllers_and_update_rules.ipynb
     - Simulation States: ./guides/simulation_state.ipynb
     - Runners: ./guides/runners.ipynb
-  - Examples:
-    - Game Of Life: ./examples/game_of_life.ipynb
-    - Square Grids: ./examples/square_grids.ipynb
-    - Life Like Demos: ./examples/life_like_demos.ipynb
+    - Examples:
+      - Game Of Life: ./examples/game_of_life.ipynb
+      - Square Grids: ./examples/square_grids.ipynb
+      - Life Like Demos: ./examples/life_like_demos.ipynb
   - Reference:
     - Core:
       - Runner:
@@ -55,8 +56,9 @@ nav:
         - Neighorboods: reference/structures/honeycomb/neighborhoods.md
         - StructureBuilders: reference/structures/honeycomb/structure_builders.md
     - Visualization:
-      - SquareGridArtist: reference/visualization/square_grid_artist.md
-      - SquareGridResultArtist: reference/visualization/square_grid_result_artist.md
+      - SquareGridArtist2D: reference/visualization/square_grid_artist_2D.md
+      - SquareGridArtist3D: reference/visualization/square_grid_artist_3D.md
+      - ResultArtist: reference/visualization/result_artist.md
   - CHANGELOG: ../CHANGELOG.md
 
 repo_url: https://github.com/mcgalcode/pylattica/
