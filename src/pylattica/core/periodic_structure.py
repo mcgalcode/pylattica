@@ -155,7 +155,7 @@ class PeriodicStructure:
 
         self._sites[new_site_id] = {
             SITE_CLASS: site_class,
-            LOCATION: tuple(periodized_coords),
+            LOCATION: periodized_coords,
             SITE_ID: new_site_id,
         }
 

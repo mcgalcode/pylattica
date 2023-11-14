@@ -75,16 +75,18 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
             The resulting NeighborGraph
         """
         nbs = []
+        curr_loc = curr_site[LOCATION]
+        curr_id = curr_site[SITE_ID]
         for other_site in struct.sites():
-            if curr_site[SITE_ID] != other_site[SITE_ID]:
-                dist = pbc_diff_cart(
-                    np.array(other_site[LOCATION]),
-                    np.array(curr_site[LOCATION]),
-                    struct.lattice,
+            other_id = other_site[SITE_ID]
+            if curr_id != other_id:
+                dist = struct.lattice.cartesian_periodic_distance(
+                    other_site[LOCATION],
+                    curr_loc,
                 )
 
                 if dist < self.cutoff:
-                    nbs.append((other_site[SITE_ID], dist))
+                    nbs.append((other_id, dist))
 
         return nbs
 
