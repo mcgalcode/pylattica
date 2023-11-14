@@ -5,7 +5,8 @@ watch:
   - src/pylattica
 nav:
   - Home:
-    - index.md
+    - Home: index.md
+    - Getting Started: ./guides/index.md
     - Reference: reference/core/lattice.md
     - Notebooks: ./examples/game_of_life.ipynb
     - Guides: ./guides/constructing_lattices.ipynb
