@@ -5,7 +5,7 @@ watch:
   - src/pylattica
 nav:
   - Home:
-    - Home: index.md
+    - pylattica: index.md
     - Getting Started: ./guides/index.md
     - Reference: reference/core/lattice.md
     - Notebooks: ./examples/game_of_life.ipynb
@@ -16,8 +16,8 @@ nav:
     - Lattices: ./guides/constructing_lattices.ipynb
     - Periodic Structures: ./guides/periodic_structures.ipynb
     - Neighborhoods: ./guides/neighborhoods.ipynb
-    - Controllers and Update Rules: ./guides/controllers_and_update_rules.ipynb
     - Simulation States: ./guides/simulation_state.ipynb
+    - Controllers and Update Rules: ./guides/controllers_and_update_rules.ipynb
     - Runners: ./guides/runners.ipynb
     - Square Grids: ./guides/square_grids.ipynb
     - Examples:
