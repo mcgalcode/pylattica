@@ -17,6 +17,8 @@ from .structure_builders import (
     SimpleSquare3DStructureBuilder,
 )
 
+from itertools import cycle
+
 
 class DiscreteGridSetup:
     """A class for setting up states. Provides helper methods for creating starting
@@ -170,8 +172,7 @@ class DiscreteGridSetup:
         size: int,
         num_sites_desired: int,
         background_spec: str,
-        nuc_species: typing.List[str],
-        nuc_ratios: typing.List[float] = None,
+        nuc_amts: typing.Dict[str, float],
         buffer: int = 2,
     ) -> Simulation:
         """_summary_
@@ -191,23 +192,43 @@ class DiscreteGridSetup:
             _type_: _description_
         """
         structure = self._builder.build(size)
+        num_sites_desired = round(num_sites_desired)
         state = self.setup_solid_phase(structure, background_spec)
         if buffer is not None:
             nb_spec: MooreNbHoodBuilder = MooreNbHoodBuilder(buffer, dim=structure.dim)
             nb_graph: Neighborhood = nb_spec.get(structure)
         all_sites = structure.sites()
 
-        if nuc_ratios is None:
-            nuc_ratios = np.ones((len(nuc_species)))
+        nuc_species = []
+        nuc_ratios = []
 
+        for spec, amt in nuc_amts.items():
+            nuc_species.append(spec)
+            nuc_ratios.append(amt)
+        
         specie_idxs = np.array(range(0, len(nuc_species)))
         normalized_ratios = np.array(nuc_ratios) / np.sum(nuc_ratios)
 
         total_attempts = 0
         num_sites_planted = 0
 
+        ideal_num_site_list = normalized_ratios * num_sites_desired
+        ideal_num_sites = { p: i for p, i in zip(nuc_species, ideal_num_site_list) }
+
+        nuc_identities = []
+
+        real_num_sites = { p: 0 for p in nuc_species }
+
+        spec_provider = cycle(nuc_species)
+        while len(nuc_identities) < num_sites_desired:
+            phase = next(spec_provider)
+
+            if real_num_sites.get(phase) < ideal_num_sites.get(phase):
+                nuc_identities.append(phase)
+                real_num_sites[phase] += 1
+
         while num_sites_planted < num_sites_desired:
-            if total_attempts > 100 * num_sites_desired:
+            if total_attempts > 1000 * num_sites_desired:
                 raise RuntimeError(
                     f"Too many nucleation sites at the specified buffer: {total_attempts} made at placing nuclei"
                 )
@@ -232,10 +253,9 @@ class DiscreteGridSetup:
                         found_existing_nucleus_in_nb = True
 
             if not found_existing_nucleus_in_nb:
-                chosen_spec = nuc_species[
-                    np.random.choice(specie_idxs, p=normalized_ratios)
-                ]
+                chosen_spec = nuc_identities[num_sites_planted]
                 state.set_site_state(rand_site_id, {DISCRETE_OCCUPANCY: chosen_spec})
+                
                 num_sites_planted += 1
 
             total_attempts += 1

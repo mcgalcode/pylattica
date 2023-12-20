@@ -6,6 +6,8 @@ from .coordinate_utils import get_points_in_box
 from .lattice import Lattice
 from .constants import LOCATION, SITE_CLASS, SITE_ID, OFFSET_PRECISION
 
+import copy
+
 VEC_OFFSET = 0.001
 DEFAULT_SITE_CLASS = "A"
 
@@ -99,6 +101,7 @@ class PeriodicStructure:
 
         return struct
 
+
     def __init__(self, lattice: Lattice):
         """Instantiates a structure with the specified lattice.
         The dimensionaliity is inferred by the dimensionality of the lattice.
@@ -114,6 +117,27 @@ class PeriodicStructure:
         self.site_ids = []
         self._location_lookup = {}
         self._offset_vector = np.array([VEC_OFFSET for _ in range(self.dim)])
+    
+    def as_dict(self):
+        copied = copy.deepcopy(self._sites)
+        for _, site in copied.items():
+            site[LOCATION] = site[LOCATION].tolist()
+
+        return {
+            "lattice": self.lattice.as_dict(),
+            "_sites": copied,
+        }
+    
+    @classmethod
+    def from_dict(cls, d):
+        struct = cls(Lattice.from_dict(d["lattice"]))
+        sites = { int(k): v for k, v in d["_sites"].items() }
+
+        for i in range(len(sites)):
+            site = sites[i]
+            struct.add_site(site[SITE_CLASS], site[LOCATION])
+
+        return struct
 
     def _get_rounded_coords(self, location: Iterable[float]) -> Iterable[float]:
         return np.round(location, OFFSET_PRECISION)
@@ -148,7 +172,7 @@ class PeriodicStructure:
             self.lattice.get_periodized_cartesian_coords(location)
         )
         offset_periodized_coords = tuple(self._transformed_coords(location))
-
+        
         assert (
             self._location_lookup.get(offset_periodized_coords, None) is None
         ), "That site is already occupied"

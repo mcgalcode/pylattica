@@ -35,11 +35,15 @@ def test_setup_noise(grid_setup: DiscreteGridSetup):
 
 def test_setup_random_sites(grid_setup: DiscreteGridSetup):
     num_sites = 2
+    nuc_amts = {
+        'B': 1,
+        'C': 1
+    }
     simulation = grid_setup.setup_random_sites(
         4,
         num_sites_desired = num_sites,
         background_spec='A',
-        nuc_species = ['B', 'C'],
+        nuc_amts=nuc_amts,
         buffer=1
     )
 
@@ -52,12 +56,16 @@ def test_setup_random_sites(grid_setup: DiscreteGridSetup):
 
 def test_setup_random_sites_with_ratios(grid_setup: DiscreteGridSetup):
     num_sites = 2
+
+    nuc_amts = {
+        'B': 1,
+        'C': 1
+    }
     simulation = grid_setup.setup_random_sites(
         4,
         num_sites_desired = num_sites,
         background_spec='A',
-        nuc_species = ['B', 'C'],
-        nuc_ratios= [1, 2],
+        nuc_amts = nuc_amts,
         buffer=1
     )
 

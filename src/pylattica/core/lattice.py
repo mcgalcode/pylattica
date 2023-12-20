@@ -81,6 +81,10 @@ class Lattice:
         The lattice vectors defining the unit cell of this lattice.
     """
 
+    @classmethod
+    def from_dict(cls, d):
+        return cls(d["vectors"], d["periodic"])
+
     def __init__(self, vecs: List[Tuple[float]], periodic=True):
         """Initializes a lattice with the vectors defining its unit cell provided.
         The dimension of the lattice is inferred from the dimension of the lattice vectors.
@@ -97,10 +101,10 @@ class Lattice:
 
         self.vecs = np.array(vecs)
 
-        if not isinstance(periodic, tuple):
+        if not isinstance(periodic, tuple) and not isinstance(periodic, list):
             self.periodic = tuple(periodic for _ in vecs)
         else:
-            self.periodic = periodic
+            self.periodic = tuple(periodic)
 
         self._periodic_bool = np.array(periodic, dtype=int)
 
@@ -116,6 +120,12 @@ class Lattice:
         assert (
             len(list(set(len(v) for v in vecs))) == 1
         ), "Lattice instantiated with vectors of unequal dimension"
+
+    def as_dict(self):
+        return {
+            "vectors": self.vecs.tolist(),
+            "periodic": self.periodic
+        }
 
     @property
     def matrix(self) -> np.ndarray:

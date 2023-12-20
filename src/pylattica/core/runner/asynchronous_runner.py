@@ -59,14 +59,26 @@ class AsynchronousRunner(Runner):
         """
 
         site_queue = deque()
-        # site_queue.append(controller.get_random_site())
-        site_queue.append(random.randint(0, len(live_state.site_ids()) - 1))
+
+        def _add_sites_to_queue():
+            next_site = controller.get_random_site(live_state)
+            if type(next_site) == int:
+                site_queue.append(next_site)
+            elif type(next_site) == list:
+                site_queue.extend(next_site)
+        
+        _add_sites_to_queue()
+
+        if len(site_queue) == 0:
+            print("Controller provided no sites to update, ABORTING")
+            return
 
         for _ in tqdm(range(num_steps), disable=(not verbose)):
             site_id = site_queue.popleft()
 
             controller_response = controller.get_state_update(site_id, live_state)
             next_sites = []
+
             # See if controller is specifying which sites to visit next
             if isinstance(controller_response, tuple):
                 state_updates, next_sites = controller_response
@@ -79,7 +91,10 @@ class AsynchronousRunner(Runner):
             result.add_step(state_updates)
 
             if len(site_queue) == 0:
-                site_queue.append(random.randint(0, len(live_state.site_ids()) - 1))
+                _add_sites_to_queue()
+
+            if len(site_queue) == 0:
+                break
 
         result.set_output(live_state)
         return result

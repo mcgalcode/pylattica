@@ -14,18 +14,17 @@ class GrowthSetup:
         size,
         num_sites_desired: int,
         background_spec,
-        nuc_species,
+        nuc_amts,
         nb_builder,
-        nuc_ratios=None,
         buffer=2,
     ):
         setup = DiscreteGridSetup(self._phases, dim=self.dim)
+
         simulation = setup.setup_random_sites(
             size,
             num_sites_desired=num_sites_desired,
             background_spec=background_spec,
-            nuc_species=nuc_species,
-            nuc_ratios=nuc_ratios,
+            nuc_amts=nuc_amts,
             buffer=buffer,
         )
 

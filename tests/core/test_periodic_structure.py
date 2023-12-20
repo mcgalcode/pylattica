@@ -6,6 +6,22 @@ from pylattica.core import PeriodicStructure, Lattice
 def test_can_instantiate_structure(square_lattice):
     assert PeriodicStructure(square_lattice) is not None
 
+def test_serialization(square_2x2_2D_grid_in_test: PeriodicStructure):
+    d = square_2x2_2D_grid_in_test.as_dict()
+
+    reproduced: PeriodicStructure = PeriodicStructure.from_dict(d)
+
+    assert reproduced._location_lookup == square_2x2_2D_grid_in_test._location_lookup
+
+    for sid, site in square_2x2_2D_grid_in_test._sites.items():
+        r_site = reproduced._sites[sid]
+        assert r_site['_site_id'] == site['_site_id']
+        assert r_site['_site_class'] == site['_site_class']
+        assert (r_site['_location'] == site['_location']).all()
+
+    assert reproduced.dim == square_2x2_2D_grid_in_test.dim
+    assert reproduced.site_ids == square_2x2_2D_grid_in_test.site_ids
+
 def test_simple_structure_has_correct_sites(square_2x2_2D_grid_in_test: PeriodicStructure):
     assert square_2x2_2D_grid_in_test.site_at((0.5, 0.5)) is not None
     assert square_2x2_2D_grid_in_test.site_at((0.5, 1.5)) is not None
