@@ -37,7 +37,6 @@ def test_simple_async_controller(square_grid_2D_4x4: PeriodicStructure):
     
     assert num_converted > 0
     assert num_converted <= 10
-    
 
 def test_simple_async_controller_async_flag(square_grid_2D_4x4: PeriodicStructure):
     
