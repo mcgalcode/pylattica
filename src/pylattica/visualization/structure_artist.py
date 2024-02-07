@@ -5,7 +5,7 @@ from .cell_artist import CellArtist
 
 
 class StructureArtist:
-    """A parent class for specifying strategies for visualizint structures."""
+    """A parent class for specifying strategies for visualizing structures."""
 
     def __init__(self, structure: PeriodicStructure, cell_artist: CellArtist):
         """Instantiates the StructureArtist with a structure and the artist used to

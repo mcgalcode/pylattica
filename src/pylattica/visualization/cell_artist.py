@@ -23,7 +23,22 @@ class CellArtist:
     def get_cell_legend_label(self, cell_state: Dict):
         pass  # pragma: no cover
 
-    def get_legend(self, simulation_state: SimulationState):
+    def get_legend(
+        self, simulation_state: SimulationState
+    ) -> Dict[str, Tuple[int, int, int]]:
+        """Returns a legend, mapping phase names to colors, given a
+        SimulationState object
+
+        Parameters
+        ----------
+        simulation_state : SimulationState
+            The SimulationState to build a legend for
+
+        Returns
+        -------
+        Dict[str, Tuple[int, int, int]]
+            The legendm mapping phase name to color.
+        """
         legend = {}
         for state in simulation_state.all_site_states():
             label = self.get_cell_legend_label(state)
