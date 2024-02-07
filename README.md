@@ -24,6 +24,27 @@ Example notebooks are included in `docs/examples`.
 
 ## Development
 
+### Installation for development
+
+To install pylattica for development purposes, use the standard editable installation command:
+
+```
+pip install -e .
+```
+
+from the root of the repository.
+
+### Running tests
+
+After you have installed the repository, ensure that `pytest` is installed, then run:
+
+```
+pytest
+```
+
+from the root of the repository.
+
+
 ### Building Documentation
 
 The docs for this project are built using mkdocs. To build the documentation
