@@ -38,7 +38,7 @@ class DiscreteCellArtist(CellArtist):
     """A class for coloring cells based on their discrete phase occupancy."""
 
     @classmethod
-    def from_phase_list(cls, phases: List[str]) -> DiscreteCellArtist:
+    def from_phase_list(cls, phases: List[str], **kwargs) -> DiscreteCellArtist:
         """Generates a DiscreteCellArtist from a list of phases.
 
         Parameters
@@ -52,10 +52,10 @@ class DiscreteCellArtist(CellArtist):
             The resulting artist.
         """
         color_map = cls.build_color_map_from_phase_list(phases)
-        return cls(color_map)
+        return cls(color_map, **kwargs)
 
     @classmethod
-    def from_discrete_state(cls, state: SimulationState) -> DiscreteCellArtist:
+    def from_discrete_state(cls, state: SimulationState, **kwargs) -> DiscreteCellArtist:
         """Generates a DiscreteCellArtist from the phases present in the
         provided simulation state.
 
@@ -71,10 +71,10 @@ class DiscreteCellArtist(CellArtist):
         """
         analyzer = DiscreteStepAnalyzer()
         phases = analyzer.phases_present(state)
-        return cls.from_phase_list(phases)
+        return cls.from_phase_list(phases, **kwargs)
 
     @classmethod
-    def from_discrete_result(cls, result: SimulationResult) -> DiscreteCellArtist:
+    def from_discrete_result(cls, result: SimulationResult, **kwargs) -> DiscreteCellArtist:
         """Generates a DiscreteCellArtist from the phases present
         in a SimulationResult.
 
@@ -90,7 +90,7 @@ class DiscreteCellArtist(CellArtist):
         """
 
         analyzer = DiscreteResultAnalyzer(result)
-        return cls.from_phase_list(analyzer.all_phases())
+        return cls.from_phase_list(analyzer.all_phases(), **kwargs)
 
     @classmethod
     def build_color_map_from_phase_list(
@@ -117,15 +117,23 @@ class DiscreteCellArtist(CellArtist):
 
         return display_phases
 
-    def __init__(self, color_map: Dict[str, Tuple[int, int, int]]):
+    def __init__(self, color_map=None, state_key=DISCRETE_OCCUPANCY, legend=None):
         """Instantiates the DiscreteCellArtist
 
         Parameters
         ----------
         color_map : Dict[str, Tuple[int, int, int]]
             A mapping of phase name to color.
-        """
+        """        
         self.color_map = color_map
+        self._state_key = state_key
+        self.legend = legend
+
+    def get_legend(self, simulation_state: SimulationState):
+        if self.legend is None:
+            return super().get_legend(simulation_state)
+        else:
+            return self.legend
 
     def get_color_from_cell_state(self, cell_state: Dict):
         """Returns the color associated with a particular cell state.
@@ -140,8 +148,11 @@ class DiscreteCellArtist(CellArtist):
         Tuple[int, int, int]
             The color associated with the specified state.
         """
-        phase_name = cell_state[DISCRETE_OCCUPANCY]
-        return self.color_map[phase_name]
+        phase_name = cell_state[self._state_key]
+        if phase_name not in self.color_map:
+            return (0, 0, 0)
+        else:
+            return self.color_map[phase_name]
 
     def get_cell_legend_label(self, cell_state: Dict) -> str:
         """Get the legend label associated with a particular cell state.
@@ -156,4 +167,4 @@ class DiscreteCellArtist(CellArtist):
         str
             The legend label for the provided state.
         """
-        return cell_state[DISCRETE_OCCUPANCY]
+        return str(cell_state[self._state_key])
