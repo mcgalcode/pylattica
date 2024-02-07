@@ -6,6 +6,9 @@ from pylattica.discrete import PhaseSet
 from pylattica.structures.square_grid import DiscreteGridSetup
 from pylattica.structures.square_grid.neighborhoods import MooreNbHoodBuilder
 
+from test_helpers.helpers import skip_windows_due_to_parallel
+
+@skip_windows_due_to_parallel
 def test_can_run_growth_sim_parallel():
     phases = PhaseSet(["A", "B", "C", "D"])
     nb_spec = MooreNbHoodBuilder()

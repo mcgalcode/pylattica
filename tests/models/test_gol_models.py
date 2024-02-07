@@ -11,7 +11,7 @@ def test_gol_variants():
         setup = DiscreteGridSetup(phases)
         simulation = setup.setup_noise(10, ["dead", "alive"])
         controller = variant(structure=simulation.structure)
-        runner = SynchronousRunner(parallel=True)
+        runner = SynchronousRunner(parallel=False)
         runner.run(simulation.state, controller, 10, verbose=False)
 
 def test_gol_update_rule():

@@ -11,7 +11,7 @@ def discrete_result():
     setup = DiscreteGridSetup(phases)
     simulation = setup.setup_noise(10, ["dead", "alive"])
     controller = Life(structure = simulation.structure)
-    runner = SynchronousRunner(parallel=True)
+    runner = SynchronousRunner(parallel=False)
     return runner.run(simulation.state, controller, 10, verbose=False)
 
 def test_plot_phase_fractions(discrete_result):
@@ -30,7 +30,7 @@ def test_phase_fraction_at_step():
     setup = DiscreteGridSetup(phases)
     simulation = setup.setup_interface(10, "dead", "alive")
     controller = Life(structure = simulation.structure)
-    runner = SynchronousRunner(parallel=True)
+    runner = SynchronousRunner(parallel=False)
     result = runner.run(simulation.state, controller, 10, verbose=False)
 
     analyzer = DiscreteResultAnalyzer(result)
