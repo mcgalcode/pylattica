@@ -132,7 +132,7 @@ class PeriodicStructure:
         struct = cls(Lattice.from_dict(d["lattice"]))
         sites = {int(k): v for k, v in d["_sites"].items()}
 
-        for site in sites:
+        for _, site in sites.items():
             struct.add_site(site[SITE_CLASS], site[LOCATION])
 
         return struct
