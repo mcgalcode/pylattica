@@ -55,7 +55,9 @@ class DiscreteCellArtist(CellArtist):
         return cls(color_map, **kwargs)
 
     @classmethod
-    def from_discrete_state(cls, state: SimulationState, **kwargs) -> DiscreteCellArtist:
+    def from_discrete_state(
+        cls, state: SimulationState, **kwargs
+    ) -> DiscreteCellArtist:
         """Generates a DiscreteCellArtist from the phases present in the
         provided simulation state.
 
@@ -74,7 +76,9 @@ class DiscreteCellArtist(CellArtist):
         return cls.from_phase_list(phases, **kwargs)
 
     @classmethod
-    def from_discrete_result(cls, result: SimulationResult, **kwargs) -> DiscreteCellArtist:
+    def from_discrete_result(
+        cls, result: SimulationResult, **kwargs
+    ) -> DiscreteCellArtist:
         """Generates a DiscreteCellArtist from the phases present
         in a SimulationResult.
 
@@ -124,7 +128,7 @@ class DiscreteCellArtist(CellArtist):
         ----------
         color_map : Dict[str, Tuple[int, int, int]]
             A mapping of phase name to color.
-        """        
+        """
         self.color_map = color_map
         self._state_key = state_key
         self.legend = legend

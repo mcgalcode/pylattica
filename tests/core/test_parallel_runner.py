@@ -7,7 +7,7 @@ from pylattica.core.simulation_state import SimulationState
 from pylattica.core.periodic_structure import PeriodicStructure
 from pylattica.core.constants import SITE_ID
 
-from test_helpers.helpers import skip_windows_due_to_parallel
+from helpers.helpers import skip_windows_due_to_parallel
 
 @skip_windows_due_to_parallel
 def test_parallel_runner(square_grid_2D_4x4: PeriodicStructure):

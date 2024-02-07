@@ -105,7 +105,7 @@ known_first_party = "pylattica"
 
 [tool.pytest]
 addopts = "--durations=10"
-norecursedirs = "tests/test_helpers"
+norecursedirs = "tests/helpers"
 
 
 [tool.setuptools.package-data]
