@@ -4,6 +4,9 @@ from pylattica.discrete import PhaseSet
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 from pylattica.core import StateAnalyzer
 
+from helpers.helpers import skip_windows_due_to_parallel
+
+@skip_windows_due_to_parallel
 def test_growth_setup():
     phases = PhaseSet(["A", "B", "C"])
 

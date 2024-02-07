@@ -1,6 +1,7 @@
 import multiprocessing as mp
 import os
 import time
+import sys
 
 from .structure_artist import StructureArtist
 from ..core import SimulationResult
@@ -29,23 +30,30 @@ class ResultArtist:
     def _get_images(self, **kwargs):
         draw_freq = kwargs.get("draw_freq", 1)
         indices = list(range(0, len(self.result), draw_freq))
-
-        global _dsr_globals  # pylint: disable=global-variable-not-assigned
-        _dsr_globals["artist"] = self._step_artist
         imgs = []
 
-        PROCESSES = mp.cpu_count()
-
-        with mp.get_context("fork").Pool(PROCESSES) as pool:
-            params = []
+        if sys.platform.startswith("win"):
             for idx in indices:
                 label = f"Step {idx}"
                 step_kwargs = {**kwargs, "label": label}
                 step = self.result.get_step(idx)
-                params.append([step, step_kwargs])
-
-            for img in pool.starmap(_get_img_parallel, params):
+                img = self._step_artist.get_img(step, **step_kwargs)
                 imgs.append(img)
+        else:
+            PROCESSES = mp.cpu_count()
+            global _dsr_globals  # pylint: disable=global-variable-not-assigned
+            _dsr_globals["artist"] = self._step_artist
+
+            with mp.get_context("fork").Pool(PROCESSES) as pool:
+                params = []
+                for idx in indices:
+                    label = f"Step {idx}"
+                    step_kwargs = {**kwargs, "label": label}
+                    step = self.result.get_step(idx)
+                    params.append([step, step_kwargs])
+
+                for img in pool.starmap(_get_img_parallel, params):
+                    imgs.append(img)
 
         return imgs
 
