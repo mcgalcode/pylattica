@@ -32,9 +32,9 @@ pip install .
 
 Detailed documentation for this library can be found [here](https://mcgalcode.github.io/pylattica/).
 
-### Examples
+### Jupyter Notebook Examples
 
-Example notebooks are included in `docs/examples`.
+Example notebooks are included in [docs/guides](https://github.com/mcgalcode/pylattica/tree/master/docs/guides).
 
 ## Development
 
