@@ -48,21 +48,8 @@ class GameOfLifeController(BasicController):
         return updates
 
 
-class Life(GameOfLifeController):
-    variant = "B3/S23"
-
-
-class Anneal(GameOfLifeController):
-    variant = "B4678/S35678"
-
-
-class Diamoeba(GameOfLifeController):
-    variant = "B35678/S5678"
-
-
-class Seeds(GameOfLifeController):
-    variant = "B2/S"
-
-
-class Maze(GameOfLifeController):
-    variant = "B3/S12345"
+Life = "B3/S23"
+Anneal = "B4678/S35678"
+Diamoeba = "B35678/S5678"
+Seeds = "B2/S"
+Maze = "B3/S12345"

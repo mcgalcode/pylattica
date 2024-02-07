@@ -3,7 +3,7 @@ from pylattica.core.simulation_state import SimulationState
 from pylattica.discrete import PhaseSet
 from pylattica.structures.square_grid.grid_setup import DiscreteGridSetup
 from pylattica.visualization import SquareGridArtist2D, SquareGridArtist3D, ResultArtist, DiscreteCellArtist
-from pylattica.models.game_of_life import Life
+from pylattica.models.game_of_life import Life, GameOfLifeController
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 
 import os
@@ -13,7 +13,8 @@ def test_step_artist():
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases)
     simulation = setup.setup_noise(10, ["dead", "alive"])
-    controller = Life(structure = simulation.structure)
+    controller = GameOfLifeController(structure = simulation.structure,
+                                      variant=Life)
     runner = SynchronousRunner(parallel=False)
     result = runner.run(simulation.state, controller, 10, verbose=False)
     cell_artist = DiscreteCellArtist.from_discrete_state(result.last_step)
@@ -26,7 +27,8 @@ def test_result_artist():
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases)
     simulation = setup.setup_noise(10, ["dead", "alive"])
-    controller = Life(structure = simulation.structure)
+    controller = GameOfLifeController(structure = simulation.structure,
+                                      variant=Life)
     runner = SynchronousRunner(parallel=False)
     result = runner.run(simulation.state, controller, 10, verbose=False)
     cell_artist = DiscreteCellArtist.from_discrete_result(result)

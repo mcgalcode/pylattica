@@ -10,7 +10,10 @@ def test_gol_variants():
         phases = PhaseSet(["dead", "alive"])
         setup = DiscreteGridSetup(phases)
         simulation = setup.setup_noise(10, ["dead", "alive"])
-        controller = variant(structure=simulation.structure)
+        controller = GameOfLifeController(
+            structure=simulation.structure,
+            variant=variant
+        )
         runner = SynchronousRunner(parallel=False)
         runner.run(simulation.state, controller, 10, verbose=False)
 
