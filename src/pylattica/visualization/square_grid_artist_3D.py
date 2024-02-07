@@ -9,6 +9,8 @@ from PIL import Image
 
 
 class SquareGridArtist3D(StructureArtist):
+    """A helper StructureArtist class for rendering 3D square grids."""
+
     def _draw_image(self, state: SimulationState, **kwargs):
         shell_only = kwargs.get("shell_only", False)
 

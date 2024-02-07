@@ -2,18 +2,27 @@ import multiprocessing as mp
 import os
 import time
 
+from .structure_artist import StructureArtist
+from pylattica.core import SimulationResult
+
 from PIL import Image
 
 _dsr_globals = {}
 
 
 class ResultArtist:
-    """A class that stores the result of running a simulation. Keeps track of all
-    the steps that the simulation proceeded through, and the set of reactions that
-    was used in the simulation.
-    """
+    """A class for rendering simulation results as animated GIFs."""
 
-    def __init__(self, step_artist, result):
+    def __init__(self, step_artist: StructureArtist, result: SimulationResult):
+        """Instantiates the ResultArtist class.
+
+        Parameters
+        ----------
+        step_artist : StructureArtist
+            The artist that should be used to render each step of the simulation.
+        result : SimulationResult
+            The result to render.
+        """
         self._step_artist = step_artist
         self.result = result
 
@@ -82,7 +91,7 @@ class ResultArtist:
             clear_output()  # pragma: no cover
             display(img)  # pragma: no cover
             time.sleep(wait)  # pragma: no cover
- 
+
     def to_gif(self, filename: str, **kwargs) -> None:
         """Saves the simulation result result as an animated GIF.
 

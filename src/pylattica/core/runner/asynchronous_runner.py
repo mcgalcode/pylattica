@@ -1,4 +1,3 @@
-import random
 from collections import deque
 
 from tqdm import tqdm
@@ -62,16 +61,15 @@ class AsynchronousRunner(Runner):
 
         def _add_sites_to_queue():
             next_site = controller.get_random_site(live_state)
-            if type(next_site) == int:
+            if isinstance(next_site, int):
                 site_queue.append(next_site)
-            elif type(next_site) == list:
+            elif isinstance(next_site, list):
                 site_queue.extend(next_site)
-        
+
         _add_sites_to_queue()
 
         if len(site_queue) == 0:
-            print("Controller provided no sites to update, ABORTING")
-            return
+            raise RuntimeError("Controller provided no sites to update, ABORTING")
 
         for _ in tqdm(range(num_steps), disable=(not verbose)):
             site_id = site_queue.popleft()

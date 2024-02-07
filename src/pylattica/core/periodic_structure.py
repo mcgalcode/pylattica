@@ -101,7 +101,6 @@ class PeriodicStructure:
 
         return struct
 
-
     def __init__(self, lattice: Lattice):
         """Instantiates a structure with the specified lattice.
         The dimensionaliity is inferred by the dimensionality of the lattice.
@@ -117,7 +116,7 @@ class PeriodicStructure:
         self.site_ids = []
         self._location_lookup = {}
         self._offset_vector = np.array([VEC_OFFSET for _ in range(self.dim)])
-    
+
     def as_dict(self):
         copied = copy.deepcopy(self._sites)
         for _, site in copied.items():
@@ -127,14 +126,13 @@ class PeriodicStructure:
             "lattice": self.lattice.as_dict(),
             "_sites": copied,
         }
-    
+
     @classmethod
     def from_dict(cls, d):
         struct = cls(Lattice.from_dict(d["lattice"]))
-        sites = { int(k): v for k, v in d["_sites"].items() }
+        sites = {int(k): v for k, v in d["_sites"].items()}
 
-        for i in range(len(sites)):
-            site = sites[i]
+        for site in sites:
             struct.add_site(site[SITE_CLASS], site[LOCATION])
 
         return struct
@@ -172,7 +170,7 @@ class PeriodicStructure:
             self.lattice.get_periodized_cartesian_coords(location)
         )
         offset_periodized_coords = tuple(self._transformed_coords(location))
-        
+
         assert (
             self._location_lookup.get(offset_periodized_coords, None) is None
         ), "That site is already occupied"

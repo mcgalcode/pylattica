@@ -7,6 +7,8 @@ from .structure_artist import StructureArtist
 
 
 class SquareGridArtist2D(StructureArtist):
+    """A helper StructureArtist class for rendering 2D square grids."""
+
     def _draw_image(self, state: SimulationState, **kwargs):
         label = kwargs.get("label", None)
         cell_size = kwargs.get("cell_size", 20)

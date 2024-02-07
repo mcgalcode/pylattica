@@ -53,6 +53,20 @@ class DiscreteGridSetup:
     def setup_solid_phase(
         self, structure: PeriodicStructure, phase_name: str
     ) -> SimulationState:
+        """Generates a simulation filled with the specified phase.
+
+        Parameters
+        ----------
+        structure : PeriodicStructure
+            The structure to
+        phase_name : str
+            The name of the phase to fill the structure with.
+
+        Returns
+        -------
+        SimulationState
+            The resulting homogeneous simulation state.
+        """
         state = self._build_blank_state(structure, phase_name)
         return state
 
@@ -166,7 +180,27 @@ class DiscreteGridSetup:
         center: tuple,
         radius: int,
         particle_phase: str,
-    ) -> np.array:
+    ) -> SimulationState:
+        """Adds a region filled with the specified phase to the point specified in the provided structure.
+
+        Parameters
+        ----------
+        structure : PeriodicStructure
+            The structure in which the particle region should be added.
+        state : SimulationState
+            The state in which this change should be reflected
+        center : tuple
+            The coordinates of the center of the desired particle
+        radius : int
+            The radius of the desired particle
+        particle_phase : str
+            The phase of the desired particle
+
+        Returns
+        -------
+        SimulationState
+            The adjusted SimulationState
+        """
         for site in structure.sites():
             if distance(np.array(site[LOCATION]), np.array(center)) < radius:
                 state.set_site_state(
@@ -174,7 +208,9 @@ class DiscreteGridSetup:
                 )
         return state
 
-    def setup_coords(self, size: int, background_state: str, coordinates: dict) -> Simulation:
+    def setup_coords(
+        self, size: int, background_state: str, coordinates: dict
+    ) -> Simulation:
         """Generates a simulation filled with a specifed background phase, and specific
         sites filled with specific phases as defined by the coordinates parameter.
 
@@ -274,19 +310,18 @@ class DiscreteGridSetup:
         for spec, amt in nuc_amts.items():
             nuc_species.append(spec)
             nuc_ratios.append(amt)
-        
-        specie_idxs = np.array(range(0, len(nuc_species)))
+
         normalized_ratios = np.array(nuc_ratios) / np.sum(nuc_ratios)
 
         total_attempts = 0
         num_sites_planted = 0
 
         ideal_num_site_list = normalized_ratios * num_sites_desired
-        ideal_num_sites = { p: i for p, i in zip(nuc_species, ideal_num_site_list) }
+        ideal_num_sites = dict(zip(nuc_species, ideal_num_site_list))
 
         nuc_identities = []
 
-        real_num_sites = { p: 0 for p in nuc_species }
+        real_num_sites = {p: 0 for p in nuc_species}
 
         spec_provider = cycle(nuc_species)
         while len(nuc_identities) < num_sites_desired:
@@ -324,7 +359,7 @@ class DiscreteGridSetup:
             if not found_existing_nucleus_in_nb:
                 chosen_spec = nuc_identities[num_sites_planted]
                 state.set_site_state(rand_site_id, {DISCRETE_OCCUPANCY: chosen_spec})
-                
+
                 num_sites_planted += 1
 
             total_attempts += 1

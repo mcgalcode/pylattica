@@ -57,6 +57,7 @@ def pbc_diff_frac_vec(fcoords1: ArrayLike, fcoords2: ArrayLike, periodic):
     fdist = np.subtract(fcoords1, fcoords2)
     return fdist - np.round(fdist) * periodic
 
+
 def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lattice):
     """Returns the Cartesian distance between two coordinates taking into
     account periodic boundary conditions. (from pymatgen)
@@ -81,6 +82,7 @@ def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lat
     return np.round(
         np.linalg.norm(lattice.get_cartesian_coords(frac_dist)), OFFSET_PRECISION
     )
+
 
 class Lattice:
     """A lattice is specified by it's lattice vectors. This class can then
@@ -141,10 +143,7 @@ class Lattice:
         ), "Lattice instantiated with vectors of unequal dimension"
 
     def as_dict(self):
-        return {
-            "vectors": self.vecs.tolist(),
-            "periodic": self.periodic
-        }
+        return {"vectors": self.vecs.tolist(), "periodic": self.periodic}
 
     @property
     def matrix(self) -> np.ndarray:
