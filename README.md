@@ -36,6 +36,10 @@ Detailed documentation for this library can be found [here](https://mcgalcode.gi
 
 Example notebooks are included in [docs/guides](https://github.com/mcgalcode/pylattica/tree/master/docs/guides).
 
+### Note about Windows
+
+`pylattica` makes use of Python's fork functionality in the multiprocessing library. This functionality is not available on windows, so certain features (the `parallel` keyword for the `SynchronousRunner`) will not be available on Windows platforms.
+
 ## Development
 
 ### Installation for development
