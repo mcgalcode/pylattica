@@ -110,12 +110,14 @@ class ResultArtist:
         """
         wait = kwargs.get("wait", 0.8)
         imgs = self._get_images(**kwargs)
+        img_names = []
         for idx, img in enumerate(imgs):
-            img.save(f"tmp_rxn_ca_step_{idx}.png")
+            fname = f"tmp_pylat_step_{idx}.png"
+            img.save(fname)
+            img_names.append(fname)
 
         reloaded_imgs = []
-        for idx in range(len(imgs)):
-            fname = f"tmp_rxn_ca_step_{idx}.png"
+        for fname in img_names:
             reloaded_imgs.append(Image.open(fname))
             os.remove(fname)
 
