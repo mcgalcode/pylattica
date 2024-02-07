@@ -14,6 +14,20 @@ These rules capture many common models in chemistry and materials science. For i
 
 pylattica aims to provide a general framework for prototyping these types of lattice simulations. It prioritizes providing a straightforward method for experimenting with different interaction rules and interaction neighborhoods. It provides some simple utilities for analyzing simulation states, and in the case of square grid systems, it provides visualization tools for the system state itself. Additionally, since this tool is focused on materials science, there is functionality for mapping system states to CIF files (for use in crystal lattice simulations).
 
+## Installation
+
+`pylattica` can be installed from the [PyPi source](https://pypi.org/project/pylattica/) by running:
+
+```
+pip install pylattica
+```
+
+It can also be installed by cloning this repository, then running the following in the root of the repository:
+
+```
+pip install .
+```
+
 ### Documentation
 
 Detailed documentation for this library can be found [here](https://mcgalcode.github.io/pylattica/).
