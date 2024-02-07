@@ -14,6 +14,7 @@ class SquareGridArtist2D(StructureArtist):
         cell_size = kwargs.get("cell_size", 20)
 
         legend = self.cell_artist.get_legend(state)
+        legend_order = sorted(legend.keys())
         state_size = int(self.structure.lattice.vec_lengths[0])
         width = state_size + 6
 
@@ -47,7 +48,8 @@ class SquareGridArtist2D(StructureArtist):
                 x = state_size * cell_size + p_x
                 pixels[x, p_y] = (255, 255, 255)
 
-        for phase, color in legend.items():
+        for phase in legend_order:
+            color = legend.get(phase)
             p_col_start = state_size * cell_size + legend_border_width + legend_hoffset
             p_row_start = count * cell_size + legend_voffset
             for p_x in range(p_col_start, p_col_start + cell_size):
