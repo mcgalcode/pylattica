@@ -35,7 +35,7 @@ class ResultArtist:
                 step = self.result.get_step(idx)
                 params.append([step, step_kwargs])
 
-            for img in pool.starmap(get_img_parallel, params):
+            for img in pool.starmap(_get_img_parallel, params):
                 imgs.append(img)
 
         return imgs
@@ -47,8 +47,12 @@ class ResultArtist:
     ) -> None:
         """In a jupyter notebook environment, visualizes the step as a color coded phase grid.
 
-        Args:
-            step_no (int): The step of the simulation to visualize
+        Parameters
+        ----------
+        step_no : int
+            The step of the simulation to visualize
+        cell_size : int, optional
+            The size of each simulation cell, in pixels, by default 20
         """
         label = f"Step {step_no}"  # pragma: no cover
         step = self.result.get_step(step_no)  # pragma: no cover
@@ -64,9 +68,12 @@ class ResultArtist:
         """In a jupyter notebook environment, plays the simulation visualization back by showing a
         series of images with {wait} seconds between each one.
 
-        Args:
-            cell_size (int, optional): The sidelength of a grid cell in pixels. Defaults to 20.
-            wait (int, optional): The time duration between frames in the animation. Defaults to 1.
+        Parameters
+        ----------
+        cell_size : int, optional
+            The sidelength of a grid cell in pixels. Defaults to 20., by default 20
+        wait : int, optional
+            The time duration between frames in the animation. Defaults to 1., by default 1
         """
         from IPython.display import clear_output, display  # pragma: no cover
 
@@ -75,14 +82,14 @@ class ResultArtist:
             clear_output()  # pragma: no cover
             display(img)  # pragma: no cover
             time.sleep(wait)  # pragma: no cover
-
+ 
     def to_gif(self, filename: str, **kwargs) -> None:
-        """Saves the areaction result as an animated GIF.
+        """Saves the simulation result result as an animated GIF.
 
-        Args:
-            filename (str): The name of the output GIF. Must end in .gif.
-            cell_size (int, optional): The side length of a grid cell in pixels. Defaults to 20.
-            wait (float, optional): The time in seconds between each frame. Defaults to 0.8.
+        Parameters
+        ----------
+        filename : str
+            The filename for the resulting file.
         """
         wait = kwargs.get("wait", 0.8)
         imgs = self._get_images(**kwargs)
@@ -104,5 +111,5 @@ class ResultArtist:
         )
 
 
-def get_img_parallel(step, step_kwargs):
+def _get_img_parallel(step, step_kwargs):
     return _dsr_globals["artist"].get_img(step, **step_kwargs)

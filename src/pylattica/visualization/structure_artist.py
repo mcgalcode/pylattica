@@ -19,14 +19,6 @@ class StructureArtist:
         return self._draw_image(state, **kwargs)
 
     def save_img(self, state: SimulationState, filename: str, **kwargs) -> None:
-        """Saves the areaction result as an animated GIF.
-
-        Args:
-            filename (str): The name of the output GIF. Must end in .gif.
-            color_map (_type_, optional): Defaults to None.
-            cell_size (int, optional): The side length of a grid cell in pixels. Defaults to 20.
-            wait (float, optional): The time in seconds between each frame. Defaults to 0.8.
-        """
         img = self.get_img(state, **kwargs)
         img.save(filename)
         return filename
