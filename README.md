@@ -1,7 +1,7 @@
 # pylattica - A Framework for Lattice and Cellular Automata Simulation
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/mcgalcode/pylattica/testing.yaml?branch=master)
-![Codecov](https://img.shields.io/codecov/c/github/mcgalcode/pylattica?style=for-the-badge)
+[![Codecov](https://img.shields.io/codecov/c/github/mcgalcode/pylattica?style=for-the-badge)](https://app.codecov.io/gh/mcgalcode/pylattica)
 
 pylattica is a Python library for prototyping and constructing cellular automaton and lattice models. The core features of these models are:
 
