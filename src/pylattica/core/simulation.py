@@ -1,7 +1,6 @@
 from typing import Dict, Tuple
 
-from pylattica.core.constants import SITE_ID
-
+from .constants import SITE_ID
 from .periodic_structure import PeriodicStructure
 from .simulation_state import SimulationState
 

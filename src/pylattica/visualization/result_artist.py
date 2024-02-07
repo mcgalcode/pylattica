@@ -3,7 +3,7 @@ import os
 import time
 
 from .structure_artist import StructureArtist
-from pylattica.core import SimulationResult
+from ..core import SimulationResult
 
 from PIL import Image
 

@@ -1,6 +1,6 @@
-from pylattica.core import BasicController, SimulationState, PeriodicStructure
-from pylattica.structures.square_grid import MooreNbHoodBuilder
-from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
+from ...core import BasicController, SimulationState, PeriodicStructure
+from ...structures.square_grid import MooreNbHoodBuilder
+from ...discrete.state_constants import DISCRETE_OCCUPANCY
 
 
 def process_variant_string(v_string):

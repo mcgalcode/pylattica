@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from pylattica.core import SimulationState, PeriodicStructure
+from ..core import SimulationState, PeriodicStructure
 from .cell_artist import CellArtist
 
 
