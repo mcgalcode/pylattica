@@ -77,13 +77,13 @@ The result of a simulation run is an instance of `SimulationResult`, which store
 
 ![\label{fig_2} Example visualizations of two and three dimensional square grid simulation states.](./vizeg.png)
 
-`pylattica` provides basic utilities for analyzing the state of the simulation. These tools provide functionality for filtering and counting sites in a SimulationStep by arbitrary criteria (implemented as a function of the site’s state). Further specialized support is provided for simulation states in which the state of each site is a single discrete label (as is the case in traditional cellular automata).
+`pylattica` provides basic utilities for analyzing the state of the simulation. These tools provide functionality for filtering and counting sites in a `SimulationState` by arbitrary criteria (implemented as a function of the site’s state). Further specialized support is provided for simulation states in which the state of each site is a single discrete label (as is the case in traditional cellular automata).
 
 In the case of simulations with two- and three-dimensional square grid structures, `pylattica` provides visualization tools which convert `SimulationState`s into PNG images (as shown in \autoref{fig_2}) and `SimulationResult`s into animated GIFs.
 
 ## Crystal Structure Support and pymatgen
 
-`pylattica` was developed with simulations of crystalline materials in mind. As a result, it supports simulation `Structure`s defined with periodic boundaries and lattices with arbitrarily shaped unit cells. In service of developing simulations of real crystalline materials, it provides utility functions for defining neighborhoods in periodic space based on displacement motifs (e.g. octahedral or tetrahedral neighbors) and supports converting `pymatgen.Structure` objects to `pylattica` `Structure`s. This feature is intended to enable more seamless integration with existing materials science workflows.
+`pylattica` was developed with simulations of crystalline materials in mind. As a result, it supports simulation `Structure`s defined with periodic boundaries and lattices with arbitrarily shaped unit cells. These structures are implemented using a `Lattice` class which uses functionality from `pymatgen` to convert coordinates between the basis of the lattice and the Cartesian basis. In service of developing simulations of real crystalline materials, `pylattica` also provides utility functions for defining neighborhoods in periodic space based on displacement motifs (e.g. octahedral or tetrahedral neighbors) and supports converting `pymatgen.Structure` objects to `pylattica` `Structure`s. This feature is intended to enable more seamless integration with existing materials science workflows.
 
 # Acknowledgments
 
