@@ -143,7 +143,7 @@ class AnnularNeighborhoodBuilder(NeighborhoodBuilder):
     """
 
     def __init__(self, inner_radius: float, outer_radius: float):
-        """Instantiates a DistanceNeighborhoodBuilder
+        """Instantiates an AnnularNeighborhoodBuilder
 
         Parameters
         ----------
@@ -194,6 +194,7 @@ class MotifNeighborhoodBuilder(NeighborhoodBuilder):
     by one unit in each of the positive and negative y directions, then the spec
     parameter for this arrangement would look as follows.
 
+    ```
     {
         "A": [
             [0, 1],
@@ -206,6 +207,7 @@ class MotifNeighborhoodBuilder(NeighborhoodBuilder):
             [0, -1],
         ]
     }
+    ```
 
     Note that there is reciprocity here between the A and B sites. The A sites
     list B sites as their neighbors, and the B sites list A sites as their neighbors.
