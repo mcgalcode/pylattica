@@ -6,6 +6,8 @@ from .coordinate_utils import get_points_in_box
 from .lattice import Lattice
 from .constants import LOCATION, SITE_CLASS, SITE_ID, OFFSET_PRECISION
 
+import copy
+
 VEC_OFFSET = 0.001
 DEFAULT_SITE_CLASS = "A"
 
@@ -114,6 +116,26 @@ class PeriodicStructure:
         self.site_ids = []
         self._location_lookup = {}
         self._offset_vector = np.array([VEC_OFFSET for _ in range(self.dim)])
+
+    def as_dict(self):
+        copied = copy.deepcopy(self._sites)
+        for _, site in copied.items():
+            site[LOCATION] = site[LOCATION].tolist()
+
+        return {
+            "lattice": self.lattice.as_dict(),
+            "_sites": copied,
+        }
+
+    @classmethod
+    def from_dict(cls, d):
+        struct = cls(Lattice.from_dict(d["lattice"]))
+        sites = {int(k): v for k, v in d["_sites"].items()}
+
+        for _, site in sites.items():
+            struct.add_site(site[SITE_CLASS], site[LOCATION])
+
+        return struct
 
     def _get_rounded_coords(self, location: Iterable[float]) -> Iterable[float]:
         return np.round(location, OFFSET_PRECISION)

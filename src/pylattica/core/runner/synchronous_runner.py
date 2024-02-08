@@ -82,15 +82,6 @@ class SynchronousRunner(Runner):
         return result
 
     def _take_step_parallel(self, updates: dict, pool, chunk_size) -> SimulationState:
-        """Given a SimulationState, advances the system state by one time increment
-        and returns a new reaction step.
-
-        Args:
-            step (SimulationState):
-
-        Returns:
-            SimulationState:
-        """
         params = []
         site_ids = mp_globals["initial_state"].site_ids()
         num_sites = len(site_ids)
@@ -118,15 +109,6 @@ class SynchronousRunner(Runner):
 
 
 def _step_batch_parallel(id_batch: List[int], last_updates: dict):  # pragma: no cover
-    """Here we are in a subprocess
-
-    Args:
-        id_batch (List[int]): _description_
-        previous_state (SimulationState): _description_
-
-    Returns:
-        _type_: _description_
-    """
     state = mp_globals["initial_state"]
     state.batch_update(last_updates)
     return _step_batch(id_batch, state, mp_globals["controller"])

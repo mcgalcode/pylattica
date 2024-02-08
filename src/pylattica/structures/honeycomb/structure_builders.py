@@ -3,6 +3,8 @@ from .lattice import RhombohedralLattice
 
 
 class HoneycombTilingBuilder(StructureBuilder):
+    """A helper class for generating honeycomb tiling structures."""
+
     SITE_CLASS = "A"
 
     def __init__(self):

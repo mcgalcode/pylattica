@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 from typing import Dict, List
 
@@ -24,6 +26,7 @@ class SimulationState:
     @classmethod
     def from_dict(cls, state_dict):
         state = state_dict["state"]
+        state[SITES] = {int(k): v for k, v in state[SITES].items()}
         return cls(state)
 
     @classmethod
@@ -161,7 +164,7 @@ class SimulationState:
             for site_id, updates in update_batch.items():
                 self.set_site_state(site_id, updates)
 
-    def copy(self) -> "SimulationState":
+    def copy(self) -> SimulationState:
         """Creates a new simulation state identical to this one. This is a deepcopy
         operation, so changing the copy will not change the original.
 
@@ -171,3 +174,6 @@ class SimulationState:
             The copy of this SimulationState
         """
         return SimulationState(self._state)
+
+    def __eq__(self, other: SimulationState) -> bool:
+        return self._state == other._state

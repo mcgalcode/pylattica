@@ -14,7 +14,27 @@ from .lattice import pbc_diff_cart
 
 
 class NeighborhoodBuilder:
-    def get(self, struct: PeriodicStructure, site_class=None) -> Neighborhood:
+    """An abstract class to extend in order to implement a new type of
+    NeighborhoodBuilder"""
+
+    def get(self, struct: PeriodicStructure, site_class: str = None) -> Neighborhood:
+        """Given a structure and a site class to build a neighborhood for,
+        build the neighborhood.
+
+        Parameters
+        ----------
+        struct : PeriodicStructure
+            The structure for which the Neighborhood of every site should be
+            calculated
+        site_class : str, optional
+            Specify a single class of sites to calculate the neighborhood for,
+            by default None
+
+        Returns
+        -------
+        Neighborhood
+            _description_
+        """
         graph = rx.PyDiGraph()
 
         if site_class is None:
@@ -38,10 +58,35 @@ class NeighborhoodBuilder:
 
 
 class StochasticNeighborhoodBuilder(NeighborhoodBuilder):
-    def __init__(self, builders):
+    """A helper class for building StochasticNeighborhoods - that is,
+    neighborhoods for which one of several random neighbor sets is chosen
+    each time a site's neighbors are requested."""
+
+    def __init__(self, builders: List[NeighborhoodBuilder]):
+        """Instantiates the StochasticNeighborhoodBuilder class.
+
+        Parameters
+        ----------
+        builders : List[NeighborhoodBuilder]
+            A list of builders which will give the neighborhoods that
+            might be returned by the StochasticNeighborhood
+        """
         self.builders = builders
 
     def get(self, struct: PeriodicStructure) -> Neighborhood:
+        """For the provided structure, calculate the StochasticNeighborhood
+        specified by the list of builders originally provided to this class.
+
+        Parameters
+        ----------
+        struct : PeriodicStructure
+            The structure for which the neighborhood should be calculated.
+
+        Returns
+        -------
+        Neighborhood
+            The resulting StochasticNeighborhood
+        """
         return StochasticNeighborhood([b.get(struct) for b in self.builders])
 
 
@@ -205,10 +250,34 @@ class MotifNeighborhoodBuilder(NeighborhoodBuilder):
 
 
 class SiteClassNeighborhoodBuilder(NeighborhoodBuilder):
+    """A class which constructs the neighborhood of each site as a function
+    of the class of that site."""
+
     def __init__(self, nb_builders: Dict[str, NeighborhoodBuilder]):
+        """Instantiates the SiteClassNeighborhoodBuilder.
+
+        Parameters
+        ----------
+        nb_builders : Dict[str, NeighborhoodBuilder]
+            A mapping of site classes to the NeighborhoodBuilders which
+            specify what neighborhood that class of sites should have.
+        """
         self._builders = nb_builders
 
     def get(self, struct: PeriodicStructure) -> Neighborhood:
+        """Constructs the neighborhood of every site in the provided
+        structure, conditional on the class of each site.
+
+        Parameters
+        ----------
+        struct : PeriodicStructure
+            The structure for which the neigborhood should be calculated.
+
+        Returns
+        -------
+        Neighborhood
+            The resulting Neighborhood object.
+        """
         nbhood_map = {}
         for sclass, builder in self._builders.items():
             nbhood = builder.get(struct, site_class=sclass)

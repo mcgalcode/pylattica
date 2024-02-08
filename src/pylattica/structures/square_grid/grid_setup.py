@@ -17,6 +17,8 @@ from .structure_builders import (
     SimpleSquare3DStructureBuilder,
 )
 
+from itertools import cycle
+
 
 class DiscreteGridSetup:
     """A class for setting up states. Provides helper methods for creating starting
@@ -24,11 +26,15 @@ class DiscreteGridSetup:
     """
 
     def __init__(self, phase_set: PhaseSet, dim: int = 2):
-        """Initializes a laboratory object by providing a reaction set that is used to
+        """Initializes a DiscreteGridSetup object by providing a set of phases that is used to
         specify cell states
 
-        Args:
-            phase_set (PhaseSet):
+        Parameters
+        ----------
+        phase_set : PhaseSet
+            A PhaseSet instance containing the possible phases that might be assigned to cells.
+        dim : int, optional
+            The dimension of the simulations to setup, by default 2
         """
         if dim == 2:
             self._builder = SimpleSquare2DStructureBuilder()
@@ -47,6 +53,20 @@ class DiscreteGridSetup:
     def setup_solid_phase(
         self, structure: PeriodicStructure, phase_name: str
     ) -> SimulationState:
+        """Generates a simulation filled with the specified phase.
+
+        Parameters
+        ----------
+        structure : PeriodicStructure
+            The structure to
+        phase_name : str
+            The name of the phase to fill the structure with.
+
+        Returns
+        -------
+        SimulationState
+            The resulting homogeneous simulation state.
+        """
         state = self._build_blank_state(structure, phase_name)
         return state
 
@@ -54,13 +74,19 @@ class DiscreteGridSetup:
         """Generates a starting state that is divided into two phases. One phase
         occupies the left half of the state, and one phase occupies the right half of the state
 
-        Args:
-            size (int): The side length of the state
-            p1 (str): The name of the left phase
-            p2 (str): The name of the right phase
+        Parameters
+        ----------
+        size : int
+            The side length of the state
+        p1 : str
+            The name of the left phase
+        p2 : str
+            The name of the right phase
 
-        Returns:
-            SimulationState:
+        Returns
+        -------
+        Simulation
+            The resulting Simulation.
         """
         structure = self._builder.build(size=size)
         state: SimulationState = self._build_blank_state(structure)
@@ -78,14 +104,21 @@ class DiscreteGridSetup:
         """Generates a starting state with a bulk phase surrounding a particle in the
         center of the state.
 
-        Args:
-            size (int): The side length of the state
-            radius (int): The radius of the particle
-            bulk_phase (str): The name of the bulk
-            particle_phase (str): The name of the particle phase
+        Parameters
+        ----------
+        size : int
+            The side length of the state
+        radius : int
+            The radius of the particle
+        bulk_phase : str
+            The name of the bulk
+        particle_phase : str
+            The name of the particle phase
 
-        Returns:
-            SimulationState:
+        Returns
+        -------
+        Simulation
+            The resulting Simulation
         """
         structure = self._builder.build(size=size)
         state: SimulationState = self.setup_solid_phase(structure, bulk_phase)
@@ -108,15 +141,23 @@ class DiscreteGridSetup:
         """Generates a starting state with a one phase in the background and num_particles particles distributed
         onto it randomly
 
-        Args:
-            size (int): The size of the state
-            radius (int): The radius of the particles to drop
-            num_particles (int): The number of particles
-            bulk_phase (str): The name of the containing phase
-            particle_phases (str): The name of the particulate phase
+        Parameters
+        ----------
+        size : int
+            The size of the simulation
+        radius : int
+            The radius of the particles to drop
+        num_particles : int
+            The number of particles
+        bulk_phase : str
+            The name of the containing phase
+        particle_phases : str
+            The name of the particulate phase
 
-        Returns:
-            SimulationState:
+        Returns
+        -------
+        Simulation
+            The resulting Simulation.
         """
         structure = self._builder.build(size)
         state: SimulationState = self.setup_solid_phase(structure, bulk_phase)
@@ -139,7 +180,27 @@ class DiscreteGridSetup:
         center: tuple,
         radius: int,
         particle_phase: str,
-    ) -> np.array:
+    ) -> SimulationState:
+        """Adds a region filled with the specified phase to the point specified in the provided structure.
+
+        Parameters
+        ----------
+        structure : PeriodicStructure
+            The structure in which the particle region should be added.
+        state : SimulationState
+            The state in which this change should be reflected
+        center : tuple
+            The coordinates of the center of the desired particle
+        radius : int
+            The radius of the desired particle
+        particle_phase : str
+            The phase of the desired particle
+
+        Returns
+        -------
+        SimulationState
+            The adjusted SimulationState
+        """
         for site in structure.sites():
             if distance(np.array(site[LOCATION]), np.array(center)) < radius:
                 state.set_site_state(
@@ -147,7 +208,27 @@ class DiscreteGridSetup:
                 )
         return state
 
-    def setup_coords(self, size: int, background_state: str, coordinates: dict):
+    def setup_coords(
+        self, size: int, background_state: str, coordinates: dict
+    ) -> Simulation:
+        """Generates a simulation filled with a specifed background phase, and specific
+        sites filled with specific phases as defined by the coordinates parameter.
+
+        Parameters
+        ----------
+        size : int
+            The size of the simulation to generate
+        background_state : str
+            The phase with which the background should be filled.
+        coordinates : dict
+            A map of phase name to list of tuples specifying the coordinates to be filled
+            with that phase.
+
+        Returns
+        -------
+        Simulation
+            The resulting Simulation.
+        """
         structure = self._builder.build(size)
         state: np.array = self.setup_solid_phase(structure, background_state)
         for phase, coord_list in coordinates.items():
@@ -157,6 +238,21 @@ class DiscreteGridSetup:
         return Simulation(state, structure)
 
     def setup_noise(self, size: int, phases: typing.List[str]) -> Simulation:
+        """Generates an initial simulation state with sites randomly assigned one
+        of the provided list of phases
+
+        Parameters
+        ----------
+        size : int
+            The size of the simulation to generate.
+        phases : typing.List[str]
+            The phases to be randomly assigned
+
+        Returns
+        -------
+        Simulation
+            The resulting simulation.
+        """
         structure = self._builder.build(size)
         state: SimulationState = self._build_blank_state(structure)
         for site in structure.sites():
@@ -170,44 +266,73 @@ class DiscreteGridSetup:
         size: int,
         num_sites_desired: int,
         background_spec: str,
-        nuc_species: typing.List[str],
-        nuc_ratios: typing.List[float] = None,
+        nuc_amts: typing.Dict[str, float],
         buffer: int = 2,
     ) -> Simulation:
-        """_summary_
+        """Generates an initial simulation state with a background phase filling space and
+        random sites filled in with other phases as specified by the provided ratios.
 
-        Args:
-            size (_type_): _description_
-            num_sites_desired (_type_): _description_
-            background_spec (_type_): _description_
-            nuc_species (_type_): _description_
-            nuc_ratios (_type_, optional): _description_. Defaults to None.
-            buffer (int, optional): _description_. Defaults to 2.
+        Parameters
+        ----------
+        size : int
+            The size of the simulation to generate.
+        num_sites_desired : int
+            The number of non-background sites to select
+        background_spec : str
+            The phase of the background
+        nuc_amts : typing.Dict[str, float]
+            The ratios of the phases to assign to the selected sites
+        buffer : int, optional
+            The minimum distance between selected sites, by default 2
 
-        Raises:
-            RuntimeError: _description_
+        Returns
+        -------
+        Simulation
+            The resulting Simulation
 
-        Returns:
-            _type_: _description_
+        Raises
+        ------
+        RuntimeError
+            If the buffer between sites is too large, and the num_sites_desired cannot fit
+            in the specifed simulation size, a RuntimeError is thrown
         """
         structure = self._builder.build(size)
+        num_sites_desired = round(num_sites_desired)
         state = self.setup_solid_phase(structure, background_spec)
         if buffer is not None:
             nb_spec: MooreNbHoodBuilder = MooreNbHoodBuilder(buffer, dim=structure.dim)
             nb_graph: Neighborhood = nb_spec.get(structure)
         all_sites = structure.sites()
 
-        if nuc_ratios is None:
-            nuc_ratios = np.ones((len(nuc_species)))
+        nuc_species = []
+        nuc_ratios = []
 
-        specie_idxs = np.array(range(0, len(nuc_species)))
+        for spec, amt in nuc_amts.items():
+            nuc_species.append(spec)
+            nuc_ratios.append(amt)
+
         normalized_ratios = np.array(nuc_ratios) / np.sum(nuc_ratios)
 
         total_attempts = 0
         num_sites_planted = 0
 
+        ideal_num_site_list = normalized_ratios * num_sites_desired
+        ideal_num_sites = dict(zip(nuc_species, ideal_num_site_list))
+
+        nuc_identities = []
+
+        real_num_sites = {p: 0 for p in nuc_species}
+
+        spec_provider = cycle(nuc_species)
+        while len(nuc_identities) < num_sites_desired:
+            phase = next(spec_provider)
+
+            if real_num_sites.get(phase) < ideal_num_sites.get(phase):
+                nuc_identities.append(phase)
+                real_num_sites[phase] += 1
+
         while num_sites_planted < num_sites_desired:
-            if total_attempts > 100 * num_sites_desired:
+            if total_attempts > 1000 * num_sites_desired:
                 raise RuntimeError(
                     f"Too many nucleation sites at the specified buffer: {total_attempts} made at placing nuclei"
                 )
@@ -232,10 +357,9 @@ class DiscreteGridSetup:
                         found_existing_nucleus_in_nb = True
 
             if not found_existing_nucleus_in_nb:
-                chosen_spec = nuc_species[
-                    np.random.choice(specie_idxs, p=normalized_ratios)
-                ]
+                chosen_spec = nuc_identities[num_sites_planted]
                 state.set_site_state(rand_site_id, {DISCRETE_OCCUPANCY: chosen_spec})
+
                 num_sites_planted += 1
 
             total_attempts += 1

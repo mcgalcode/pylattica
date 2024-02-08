@@ -1,12 +1,15 @@
 import pytest
+import time
+import sys
 
 from pylattica.core import SynchronousRunner, BasicController
 from pylattica.core.simulation_state import SimulationState
 from pylattica.core.periodic_structure import PeriodicStructure
 from pylattica.core.constants import SITE_ID
 
-import time
+from helpers.helpers import skip_windows_due_to_parallel
 
+@skip_windows_due_to_parallel
 def test_parallel_runner(square_grid_2D_4x4: PeriodicStructure):
     
     class SimpleParallelController(BasicController):
@@ -34,6 +37,7 @@ def test_parallel_runner(square_grid_2D_4x4: PeriodicStructure):
     for site_state in last_step.all_site_states():
         assert site_state["value"] == 1000
 
+@skip_windows_due_to_parallel
 def test_parallel_runner_speed(square_grid_2D_4x4: PeriodicStructure):
     
     class SimpleParallelController(BasicController):

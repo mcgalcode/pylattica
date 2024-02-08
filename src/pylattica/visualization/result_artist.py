@@ -1,6 +1,10 @@
 import multiprocessing as mp
 import os
 import time
+import sys
+
+from .structure_artist import StructureArtist
+from ..core import SimulationResult
 
 from PIL import Image
 
@@ -8,35 +12,48 @@ _dsr_globals = {}
 
 
 class ResultArtist:
-    """A class that stores the result of running a simulation. Keeps track of all
-    the steps that the simulation proceeded through, and the set of reactions that
-    was used in the simulation.
-    """
+    """A class for rendering simulation results as animated GIFs."""
 
-    def __init__(self, step_artist, result):
+    def __init__(self, step_artist: StructureArtist, result: SimulationResult):
+        """Instantiates the ResultArtist class.
+
+        Parameters
+        ----------
+        step_artist : StructureArtist
+            The artist that should be used to render each step of the simulation.
+        result : SimulationResult
+            The result to render.
+        """
         self._step_artist = step_artist
         self.result = result
 
     def _get_images(self, **kwargs):
         draw_freq = kwargs.get("draw_freq", 1)
         indices = list(range(0, len(self.result), draw_freq))
-
-        global _dsr_globals  # pylint: disable=global-variable-not-assigned
-        _dsr_globals["artist"] = self._step_artist
         imgs = []
 
-        PROCESSES = mp.cpu_count()
-
-        with mp.get_context("fork").Pool(PROCESSES) as pool:
-            params = []
+        if sys.platform.startswith("win"):
             for idx in indices:
                 label = f"Step {idx}"
                 step_kwargs = {**kwargs, "label": label}
                 step = self.result.get_step(idx)
-                params.append([step, step_kwargs])
-
-            for img in pool.starmap(get_img_parallel, params):
+                img = self._step_artist.get_img(step, **step_kwargs)
                 imgs.append(img)
+        else:
+            PROCESSES = mp.cpu_count()
+            global _dsr_globals  # pylint: disable=global-variable-not-assigned
+            _dsr_globals["artist"] = self._step_artist
+
+            with mp.get_context("fork").Pool(PROCESSES) as pool:
+                params = []
+                for idx in indices:
+                    label = f"Step {idx}"
+                    step_kwargs = {**kwargs, "label": label}
+                    step = self.result.get_step(idx)
+                    params.append([step, step_kwargs])
+
+                for img in pool.starmap(_get_img_parallel, params):
+                    imgs.append(img)
 
         return imgs
 
@@ -47,8 +64,12 @@ class ResultArtist:
     ) -> None:
         """In a jupyter notebook environment, visualizes the step as a color coded phase grid.
 
-        Args:
-            step_no (int): The step of the simulation to visualize
+        Parameters
+        ----------
+        step_no : int
+            The step of the simulation to visualize
+        cell_size : int, optional
+            The size of each simulation cell, in pixels, by default 20
         """
         label = f"Step {step_no}"  # pragma: no cover
         step = self.result.get_step(step_no)  # pragma: no cover
@@ -64,9 +85,12 @@ class ResultArtist:
         """In a jupyter notebook environment, plays the simulation visualization back by showing a
         series of images with {wait} seconds between each one.
 
-        Args:
-            cell_size (int, optional): The sidelength of a grid cell in pixels. Defaults to 20.
-            wait (int, optional): The time duration between frames in the animation. Defaults to 1.
+        Parameters
+        ----------
+        cell_size : int, optional
+            The sidelength of a grid cell in pixels. Defaults to 20., by default 20
+        wait : int, optional
+            The time duration between frames in the animation. Defaults to 1., by default 1
         """
         from IPython.display import clear_output, display  # pragma: no cover
 
@@ -77,23 +101,24 @@ class ResultArtist:
             time.sleep(wait)  # pragma: no cover
 
     def to_gif(self, filename: str, **kwargs) -> None:
-        """Saves the areaction result as an animated GIF.
+        """Saves the simulation result result as an animated GIF.
 
-        Args:
-            filename (str): The name of the output GIF. Must end in .gif.
-            cell_size (int, optional): The side length of a grid cell in pixels. Defaults to 20.
-            wait (float, optional): The time in seconds between each frame. Defaults to 0.8.
+        Parameters
+        ----------
+        filename : str
+            The filename for the resulting file.
         """
         wait = kwargs.get("wait", 0.8)
         imgs = self._get_images(**kwargs)
+        img_names = []
         for idx, img in enumerate(imgs):
-            img.save(f"tmp_rxn_ca_step_{idx}.png")
+            fname = f"tmp_pylat_step_{idx}.png"
+            img.save(fname)
+            img_names.append(fname)
 
         reloaded_imgs = []
-        for idx in range(len(imgs)):
-            fname = f"tmp_rxn_ca_step_{idx}.png"
+        for fname in img_names:
             reloaded_imgs.append(Image.open(fname))
-            os.remove(fname)
 
         reloaded_imgs[0].save(
             filename,
@@ -103,6 +128,9 @@ class ResultArtist:
             loop=0,
         )
 
+        for fname in img_names:
+            os.remove(fname)
 
-def get_img_parallel(step, step_kwargs):
+
+def _get_img_parallel(step, step_kwargs):
     return _dsr_globals["artist"].get_img(step, **step_kwargs)

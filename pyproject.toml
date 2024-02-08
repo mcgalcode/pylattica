@@ -105,6 +105,8 @@ known_first_party = "pylattica"
 
 [tool.pytest]
 addopts = "--durations=10"
+norecursedirs = "tests/helpers"
+
 
 [tool.setuptools.package-data]
 pylattica = ["py.typed"]

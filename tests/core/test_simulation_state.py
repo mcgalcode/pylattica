@@ -8,7 +8,12 @@ def test_can_run_growth_sim_series():
     phases = PhaseSet(["A", "B", "C", "D"])
     nb_spec = PseudoHexagonalNeighborhoodBuilder2D()
     setup = DiscreteGridSetup(phases)
-    periodic_initial_state = setup.setup_random_sites(20, 20, "A", ["B", "C", "D"], [1, 1, 1])
+    nuc_amts = {
+        'B': 1,
+        'C': 1,
+        'D': 1
+    }
+    periodic_initial_state = setup.setup_random_sites(20, 20, "A", nuc_amts=nuc_amts)
     assert 'SITES' not in periodic_initial_state.state.site_ids()
 
 def test_can_serialize():
@@ -37,3 +42,17 @@ def test_batch_update():
 
     assert state.get_site_state(1)["a"] == 3
     assert state.get_site_state(2)["b"] == 4
+
+def test_states_equal():
+    state1 = SimulationState()
+    state2 = SimulationState()
+
+    updates = {
+        1: { "a": 3 },
+        2: { "b": 4 }
+    }
+    
+    state1.batch_update(updates)
+    state2.batch_update(updates)
+
+    assert state1 == state2

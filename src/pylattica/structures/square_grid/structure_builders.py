@@ -5,6 +5,8 @@ SITE_POSITION = 0
 
 
 class SimpleSquare2DStructureBuilder(StructureBuilder):
+    """A helper class for generating square 2D grid structures."""
+
     SITE_CLASS = "_A"
 
     def __init__(self):
@@ -16,6 +18,8 @@ class SimpleSquare2DStructureBuilder(StructureBuilder):
 
 
 class SimpleSquare3DStructureBuilder(StructureBuilder):
+    """A helper class for generating square 3D grid structures."""
+
     SITE_CLASS = "_A"
 
     def __init__(self):

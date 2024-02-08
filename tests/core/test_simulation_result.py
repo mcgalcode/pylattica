@@ -43,6 +43,22 @@ def random_result_small(initial_state):
 
     return result
 
+@pytest.fixture
+def random_result_small_ordered(initial_state):
+    result = SimulationResult(initial_state)
+
+    for i in range(3):
+        site_id = random.randint(0, 10)
+
+        updates = {
+            site_id: {
+                "a": i
+            }
+        }
+        result.add_step(updates)
+
+    return result
+
 def test_can_add_step(initial_state):
     result = SimulationResult(initial_state)
 
@@ -66,6 +82,7 @@ def test_can_load_at_intervals(random_result_big):
 def test_serialization(random_result_big: SimulationResult):
     d = random_result_big.as_dict()
 
+
     rehydrated = SimulationResult.from_dict(d)
 
     for idx, step in enumerate(rehydrated.steps()):
@@ -77,7 +94,7 @@ def test_write_file(random_result_small: SimulationResult):
     random_result_small.to_file(fname)
 
     rehydrated = SimulationResult.from_file(fname)
-
+    print(rehydrated._diffs[0])
     os.remove(fname)
     assert random_result_small.as_dict() == rehydrated.as_dict()
 
@@ -88,3 +105,7 @@ def test_write_file_autoname(random_result_small: SimulationResult):
     assert os.path.exists(fname)
     os.remove(fname)
     assert random_result_small.as_dict() == rehydrated.as_dict()
+
+def test_diff_storage(random_result_small_ordered: SimulationResult):
+    diff_one = random_result_small_ordered._diffs[0]
+    assert len(diff_one.keys()) == 1
