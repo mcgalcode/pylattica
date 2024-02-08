@@ -119,7 +119,6 @@ class ResultArtist:
         reloaded_imgs = []
         for fname in img_names:
             reloaded_imgs.append(Image.open(fname))
-            os.remove(fname)
 
         reloaded_imgs[0].save(
             filename,
@@ -129,6 +128,8 @@ class ResultArtist:
             loop=0,
         )
 
+        for fname in img_names:
+            os.remove(fname)
 
 def _get_img_parallel(step, step_kwargs):
     return _dsr_globals["artist"].get_img(step, **step_kwargs)
