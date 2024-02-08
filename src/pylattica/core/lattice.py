@@ -60,7 +60,7 @@ def pbc_diff_frac_vec(fcoords1: ArrayLike, fcoords2: ArrayLike, periodic):
 
 def pbc_diff_cart(cart_coords1: ArrayLike, cart_coords2: ArrayLike, lattice: Lattice):
     """Returns the Cartesian distance between two coordinates taking into
-    account periodic boundary conditions. (from pymatgen)
+    account periodic boundary conditions.
 
     Parameters
     ----------
