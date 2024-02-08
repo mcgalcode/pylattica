@@ -2026,16 +2026,7 @@ If left unspecified, one worker for each CPU will be created.</p>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SynchronousRunner</span><span class="p">(</span><span class="n">Runner</span><span class="p">):</span>
+<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SynchronousRunner</span><span class="p">(</span><span class="n">Runner</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for orchestrating the running of the simulation. An automaton simulation</span>
 <span class="sd">    is run by applying the update rule (as implemented by a Controller) to sites</span>
 <span class="sd">    in the SimulationState repeatedly. This class implements the synchronous update</span>
@@ -2102,15 +2093,6 @@ If left unspecified, one worker for each CPU will be created.</p>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">_take_step_parallel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">updates</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pool</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimulationState</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Given a SimulationState, advances the system state by one time increment</span>
-<span class="sd">        and returns a new reaction step.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            step (SimulationState):</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            SimulationState:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">site_ids</span> <span class="o">=</span> <span class="n">mp_globals</span><span class="p">[</span><span class="s2">&quot;initial_state&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">site_ids</span><span class="p">()</span>
         <span class="n">num_sites</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">site_ids</span><span class="p">)</span>

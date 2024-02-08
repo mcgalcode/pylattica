@@ -1191,6 +1191,73 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder" class="md-nav__link">
+    StructureBuilder
+  </a>
+  
+    <nav class="md-nav" aria-label="StructureBuilder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+    <nav class="md-nav" aria-label="__init__()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.__init__--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.build" class="md-nav__link">
+    build()
+  </a>
+  
+    <nav class="md-nav" aria-label="build()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.build--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.build--returns" class="md-nav__link">
+    Returns
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.build--raises" class="md-nav__link">
+    Raises
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1849,6 +1916,73 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder" class="md-nav__link">
+    StructureBuilder
+  </a>
+  
+    <nav class="md-nav" aria-label="StructureBuilder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+    <nav class="md-nav" aria-label="__init__()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.__init__--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.build" class="md-nav__link">
+    build()
+  </a>
+  
+    <nav class="md-nav" aria-label="build()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.build--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.build--returns" class="md-nav__link">
+    Returns
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.core.structure_builder.StructureBuilder.build--raises" class="md-nav__link">
+    Raises
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1885,6 +2019,327 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pylattica.core.structure_builder.StructureBuilder" class="doc doc-heading">
+        <code>StructureBuilder</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="abc.ABC">ABC</span></code></p>
+
+  
+      <p>An abstract class for building structures out of motifs and lattices. In general.
+this class works by tiling space to an extent specified, and then filling that
+space according to the motif (mapping of site types to locations within the unit cell)
+provided.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>pylattica/core/structure_builder.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">StructureBuilder</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An abstract class for building structures out of motifs and lattices. In general.</span>
+<span class="sd">    this class works by tiling space to an extent specified, and then filling that</span>
+<span class="sd">    space according to the motif (mapping of site types to locations within the unit cell)</span>
+<span class="sd">    provided.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">frac_coords</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lattice</span><span class="p">:</span> <span class="n">Lattice</span><span class="p">,</span> <span class="n">motif</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates a StructureBuilder using a Lattice and a motif.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lattice : Lattice</span>
+<span class="sd">            The Lattice with which space will be tiled.</span>
+<span class="sd">        motif : Dict[str, List[Tuple]]</span>
+<span class="sd">            The motif with which sites will be placed inside the structure. These motifs</span>
+<span class="sd">            are given by a mapping of site type (str) to list of locations inside</span>
+<span class="sd">            the unit cell that that site type exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lattice</span> <span class="o">=</span> <span class="n">lattice</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">motif</span> <span class="o">=</span> <span class="n">motif</span>
+
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">PeriodicStructure</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Builds a structure with the provided size.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        size : Union[Tuple[int], int]</span>
+<span class="sd">            Either an integer or a tuple of integers specifying the extent</span>
+<span class="sd">            of the desired structure in each dimension.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PeriodicStructure</span>
+<span class="sd">            The resulting structure.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the size is a tuple that is not of length equal to the lattice</span>
+<span class="sd">            dimension, a value error is thrown. In other words, you must specify</span>
+<span class="sd">            size along each dimension of the lattice.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">lattice</span><span class="o">.</span><span class="n">dim</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Desired structure dimensions, </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">, does not match &quot;</span>
+                    <span class="s2">&quot;dimensionality of lattice: </span><span class="si">{self.lattice.dim}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="n">size</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lattice</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">PeriodicStructure</span><span class="o">.</span><span class="n">build_from</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lattice</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">motif</span><span class="p">,</span> <span class="n">frac_coords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frac_coords</span>
+        <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pylattica.core.structure_builder.StructureBuilder.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">lattice</span><span class="p">,</span> <span class="n">motif</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Instantiates a StructureBuilder using a Lattice and a motif.</p>
+<h5 id="pylattica.core.structure_builder.StructureBuilder.__init__--parameters">Parameters</h5>
+
+<details class="lattice-">
+  <summary>Lattice</summary>
+  <p>The Lattice with which space will be tiled.</p>
+</details>
+<details class="motif-">
+  <summary>Dict[str, List[Tuple]]</summary>
+  <p>The motif with which sites will be placed inside the structure. These motifs
+are given by a mapping of site type (str) to list of locations inside
+the unit cell that that site type exists.</p>
+</details>
+      <details class="quote">
+        <summary>Source code in <code>pylattica/core/structure_builder.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lattice</span><span class="p">:</span> <span class="n">Lattice</span><span class="p">,</span> <span class="n">motif</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiates a StructureBuilder using a Lattice and a motif.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lattice : Lattice</span>
+<span class="sd">        The Lattice with which space will be tiled.</span>
+<span class="sd">    motif : Dict[str, List[Tuple]]</span>
+<span class="sd">        The motif with which sites will be placed inside the structure. These motifs</span>
+<span class="sd">        are given by a mapping of site type (str) to list of locations inside</span>
+<span class="sd">        the unit cell that that site type exists.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">lattice</span> <span class="o">=</span> <span class="n">lattice</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">motif</span> <span class="o">=</span> <span class="n">motif</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pylattica.core.structure_builder.StructureBuilder.build" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">build</span><span class="p">(</span><span class="n">size</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Builds a structure with the provided size.</p>
+<h5 id="pylattica.core.structure_builder.StructureBuilder.build--parameters">Parameters</h5>
+
+<details class="size-">
+  <summary>Union[Tuple[int], int]</summary>
+  <p>Either an integer or a tuple of integers specifying the extent
+of the desired structure in each dimension.</p>
+</details>      <h5 id="pylattica.core.structure_builder.StructureBuilder.build--returns">Returns</h5>
+<p>PeriodicStructure
+    The resulting structure.</p>
+<h5 id="pylattica.core.structure_builder.StructureBuilder.build--raises">Raises</h5>
+<p>ValueError
+    If the size is a tuple that is not of length equal to the lattice
+    dimension, a value error is thrown. In other words, you must specify
+    size along each dimension of the lattice.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>pylattica/core/structure_builder.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">PeriodicStructure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds a structure with the provided size.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    size : Union[Tuple[int], int]</span>
+<span class="sd">        Either an integer or a tuple of integers specifying the extent</span>
+<span class="sd">        of the desired structure in each dimension.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    PeriodicStructure</span>
+<span class="sd">        The resulting structure.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the size is a tuple that is not of length equal to the lattice</span>
+<span class="sd">        dimension, a value error is thrown. In other words, you must specify</span>
+<span class="sd">        size along each dimension of the lattice.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">lattice</span><span class="o">.</span><span class="n">dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Desired structure dimensions, </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">, does not match &quot;</span>
+                <span class="s2">&quot;dimensionality of lattice: </span><span class="si">{self.lattice.dim}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="n">size</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lattice</span><span class="o">.</span><span class="n">dim</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">PeriodicStructure</span><span class="o">.</span><span class="n">build_from</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lattice</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">motif</span><span class="p">,</span> <span class="n">frac_coords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frac_coords</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 

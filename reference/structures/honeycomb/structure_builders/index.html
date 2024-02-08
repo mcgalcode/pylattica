@@ -1665,6 +1665,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pylattica.structures.honeycomb.structure_builders.HoneycombTilingBuilder" class="md-nav__link">
+    HoneycombTilingBuilder
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1851,6 +1858,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pylattica.structures.honeycomb.structure_builders.HoneycombTilingBuilder" class="md-nav__link">
+    HoneycombTilingBuilder
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1887,6 +1901,67 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pylattica.structures.honeycomb.structure_builders.HoneycombTilingBuilder" class="doc doc-heading">
+        <code>HoneycombTilingBuilder</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="pylattica.core.structure_builder.StructureBuilder" href="../../../core/structure_builder/#pylattica.core.structure_builder.StructureBuilder">StructureBuilder</a></code></p>
+
+  
+      <p>A helper class for generating honeycomb tiling structures.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>pylattica/structures/honeycomb/structure_builders.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HoneycombTilingBuilder</span><span class="p">(</span><span class="n">StructureBuilder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A helper class for generating honeycomb tiling structures.&quot;&quot;&quot;</span>
+
+    <span class="n">SITE_CLASS</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lattice</span> <span class="o">=</span> <span class="n">RhombohedralLattice</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frac_coords</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">motif</span> <span class="o">=</span> <span class="p">{</span><span class="n">HoneycombTilingBuilder</span><span class="o">.</span><span class="n">SITE_CLASS</span><span class="p">:</span> <span class="p">[(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)]}</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 

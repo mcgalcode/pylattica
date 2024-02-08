@@ -2766,7 +2766,7 @@ Location of 7:  (1.5, 2.5)
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Incidentally, this is the Von Neumann neighborhood:</p>
-<p><img alt="title" src="img/vnnbhood.png"/></p>
+<p><img alt="title" src="pylattica/guides/img/vnnbhood.png"/></p>
 <p>If we expand the distance cutoff to just over the square root of 2, we can get the Moore Neighborhood:</p>
 </div>
 </div>
@@ -2851,7 +2851,7 @@ Location of 17:  (3.5, 2.5)
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Shown here:</p>
-<p><img alt="title" src="img/moorenbhood.png"/></p>
+<p><img alt="title" src="../img/moorenbhood.png"/></p>
 </div>
 </div>
 </div>
@@ -2927,7 +2927,7 @@ Location of 17:  (3.5, 2.5)  and distance:  1.0
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="building-complex-neighborhoods">Building complex neighborhoods<a class="anchor-link" href="#building-complex-neighborhoods">¶</a></h2><p>Other simulations might call for other types of neighborhoods that are not given by a simple distance cutoff. Consider the following shape:</p>
-<p><img alt="title" src="img/othernbhood.png"/></p>
+<p><img alt="title" src="../img/othernbhood.png"/></p>
 <p>This neighborhood requires more information. This shape could be achieved by two of the built-in neighborhood types in pylattica.</p>
 <h3 id="using-the-annular-neighborhood">Using the Annular Neighborhood<a class="anchor-link" href="#using-the-annular-neighborhood">¶</a></h3><p>The first option is to use the <code>AnnularNeighborhoodBuilder</code>. This NB builder is similar to the <code>DistanceNeighborhoodBuilder</code> but instead of taking a single distance cutoff, it takes both a minimum and maximum distance.</p>
 </div>
@@ -3538,7 +3538,7 @@ non_periodic_nbhood = von_neumann_nb_builder.get(non_periodic_struct)</div>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>We will illustrate the behavior of this system by looking at corner and edge sites.</p>
 <h4 id="full-periodicity">Full Periodicity<a class="anchor-link" href="#full-periodicity">¶</a></h4><p>We expect the neighborhoods of edge and corner sites in the fully periodic system to look like this:</p>
-<p><img alt="full periodic edge" src="img/vn_edge_full_per.png"/> <img alt="full periodic corner" src="img/vn_cor_ful_per.png"/></p>
+<p><img alt="full periodic edge" src="../img/vn_edge_full_per.png"/> <img alt="full periodic corner" src="../img/vn_cor_ful_per.png"/></p>
 <p>To see that, lets get references to the edge site (coordinates [0.5, 1.5]) and the corner site (coordinates [0.5, 2.5]) and look at the number of their neighbors and the coordinates of their neighbors.</p>
 </div>
 </div>
@@ -3621,7 +3621,7 @@ Their coordinates are: [(0.5, 0.5), (1.5, 2.5), (0.5, 1.5), (2.5, 2.5)]
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h4 id="partial-periodicity">Partial Periodicity<a class="anchor-link" href="#partial-periodicity">¶</a></h4><p>In the partial periodic example, we expect these neighborhoods to look like this:</p>
-<p><img alt="partial periodic edge" src="img/vn_edge_non_per.png"/> <img alt="partial periodic corner" src="img/vn_cor_par_per.png"/></p>
+<p><img alt="partial periodic edge" src="../img/vn_edge_non_per.png"/> <img alt="partial periodic corner" src="../img/vn_cor_par_per.png"/></p>
 <p>Note that the neighborhood has not "rolled over" into the right side of the simulation box. Let's see the code for this.</p>
 </div>
 </div>
@@ -3698,7 +3698,7 @@ Their coordinates are: [(1.5, 2.5), (0.5, 0.5), (0.5, 1.5)]
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h4 id="non-periodic-system">Non-periodic System<a class="anchor-link" href="#non-periodic-system">¶</a></h4><p>In the system without any periodicity, we expect neighborhoods for these sites to look like so:</p>
-<p><img alt="non periodic edge" src="img/vn_edge_non_per.png"/> <img alt="non periodic corner" src="img/vn_cor_non_per.png"/></p>
+<p><img alt="non periodic edge" src="../img/vn_edge_non_per.png"/> <img alt="non periodic corner" src="../img/vn_cor_non_per.png"/></p>
 <p>Note that now the neighborhood does not roll over in either direction.</p>
 </div>
 </div>

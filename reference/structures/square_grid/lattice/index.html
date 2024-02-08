@@ -1521,6 +1521,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.lattice.SquareGridLattice2D" class="md-nav__link">
+    SquareGridLattice2D
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.lattice.SquareGridLattice3D" class="md-nav__link">
+    SquareGridLattice3D
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1851,6 +1865,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.lattice.SquareGridLattice2D" class="md-nav__link">
+    SquareGridLattice2D
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.lattice.SquareGridLattice3D" class="md-nav__link">
+    SquareGridLattice3D
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1887,6 +1915,116 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pylattica.structures.square_grid.lattice.SquareGridLattice2D" class="doc doc-heading">
+        <code>SquareGridLattice2D</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="pylattica.core.Lattice" href="../../../core/lattice/#pylattica.core.lattice.Lattice">Lattice</a></code></p>
+
+  
+      <p>A helper class for generating square 2D grid lattices.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>pylattica/structures/square_grid/lattice.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SquareGridLattice2D</span><span class="p">(</span><span class="n">Lattice</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A helper class for generating square 2D grid lattices.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">lattice_vecs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">lattice_vecs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pylattica.structures.square_grid.lattice.SquareGridLattice3D" class="doc doc-heading">
+        <code>SquareGridLattice3D</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="pylattica.core.Lattice" href="../../../core/lattice/#pylattica.core.lattice.Lattice">Lattice</a></code></p>
+
+  
+      <p>A helper class for generating square 3D grid lattices.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>pylattica/structures/square_grid/lattice.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SquareGridLattice3D</span><span class="p">(</span><span class="n">Lattice</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A helper class for generating square 3D grid lattices.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">lattice_vecs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">lattice_vecs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 

@@ -1501,6 +1501,66 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup" class="md-nav__link">
+    GrowthSetup
+  </a>
+  
+    <nav class="md-nav" aria-label="GrowthSetup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+    <nav class="md-nav" aria-label="__init__()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.__init__--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.grow" class="md-nav__link">
+    grow()
+  </a>
+  
+    <nav class="md-nav" aria-label="grow()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.grow--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.grow--returns" class="md-nav__link">
+    Returns
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1851,6 +1911,66 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup" class="md-nav__link">
+    GrowthSetup
+  </a>
+  
+    <nav class="md-nav" aria-label="GrowthSetup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+    <nav class="md-nav" aria-label="__init__()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.__init__--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.grow" class="md-nav__link">
+    grow()
+  </a>
+  
+    <nav class="md-nav" aria-label="grow()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.grow--parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pylattica.structures.square_grid.growth_setup.GrowthSetup.grow--returns" class="md-nav__link">
+    Returns
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1887,6 +2007,415 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="pylattica.structures.square_grid.growth_setup.GrowthSetup" class="doc doc-heading">
+        <code>GrowthSetup</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A class for generating simulation starting states by a growth + impingement algorithm.
+This algorithm can be summarized as follows:</p>
+<ol>
+<li>Random sites are selected in the strucure and assigned phases in the ratios
+specified.</li>
+<li>A simulation is run in which unassigned cells adopt the phase of their occupied
+neighbors, allowing particles to "grow" outward into unoccupied space until they
+impinge on one another.</li>
+</ol>
+
+
+        <details class="quote">
+          <summary>Source code in <code>pylattica/structures/square_grid/growth_setup.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GrowthSetup</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for generating simulation starting states by a growth + impingement algorithm.</span>
+<span class="sd">    This algorithm can be summarized as follows:</span>
+
+<span class="sd">    1. Random sites are selected in the strucure and assigned phases in the ratios</span>
+<span class="sd">    specified.</span>
+<span class="sd">    2. A simulation is run in which unassigned cells adopt the phase of their occupied</span>
+<span class="sd">    neighbors, allowing particles to &quot;grow&quot; outward into unoccupied space until they</span>
+<span class="sd">    impinge on one another.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_set</span><span class="p">:</span> <span class="n">PhaseSet</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates the GrowthSetup object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        phase_set : PhaseSet</span>
+<span class="sd">            The phases to be used in the growth process.</span>
+<span class="sd">        dim : int, optional</span>
+<span class="sd">            The dimension of the desired simulation., by default 2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span> <span class="o">=</span> <span class="n">phase_set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+
+    <span class="k">def</span> <span class="nf">grow</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_sites_desired</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">background_spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">nuc_amts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">nb_builder</span><span class="p">:</span> <span class="n">NeighborhoodBuilder</span><span class="p">,</span>
+        <span class="n">buffer</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the growth simulation and produces a starting state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        size : int</span>
+<span class="sd">            The size of the desired simulation.</span>
+<span class="sd">        num_sites_desired : int</span>
+<span class="sd">            The number of nucleation sites for growing particles.</span>
+<span class="sd">        background_spec : str</span>
+<span class="sd">            The background species.</span>
+<span class="sd">        nuc_amts : Dict[str, float]</span>
+<span class="sd">            A mapping of phase names to their relative desired amounts.</span>
+<span class="sd">        nb_builder : NeighborhoodBuilder</span>
+<span class="sd">            The NeighborhoodBuilder to use to identify the growth environment for</span>
+<span class="sd">            each particle.</span>
+<span class="sd">        buffer : int, optional</span>
+<span class="sd">            The minimum distance between seed sites, by default 2</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Simulation</span>
+<span class="sd">            The resulting Simulation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">setup</span> <span class="o">=</span> <span class="n">DiscreteGridSetup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+
+        <span class="n">simulation</span> <span class="o">=</span> <span class="n">setup</span><span class="o">.</span><span class="n">setup_random_sites</span><span class="p">(</span>
+            <span class="n">size</span><span class="p">,</span>
+            <span class="n">num_sites_desired</span><span class="o">=</span><span class="n">num_sites_desired</span><span class="p">,</span>
+            <span class="n">background_spec</span><span class="o">=</span><span class="n">background_spec</span><span class="p">,</span>
+            <span class="n">nuc_amts</span><span class="o">=</span><span class="n">nuc_amts</span><span class="p">,</span>
+            <span class="n">buffer</span><span class="o">=</span><span class="n">buffer</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">controller</span> <span class="o">=</span> <span class="n">GrowthController</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="p">,</span>
+            <span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
+            <span class="n">nb_builder</span><span class="o">=</span><span class="n">nb_builder</span><span class="p">,</span>
+            <span class="n">background_phase</span><span class="o">=</span><span class="n">background_spec</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">runner</span> <span class="o">=</span> <span class="n">SynchronousRunner</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">last_step</span><span class="p">,</span> <span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pylattica.structures.square_grid.growth_setup.GrowthSetup.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">phase_set</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Instantiates the GrowthSetup object.</p>
+<h5 id="pylattica.structures.square_grid.growth_setup.GrowthSetup.__init__--parameters">Parameters</h5>
+
+<details class="phase_set-">
+  <summary>PhaseSet</summary>
+  <p>The phases to be used in the growth process.</p>
+</details>
+<details class="dim-">
+  <summary>int, optional</summary>
+  <p>The dimension of the desired simulation., by default 2</p>
+</details>
+      <details class="quote">
+        <summary>Source code in <code>pylattica/structures/square_grid/growth_setup.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_set</span><span class="p">:</span> <span class="n">PhaseSet</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiates the GrowthSetup object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phase_set : PhaseSet</span>
+<span class="sd">        The phases to be used in the growth process.</span>
+<span class="sd">    dim : int, optional</span>
+<span class="sd">        The dimension of the desired simulation., by default 2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span> <span class="o">=</span> <span class="n">phase_set</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="pylattica.structures.square_grid.growth_setup.GrowthSetup.grow" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">grow</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">num_sites_desired</span><span class="p">,</span> <span class="n">background_spec</span><span class="p">,</span> <span class="n">nuc_amts</span><span class="p">,</span> <span class="n">nb_builder</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Runs the growth simulation and produces a starting state.</p>
+<h5 id="pylattica.structures.square_grid.growth_setup.GrowthSetup.grow--parameters">Parameters</h5>
+
+<details class="size-">
+  <summary>int</summary>
+  <p>The size of the desired simulation.</p>
+</details>
+<details class="num_sites_desired-">
+  <summary>int</summary>
+  <p>The number of nucleation sites for growing particles.</p>
+</details>
+<details class="background_spec-">
+  <summary>str</summary>
+  <p>The background species.</p>
+</details>
+<details class="nuc_amts-">
+  <summary>Dict[str, float]</summary>
+  <p>A mapping of phase names to their relative desired amounts.</p>
+</details>
+<details class="nb_builder-">
+  <summary>NeighborhoodBuilder</summary>
+  <p>The NeighborhoodBuilder to use to identify the growth environment for
+each particle.</p>
+</details>
+<details class="buffer-">
+  <summary>int, optional</summary>
+  <p>The minimum distance between seed sites, by default 2</p>
+</details>      <h5 id="pylattica.structures.square_grid.growth_setup.GrowthSetup.grow--returns">Returns</h5>
+<p>Simulation
+    The resulting Simulation.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>pylattica/structures/square_grid/growth_setup.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">grow</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">num_sites_desired</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">background_spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">nuc_amts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">nb_builder</span><span class="p">:</span> <span class="n">NeighborhoodBuilder</span><span class="p">,</span>
+    <span class="n">buffer</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Simulation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs the growth simulation and produces a starting state.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    size : int</span>
+<span class="sd">        The size of the desired simulation.</span>
+<span class="sd">    num_sites_desired : int</span>
+<span class="sd">        The number of nucleation sites for growing particles.</span>
+<span class="sd">    background_spec : str</span>
+<span class="sd">        The background species.</span>
+<span class="sd">    nuc_amts : Dict[str, float]</span>
+<span class="sd">        A mapping of phase names to their relative desired amounts.</span>
+<span class="sd">    nb_builder : NeighborhoodBuilder</span>
+<span class="sd">        The NeighborhoodBuilder to use to identify the growth environment for</span>
+<span class="sd">        each particle.</span>
+<span class="sd">    buffer : int, optional</span>
+<span class="sd">        The minimum distance between seed sites, by default 2</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Simulation</span>
+<span class="sd">        The resulting Simulation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">setup</span> <span class="o">=</span> <span class="n">DiscreteGridSetup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+
+    <span class="n">simulation</span> <span class="o">=</span> <span class="n">setup</span><span class="o">.</span><span class="n">setup_random_sites</span><span class="p">(</span>
+        <span class="n">size</span><span class="p">,</span>
+        <span class="n">num_sites_desired</span><span class="o">=</span><span class="n">num_sites_desired</span><span class="p">,</span>
+        <span class="n">background_spec</span><span class="o">=</span><span class="n">background_spec</span><span class="p">,</span>
+        <span class="n">nuc_amts</span><span class="o">=</span><span class="n">nuc_amts</span><span class="p">,</span>
+        <span class="n">buffer</span><span class="o">=</span><span class="n">buffer</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">controller</span> <span class="o">=</span> <span class="n">GrowthController</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="p">,</span>
+        <span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
+        <span class="n">nb_builder</span><span class="o">=</span><span class="n">nb_builder</span><span class="p">,</span>
+        <span class="n">background_phase</span><span class="o">=</span><span class="n">background_spec</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">runner</span> <span class="o">=</span> <span class="n">SynchronousRunner</span><span class="p">(</span><span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">last_step</span><span class="p">,</span> <span class="n">simulation</span><span class="o">.</span><span class="n">structure</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 
