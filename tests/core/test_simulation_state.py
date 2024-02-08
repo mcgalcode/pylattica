@@ -42,3 +42,17 @@ def test_batch_update():
 
     assert state.get_site_state(1)["a"] == 3
     assert state.get_site_state(2)["b"] == 4
+
+def test_states_equal():
+    state1 = SimulationState()
+    state2 = SimulationState()
+
+    updates = {
+        1: { "a": 3 },
+        2: { "b": 4 }
+    }
+    
+    state1.batch_update(updates)
+    state2.batch_update(updates)
+
+    assert state1 == state2
