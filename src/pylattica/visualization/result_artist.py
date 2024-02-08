@@ -131,5 +131,6 @@ class ResultArtist:
         for fname in img_names:
             os.remove(fname)
 
+
 def _get_img_parallel(step, step_kwargs):
     return _dsr_globals["artist"].get_img(step, **step_kwargs)
