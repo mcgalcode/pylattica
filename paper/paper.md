@@ -29,7 +29,7 @@ bibliography: paper.bib
 
 # Statement of need
 
-Cellular automata [@bays_introduction_2010], lattice-gas automata [@boghosian_lattice_1999], and atomistic Monte Carlo models [@andersen_practical_2019] are all simulations in which a system, represented by an arrangement of connected sites, evolves over time according to an update rule which determines the future state of a site by considering its current state and the state of its neighbors. For example, in the classic "Game of Life" cellular automaton [@gardner_mathematical_1970], sites in a 2D square grid switch between "dead" and "alive" during each timestep based on the number of living neighbors surrounding them. In lattice Monte Carlo simulations for vacancy diffusion in crystalline solid materials, atoms move between neighboring sites at rates partially determined by the occupancy of their neighbors [@haley_vacancy_2006].
+Cellular automata [@bays_introduction_2010], lattice-gas automata [@boghosian_lattice_1999], and atomistic Monte Carlo models [@andersen_practical_2019] are all simulations in which a system, represented by an arrangement of connected sites, evolves over time according to an update rule which determines the future state of a site by considering its current state and the state of each of its neighbors. For example, in the classic "Game of Life" cellular automaton [@gardner_mathematical_1970], sites in a 2D square grid switch between "dead" and "alive" during each timestep based on the number of living neighbors surrounding them. In lattice Monte Carlo simulations for vacancy diffusion in crystalline solid materials, atoms move between neighboring sites at rates partially determined by the occupancy of their neighbors [@haley_vacancy_2006].
 
 These simulation classes have been implemented many times in various programming languages for a range of applications [@andersen_practical_2019; @raabe_cellular_2002]. However, these implementations typically focus on tuning an existing simulation form within a relatively narrow range of focus. For instance, `CellPyLib` [@antunes_cellpylib_2023], `netomaton` [@antunes_netomaton_2019], and `cellular_automaton` [@feistenauer_cellular_automaton_2021] are all libraries for simulating cellular automata, but they each are limited in the simulation geometry, the data type for the simulation state, the geometry of the neighborhood, or the strategy for applying the update rule. Similarly, `lattice_mc` [@Morgan2017] is an excellent Monte Carlo program that focuses solely on diffusion in ionic solids. While `KMCLib` [@leetmaa_kmclib_2014] is a more generic alternative, it is still (appropriately) limited in the form of the state and the update rule.
 
@@ -53,15 +53,13 @@ Of these three entities, only a `SimulationState` is required to run a simulatio
 
 ## Constructing Neighborhoods
 
-`pylattica` supports two and three dimensional square grid simulation structures out of the box (though any simulation structure can be created), and provides convenience methods for building them. Additionally, it provides a number of `NeighborhoodBuilder` classes which encode methods for specifying site neighbors in `Structure`s. Support for the following neighborhood types is provided:
+`pylattica` supports two and three dimensional square grid simulation structures out of the box (though any simulation structure can be created), and provides convenience methods for building them. Additionally, it provides a number of `NeighborhoodBuilder` classes which encode methods for specifying site neighbors in `Structure`s. The two most flexible `NeighborhoodBuilder` classes are the `DistanceNeighborhoodBuilder` and the `MotifNeighborhoodBuilder`. Using the `DistanceNeighborhoodBuilder`, the neighbors of a site are defined as all other sites falling within a particular cutoff distance. Using the `MotifNeighborhoodBuilder`, the locations of a site's neighbors are specified by providing a list of offset vectors from that site (one for each neighbor). While these two classes can be used to construct practically any neighborhood, builder classes for the following common neighborhoods are also provided:
 
 - Moore (square grid) [@packard_two-dimensional_1985]
 - Von Neumann (square grid) [@packard_two-dimensional_1985]
 - Pseudopentagonal (square grid) [@sieradzki_perceptive_2013]
 - Pseudohexagonal (square grid) [@sieradzki_perceptive_2013]
-- Circular (arbitrary structure)
 - Annular (arbitrary structure)
-- Motif-based (arbitrary structure)
 
 ## Simulation Execution
 
