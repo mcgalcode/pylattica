@@ -276,23 +276,6 @@
   
 
       
-        
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../../../CHANGELOG.md" class="md-tabs__link">
-        
-  
-    
-  
-  CHANGELOG
-
-      </a>
-    </li>
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -2139,25 +2122,6 @@
   
 
     
-      
-      
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../CHANGELOG.md" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    CHANGELOG
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -2641,7 +2605,7 @@ is specified by a minimum (inner radius) and maximum (outer radius) distance.</p
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inner_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">outer_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates a DistanceNeighborhoodBuilder</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates an AnnularNeighborhoodBuilder</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -2707,7 +2671,7 @@ is specified by a minimum (inner radius) and maximum (outer radius) distance.</p
 
   <div class="doc doc-contents ">
   
-      <p>Instantiates a DistanceNeighborhoodBuilder</p>
+      <p>Instantiates an AnnularNeighborhoodBuilder</p>
 <h5 id="pylattica.core.neighborhood_builders.AnnularNeighborhoodBuilder.__init__--parameters">Parameters</h5>
 
 <details class="inner_radius-">
@@ -2732,7 +2696,7 @@ is specified by a minimum (inner radius) and maximum (outer radius) distance.</p
 <span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inner_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">outer_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiates a DistanceNeighborhoodBuilder</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiates an AnnularNeighborhoodBuilder</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3128,18 +3092,19 @@ site is connected to two other A sites, one offset by 1 unit in each of the posi
 and negative x directions. Each A site is also connected to two B sites, one offset
 by one unit in each of the positive and negative y directions, then the spec
 parameter for this arrangement would look as follows.</p>
-<p>{
-    "A": [
+<div class="highlight"><pre><span></span><code>{
+    &quot;A&quot;: [
         [0, 1],
         [1, 0],
         [0, -1],
         [-1, 0],
     ],
-    "B": [
+    &quot;B&quot;: [
         [0, 1],
         [0, -1],
     ]
-}</p>
+}
+</code></pre></div>
 <p>Note that there is reciprocity here between the A and B sites. The A sites
 list B sites as their neighbors, and the B sites list A sites as their neighbors.</p>
 
@@ -3208,7 +3173,9 @@ list B sites as their neighbors, and the B sites list A sites as their neighbors
 <span class="normal">246</span>
 <span class="normal">247</span>
 <span class="normal">248</span>
-<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MotifNeighborhoodBuilder</span><span class="p">(</span><span class="n">NeighborhoodBuilder</span><span class="p">):</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MotifNeighborhoodBuilder</span><span class="p">(</span><span class="n">NeighborhoodBuilder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This NeighborhoodBuilder constructs NeighborGraphs with connections between</span>
 <span class="sd">    points that are separated by one of a set of specific offset vectors.</span>
 
@@ -3218,6 +3185,7 @@ list B sites as their neighbors, and the B sites list A sites as their neighbors
 <span class="sd">    by one unit in each of the positive and negative y directions, then the spec</span>
 <span class="sd">    parameter for this arrangement would look as follows.</span>
 
+<span class="sd">    ```</span>
 <span class="sd">    {</span>
 <span class="sd">        &quot;A&quot;: [</span>
 <span class="sd">            [0, 1],</span>
@@ -3230,6 +3198,7 @@ list B sites as their neighbors, and the B sites list A sites as their neighbors
 <span class="sd">            [0, -1],</span>
 <span class="sd">        ]</span>
 <span class="sd">    }</span>
+<span class="sd">    ```</span>
 
 <span class="sd">    Note that there is reciprocity here between the A and B sites. The A sites</span>
 <span class="sd">    list B sites as their neighbors, and the B sites list A sites as their neighbors.</span>
@@ -3308,9 +3277,7 @@ the docstring for the class.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>pylattica/core/neighborhood_builders.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
 <span class="normal">217</span>
 <span class="normal">218</span>
 <span class="normal">219</span>
@@ -3319,7 +3286,9 @@ the docstring for the class.</p>
 <span class="normal">222</span>
 <span class="normal">223</span>
 <span class="normal">224</span>
-<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motif</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]):</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motif</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiates the MotifNeighborhoodBuilder by a motif as described in</span>
 <span class="sd">    the docstring for the class.</span>
 
@@ -3362,9 +3331,7 @@ according to the motif.</p>
 
       <details class="quote">
         <summary>Source code in <code>pylattica/core/neighborhood_builders.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">229</span>
 <span class="normal">230</span>
 <span class="normal">231</span>
 <span class="normal">232</span>
@@ -3384,7 +3351,9 @@ according to the motif.</p>
 <span class="normal">246</span>
 <span class="normal">247</span>
 <span class="normal">248</span>
-<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curr_site</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">struct</span><span class="p">:</span> <span class="n">PeriodicStructure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curr_site</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">struct</span><span class="p">:</span> <span class="n">PeriodicStructure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a structure, constructs a NeighborGraph with site connections</span>
 <span class="sd">    according to the motif.</span>
 
@@ -3673,9 +3642,7 @@ of the class of that site.</p>
 
         <details class="quote">
           <summary>Source code in <code>pylattica/core/neighborhood_builders.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
 <span class="normal">255</span>
 <span class="normal">256</span>
 <span class="normal">257</span>
@@ -3707,7 +3674,9 @@ of the class of that site.</p>
 <span class="normal">283</span>
 <span class="normal">284</span>
 <span class="normal">285</span>
-<span class="normal">286</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SiteClassNeighborhoodBuilder</span><span class="p">(</span><span class="n">NeighborhoodBuilder</span><span class="p">):</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SiteClassNeighborhoodBuilder</span><span class="p">(</span><span class="n">NeighborhoodBuilder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class which constructs the neighborhood of each site as a function</span>
 <span class="sd">    of the class of that site.&quot;&quot;&quot;</span>
 
@@ -3779,16 +3748,16 @@ specify what neighborhood that class of sites should have.</p>
 </details>
       <details class="quote">
         <summary>Source code in <code>pylattica/core/neighborhood_builders.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">258</span>
 <span class="normal">259</span>
 <span class="normal">260</span>
 <span class="normal">261</span>
 <span class="normal">262</span>
 <span class="normal">263</span>
 <span class="normal">264</span>
-<span class="normal">265</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_builders</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NeighborhoodBuilder</span><span class="p">]):</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_builders</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NeighborhoodBuilder</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiates the SiteClassNeighborhoodBuilder.</span>
 
 <span class="sd">    Parameters</span>
@@ -3829,9 +3798,7 @@ structure, conditional on the class of each site.</p>
 
       <details class="quote">
         <summary>Source code in <code>pylattica/core/neighborhood_builders.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
 <span class="normal">270</span>
 <span class="normal">271</span>
 <span class="normal">272</span>
@@ -3848,7 +3815,9 @@ structure, conditional on the class of each site.</p>
 <span class="normal">283</span>
 <span class="normal">284</span>
 <span class="normal">285</span>
-<span class="normal">286</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct</span><span class="p">:</span> <span class="n">PeriodicStructure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Neighborhood</span><span class="p">:</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct</span><span class="p">:</span> <span class="n">PeriodicStructure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Neighborhood</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Constructs the neighborhood of every site in the provided</span>
 <span class="sd">    structure, conditional on the class of each site.</span>
 
