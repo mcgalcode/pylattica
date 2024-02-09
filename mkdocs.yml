@@ -60,7 +60,6 @@ nav:
       - SquareGridArtist2D: reference/visualization/square_grid_artist_2D.md
       - SquareGridArtist3D: reference/visualization/square_grid_artist_3D.md
       - ResultArtist: reference/visualization/result_artist.md
-  - CHANGELOG: ../CHANGELOG.md
 
 repo_url: https://github.com/mcgalcode/pylattica/
 repo_name: Github
