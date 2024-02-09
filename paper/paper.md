@@ -41,7 +41,7 @@ Because `pylattica` is focused on enabling fast iteration on simulation features
 
 ## Simulation representation
 
-In lattice models, a system is represented by a network of connected sites, frequently a two or three dimensional square grid, with some state value assigned to each site. In `pylattica`, this representation is accomplished by the combination of three entities, which separate the dominant concerns (illustrated schematically in \autoref{fig_1}):
+In lattice models, a system is represented by a network of connected sites, frequently a two or three dimensional square grid, with some state value assigned to each site. In `pylattica`, this representation is accomplished by the combination of three entities, which separate the dominant concerns (illustrated schematically in \autoref{fig_2}):
 
 - A `Structure`, which enumerates the sites and their physical locations with no limitations on periodicity or dimensionality
 - A `SimulationState`, which acts as an index of sites and stores the state of each site as an arbitrary key-value mapping
@@ -49,7 +49,7 @@ In lattice models, a system is represented by a network of connected sites, freq
 
 Of these three entities, only a `SimulationState` is required to run a simulation. The user can freely utilize `Structure`s and `Neighborhood`s as required by their use case in the preparation or evolution of the system.
 
-![\label{fig_1}Schematic showing an example state, a structure labeled with site IDs, and a possible  neighborhood for site 13 in a simulation with a two dimensional grid structure.](./composite.png)
+![\label{fig_2}Schematic showing an example state, a structure labeled with site IDs, and a possible  neighborhood for site 13 in a simulation with a two dimensional grid structure.](./composite.png)
 
 ## Constructing Neighborhoods
 
@@ -72,14 +72,20 @@ The simulation is evolved by providing the `Controller` and a desired number of 
 
 The result of a simulation run is an instance of `SimulationResult`, which stores the state at every step in the simulation as a list of `SimulationState`s. It can be easily serialized for storage on a filesystem or a document store, like MongoDB.
 
+## Overview
+
+![\label{fig_1}Diagram showing relationships between `pylattica` entities.](./flowchart.png)
+
+\autoref{fig_1} shows the relationship between the entities discussed so far, and how they are connected in producing a `SimulationResult`. To summarize, a `Lattice` is used to create a `Structure`, which is paired with an initial `SimulationState` to create a `Simulation`, or the starting point for simulation execution. The `Structure` is also fed to a `NeighborhoodBuilder` to construct a `Neighborhood` object, which is used in the update rule implemented by the `Controller` to determine how the simulation evolves. Finally, the `Simulation` and `Controller` are passed to a `Runner`, which applies the update rule repeatedly, producing a series of `SimulationState`s, which are concatenated to form a `SimulationResult`.
+
 
 ## Visualization and Analysis
 
-![\label{fig_2} Example visualizations of two and three dimensional square grid simulation states.](./vizeg.png)
+![\label{fig_3} Example visualizations of two and three dimensional square grid simulation states.](./vizeg.png)
 
 `pylattica` provides basic utilities for analyzing the state of the simulation. These tools provide functionality for filtering and counting sites in a `SimulationState` by arbitrary criteria (implemented as a function of the site’s state). Further specialized support is provided for simulation states in which the state of each site is a single discrete label (as is the case in traditional cellular automata).
 
-In the case of simulations with two- and three-dimensional square grid structures, `pylattica` provides visualization tools which convert `SimulationState`s into PNG images (as shown in \autoref{fig_2}) and `SimulationResult`s into animated GIFs.
+In the case of simulations with two- and three-dimensional square grid structures, `pylattica` provides visualization tools which convert `SimulationState`s into PNG images (as shown in \autoref{fig_3}) and `SimulationResult`s into animated GIFs.
 
 ## Crystal Structure Support and pymatgen
 
