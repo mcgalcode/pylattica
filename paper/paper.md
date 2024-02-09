@@ -35,7 +35,7 @@ These simulation classes have been implemented many times in various programming
 
 The goal of `pylattica` is to synthesize the essential elements of these valuable simulation classes into a flexible and user-friendly framework for developing lattice models that do not fit neatly into the target use case of one of the existing packages. It accomplishes this by providing implementations of common lattice model features (e.g. various neighborhoods, methods for applying evolution rules, simulation structures, and analysis tools) while remaining unopinionated with regard to the ways these pieces are used in new models. It is implemented in python to maximize accessibility and interoperability with other scientific software tools, in particular, `pymatgen`, a package containing utilities for analysis in materials science [@ong_python_2013].
 
-Because `pylattica` is particularly focused on enabling fast iteration on simulation features during development, it prioritizes flexibility and application agnosticism over performance. Therefore, it is most appropriately used in cases when the developer needs to prototype and experiment with various forms of their model, or in cases when performance is not of the utmost importance.
+Because `pylattica` is focused on enabling fast iteration on simulation features during development, it prioritizes flexibility and application agnosticism over performance. Therefore, it is better suited for cases in which the developer needs to prototype and experiment with various forms of their simulation as opposed to honing in a hardened production model.
 
 # Package Overview
 
@@ -83,7 +83,7 @@ In the case of simulations with two- and three-dimensional square grid structure
 
 ## Crystal Structure Support and pymatgen
 
-`pylattica` was developed with simulations of crystalline materials in mind. As a result, it supports simulation `Structure`s defined with periodic boundaries and lattices with arbitrarily shaped unit cells. These structures are implemented using a `Lattice` class which uses functionality from `pymatgen` to convert coordinates between the basis of the lattice and the Cartesian basis. In service of developing simulations of real crystalline materials, `pylattica` also provides utility functions for defining neighborhoods in periodic space based on displacement motifs (e.g. octahedral or tetrahedral neighbors) and supports converting `pymatgen.Structure` objects to `pylattica` `Structure`s. This feature is intended to enable more seamless integration with existing materials science workflows.
+`pylattica` was developed with simulations of crystalline materials in mind. As a result, it supports simulation `Structure`s defined with periodic boundaries and lattices with arbitrarily shaped unit cells. These `Structure`s are supported by a `Lattice` class with functionality which was cloned from `pymatgen` and then adjusted to the needs of `pylattica`, primarily because `pymatgen`'s implementation is hard-coded to use 3-dimensions, while `pylattica` strives for generality and enforces no such constraint. In service of developing simulations of real crystalline materials, `pylattica` also provides utility functions for defining neighborhoods in periodic space based on displacement motifs (e.g. octahedral or tetrahedral neighbors) and supports converting `pymatgen.Structure` objects to `pylattica` `Structure`s. This feature is intended to enable more seamless integration with existing materials science workflows.
 
 # Acknowledgments
 
