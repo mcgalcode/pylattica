@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "setuptools-git-versioning"]
+requires = ["setuptools>=61", "wheel", "setuptools-git-versioning"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -15,7 +15,7 @@ keywords = [
     "materials",
 ]
 
-license = { text = "modified BSD" }
+license = { text = "MIT" }
 authors = [{ name = "Max Gallant", email = "maxg@lbl.gov" }]
 dynamic = ["version"]
 classifiers = [
