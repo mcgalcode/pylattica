@@ -74,7 +74,7 @@ The result of a simulation run is an instance of `SimulationResult`, which store
 
 ## Overview
 
-![\label{fig_1}Diagram showing relationships between `pylattica` entities.](./flowchart.png)
+![\label{fig_1}Diagram showing relationships between `pylattica` entities.](./flowchart.png){width=1080}
 
 \autoref{fig_1} shows the relationship between the entities discussed so far, and how they are connected in producing a `SimulationResult`. To summarize, a `Lattice` is used to create a `Structure`, which is paired with an initial `SimulationState` to create a `Simulation`, or the starting point for simulation execution. The `Structure` is also fed to a `NeighborhoodBuilder` to construct a `Neighborhood` object, which is used in the update rule implemented by the `Controller` to determine how the simulation evolves. Finally, the `Simulation` and `Controller` are passed to a `Runner`, which applies the update rule repeatedly, producing a series of `SimulationState`s, which are concatenated to form a `SimulationResult`.
 

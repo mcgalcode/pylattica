@@ -50,6 +50,21 @@ class DiscreteGridSetup:
             state.set_site_state(site[SITE_ID], {DISCRETE_OCCUPANCY: fill})
         return state
 
+    def build_structure(self, size: int) -> PeriodicStructure:
+        """Constructs a structure without a state of the specified size
+
+        Parameters
+        ----------
+        size : int
+            The size of the structure to build
+
+        Returns
+        -------
+        PeriodicStructure
+            The resulting structure.
+        """
+        return self._builder.build(size)
+
     def setup_solid_phase(
         self, structure: PeriodicStructure, phase_name: str
     ) -> SimulationState:
