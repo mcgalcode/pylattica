@@ -113,7 +113,7 @@ class PeriodicStructure:
         self.lattice = lattice
         self.dim = lattice.dim
         self._sites = {}
-        self.site_ids = []
+        self._site_ids = []
         self._location_lookup = {}
         self._offset_vector = np.array([VEC_OFFSET for _ in range(self.dim)])
 
@@ -126,6 +126,10 @@ class PeriodicStructure:
             "lattice": self.lattice.as_dict(),
             "_sites": copied,
         }
+    
+    @property
+    def site_ids(self):
+        return copy.copy(self._site_ids)
 
     @classmethod
     def from_dict(cls, d):
@@ -182,7 +186,7 @@ class PeriodicStructure:
         }
 
         self._location_lookup[offset_periodized_coords] = new_site_id
-        self.site_ids.append(new_site_id)
+        self._site_ids.append(new_site_id)
         return new_site_id
 
     def site_at(self, location: Tuple[float]) -> Dict:
