@@ -126,7 +126,7 @@ class PeriodicStructure:
             "lattice": self.lattice.as_dict(),
             "_sites": copied,
         }
-    
+
     @property
     def site_ids(self):
         return copy.copy(self._site_ids)
