@@ -77,12 +77,7 @@ class ResultArtist:
             step, label=label, cell_size=cell_size
         )  # pragma: no cover
 
-    def jupyter_play(
-        self,
-        cell_size: int = 20,
-        wait: int = 1,
-        **kwargs
-    ):
+    def jupyter_play(self, cell_size: int = 20, wait: int = 1, **kwargs):
         """In a jupyter notebook environment, plays the simulation visualization back by showing a
         series of images with {wait} seconds between each one.
 

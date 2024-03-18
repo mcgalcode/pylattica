@@ -86,6 +86,7 @@ class AsynchronousRunner(Runner):
             state_updates = merge_updates(state_updates, site_id=site_id)
             live_state.batch_update(state_updates)
             site_queue.extend(next_sites)
+
             result.add_step(state_updates)
 
             if len(site_queue) == 0:
