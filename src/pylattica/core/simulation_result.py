@@ -5,6 +5,7 @@ from typing import Dict, List
 from monty.serialization import dumpfn, loadfn
 import datetime
 from .simulation_state import SimulationState
+from .constants import GENERAL, SITES
 
 
 class SimulationResult:
@@ -25,8 +26,12 @@ class SimulationResult:
         diffs = res_dict["diffs"]
         res = cls(SimulationState.from_dict(res_dict["initial_state"]))
         for diff in diffs:
-            formatted = {int(k): v for k, v in diff.items() if k != "GENERAL"}
-            res.add_step(formatted)
+            if SITES in diff:
+                diff[SITES] = { int(k): v for k, v in diff[SITES].items() }
+            if GENERAL not in diff and SITES not in diff:
+                diff = { int(k): v for k, v in diff.items() }
+            res.add_step(diff)
+
         return res
 
     def __init__(self, starting_state: SimulationState):
