@@ -81,6 +81,7 @@ class ResultArtist:
         self,
         cell_size: int = 20,
         wait: int = 1,
+        **kwargs
     ):
         """In a jupyter notebook environment, plays the simulation visualization back by showing a
         series of images with {wait} seconds between each one.
@@ -94,7 +95,7 @@ class ResultArtist:
         """
         from IPython.display import clear_output, display  # pragma: no cover
 
-        imgs = self._get_images(cell_size=cell_size)  # pragma: no cover
+        imgs = self._get_images(cell_size=cell_size, **kwargs)  # pragma: no cover
         for img in imgs:  # pragma: no cover
             clear_output()  # pragma: no cover
             display(img)  # pragma: no cover
