@@ -2,19 +2,24 @@ from pylattica.core import SynchronousRunner, BasicController
 from pylattica.core.simulation_state import SimulationState
 from pylattica.discrete import PhaseSet
 from pylattica.structures.square_grid.grid_setup import DiscreteGridSetup
-from pylattica.visualization import SquareGridArtist2D, SquareGridArtist3D, ResultArtist, DiscreteCellArtist
+from pylattica.visualization import (
+    SquareGridArtist2D,
+    SquareGridArtist3D,
+    ResultArtist,
+    DiscreteCellArtist,
+)
 from pylattica.models.game_of_life import Life, GameOfLifeController
 from pylattica.discrete.state_constants import DISCRETE_OCCUPANCY
 
 import os
 import random
 
+
 def test_step_artist():
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases)
     simulation = setup.setup_noise(10, ["dead", "alive"])
-    controller = GameOfLifeController(structure = simulation.structure,
-                                      variant=Life)
+    controller = GameOfLifeController(structure=simulation.structure, variant=Life)
     runner = SynchronousRunner(parallel=False)
     result = runner.run(simulation.state, controller, 10, verbose=False)
     cell_artist = DiscreteCellArtist.from_discrete_state(result.last_step)
@@ -23,12 +28,12 @@ def test_step_artist():
     artist.save_img(result.last_step, "tmp.png")
     os.remove("tmp.png")
 
+
 def test_result_artist():
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases)
     simulation = setup.setup_noise(10, ["dead", "alive"])
-    controller = GameOfLifeController(structure = simulation.structure,
-                                      variant=Life)
+    controller = GameOfLifeController(structure=simulation.structure, variant=Life)
     runner = SynchronousRunner(parallel=False)
     result = runner.run(simulation.state, controller, 10, verbose=False)
     cell_artist = DiscreteCellArtist.from_discrete_result(result)
@@ -38,16 +43,14 @@ def test_result_artist():
     result_artist.to_gif("out.gif", cell_size=5)
     os.remove("out.gif")
 
+
 def test_step_artist_3D():
-
     class SimpleController(BasicController):
-
         def __init__(self):
             pass
 
         def get_state_update(self, site_id: int, prev_state: SimulationState):
-            return { DISCRETE_OCCUPANCY: random.choice(["dead", "alive"])}
-
+            return {DISCRETE_OCCUPANCY: random.choice(["dead", "alive"])}
 
     phases = PhaseSet(["dead", "alive"])
     setup = DiscreteGridSetup(phases, dim=3)
