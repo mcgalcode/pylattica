@@ -15,9 +15,9 @@ authors:
     orcid: 0000-0003-2495-5509
     affiliation: "1, 2"
 affiliations:
- - name: Lawrence Berkeley National Laboratory; Berkeley, California, United States of America
+ - name: Materials Sciences Division, Lawrence Berkeley National Laboratory, Berkeley, California, United States of America
    index: 1
- - name: University of California, Berkeley; Berkeley, California, United States of America
+ - name: Department of Materials Science and Engineering, University of California, Berkeley, California, United States of America
    index: 2
 date: 23 October 2023
 bibliography: paper.bib
