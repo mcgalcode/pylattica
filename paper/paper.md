@@ -15,9 +15,9 @@ authors:
     orcid: 0000-0003-2495-5509
     affiliation: "1, 2"
 affiliations:
- - name: Lawrence Berkeley National Laboratory, U.S.A.
+ - name: Lawrence Berkeley National Laboratory; Berkeley, California, United States of America
    index: 1
- - name: University of California, Berkeley, U.S.A.
+ - name: University of California, Berkeley; Berkeley, California, United States of America
    index: 2
 date: 23 October 2023
 bibliography: paper.bib
