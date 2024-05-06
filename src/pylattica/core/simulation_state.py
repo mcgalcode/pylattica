@@ -100,7 +100,7 @@ class SimulationState:
         """
         return self._state[SITES].get(site_id)
 
-    def get_general_state(self, key: str = None) -> Dict:
+    def get_general_state(self, key: str = None, default = None) -> Dict:
         """Returns the general state.
 
         Returns
@@ -111,7 +111,7 @@ class SimulationState:
         if key is None:
             return copy.deepcopy(self._state.get(GENERAL))
         else:
-            return copy.deepcopy(self._state.get(GENERAL)).get(key)
+            return copy.deepcopy(self._state.get(GENERAL)).get(key, default)
 
     def set_general_state(self, updates: Dict) -> None:
         """Updates the general state with the keys and values provided by the updates parameter.
@@ -177,6 +177,9 @@ class SimulationState:
             The copy of this SimulationState
         """
         return SimulationState(self._state)
+    
+    def as_state_update(self) -> Dict:
+        return copy.deepcopy(self._state)
 
     def __eq__(self, other: SimulationState) -> bool:
         return self._state == other._state

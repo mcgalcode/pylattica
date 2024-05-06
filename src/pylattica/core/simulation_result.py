@@ -7,6 +7,8 @@ import datetime
 from .simulation_state import SimulationState
 from .constants import GENERAL, SITES
 
+import copy
+
 
 class SimulationResult:
     """A class that stores the result of running a simulation.
@@ -24,7 +26,8 @@ class SimulationResult:
     @classmethod
     def from_dict(cls, res_dict):
         diffs = res_dict["diffs"]
-        res = cls(SimulationState.from_dict(res_dict["initial_state"]))
+        compress_freq = res_dict.get("compress_freq", 1)
+        res = cls(SimulationState.from_dict(res_dict["initial_state"]), compress_freq=compress_freq)
         for diff in diffs:
             if SITES in diff:
                 diff[SITES] = { int(k): v for k, v in diff[SITES].items() }
@@ -34,7 +37,7 @@ class SimulationResult:
 
         return res
 
-    def __init__(self, starting_state: SimulationState):
+    def __init__(self, starting_state: SimulationState, compress_freq: int = 1):
         """Initializes a SimulationResult with the specified starting_state.
 
         Parameters
@@ -43,6 +46,7 @@ class SimulationResult:
             The state with which the simulation started.
         """
         self.initial_state = starting_state
+        self.compress_freq = compress_freq
         self._diffs: list[dict] = []
         self._stored_states = {}
 
@@ -64,6 +68,10 @@ class SimulationResult:
             The changes associated with a new simulation step.
         """
         self._diffs.append(updates)
+
+    @property
+    def original_length(self) -> int:
+        return int(len(self) * self.compress_freq)
 
     def __len__(self) -> int:
         return len(self._diffs) + 1
@@ -125,6 +133,9 @@ class SimulationResult:
             The simulation state at the requested step.
         """
 
+        # if step_no % self.compress_freq != 0:
+        #     raise ValueError(f"Cannot retrieve step no {step_no} because this result has been compressed with sampling frequency {self.compress_freq}")
+
         stored = self._stored_states.get(step_no)
         if stored is not None:
             return stored
@@ -138,6 +149,7 @@ class SimulationResult:
         return {
             "initial_state": self.initial_state.as_dict(),
             "diffs": self._diffs,
+            "compress_freq": self.compress_freq,
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
         }
@@ -157,3 +169,31 @@ class SimulationResult:
 
         dumpfn(self, fpath)
         return fpath
+
+
+def compress_result(result: SimulationResult, num_steps: int):
+    i_state = result.first_step
+    # total steps is the actual number of diffs stored, not the number of original simulation steps taken
+    total_steps = len(result)
+    if num_steps >= total_steps:
+        raise ValueError(f"Cannot upsample SimulationResult of length {total_steps} to size {num_steps}.")
+    
+    exact_sample_freq = total_steps / (num_steps)
+    # print(total_steps, current_sample_freq)
+    total_compress_freq = exact_sample_freq * result.compress_freq
+    compressed_result = SimulationResult(i_state, compress_freq=total_compress_freq)
+
+    live_state = SimulationState(copy.deepcopy(i_state._state))
+    added = 0
+    next_sample_step = exact_sample_freq
+    for i, diff in enumerate(result._diffs):
+        curr_step = i + 1
+        live_state.batch_update(diff)
+        # if curr_step % current_sample_freq == 0:
+        if curr_step > next_sample_step:
+            # print(curr_step)
+            added += 1
+            compressed_result.add_step(live_state.as_state_update())
+            next_sample_step += exact_sample_freq
+    return compressed_result
+        
