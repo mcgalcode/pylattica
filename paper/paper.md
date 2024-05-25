@@ -93,4 +93,6 @@ In the case of simulations with two- and three-dimensional square grid structure
 
 # Acknowledgments
 
-This work was primarily funded and intellectually led by the Materials Project, which is funded by the U.S. Department of Energy, Office of Science, Office of Basic Energy Sciences, Materials Sciences and Engineering Division, under Contract no. DE-AC02-05-CH11231: Materials Project program KC23MP. It also received support from the U.S. Department of Energy, Office of Science, Office of Basic Energy Sciences, Materials Sciences and Engineering Division, under Contract No. DE-AC02-05CH11231 within the Data Science for Data-Driven Synthesis Science grant (KCD2S2). MCG acknowledges Matthew J. McDermott and Bryant Li for useful discussions during the development of this work. 
+This work was primarily funded and intellectually led by the Materials Project, which is funded by the U.S. Department of Energy, Office of Science, Office of Basic Energy Sciences, Materials Sciences and Engineering Division, under Contract no. DE-AC02-05-CH11231: Materials Project program KC23MP. It also received support from the U.S. Department of Energy, Office of Science, Office of Basic Energy Sciences, Materials Sciences and Engineering Division, under Contract No. DE-AC02-05CH11231 within the Data Science for Data-Driven Synthesis Science grant (KCD2S2). MCG acknowledges Matthew J. McDermott and Bryant Li for useful discussions during the development of this work.
+
+# References
