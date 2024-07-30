@@ -27,12 +27,15 @@ class SimulationResult:
     def from_dict(cls, res_dict):
         diffs = res_dict["diffs"]
         compress_freq = res_dict.get("compress_freq", 1)
-        res = cls(SimulationState.from_dict(res_dict["initial_state"]), compress_freq=compress_freq)
+        res = cls(
+            SimulationState.from_dict(res_dict["initial_state"]),
+            compress_freq=compress_freq,
+        )
         for diff in diffs:
             if SITES in diff:
-                diff[SITES] = { int(k): v for k, v in diff[SITES].items() }
+                diff[SITES] = {int(k): v for k, v in diff[SITES].items()}
             if GENERAL not in diff and SITES not in diff:
-                diff = { int(k): v for k, v in diff.items() }
+                diff = {int(k): v for k, v in diff.items()}
             res.add_step(diff)
 
         return res
@@ -176,8 +179,10 @@ def compress_result(result: SimulationResult, num_steps: int):
     # total steps is the actual number of diffs stored, not the number of original simulation steps taken
     total_steps = len(result)
     if num_steps >= total_steps:
-        raise ValueError(f"Cannot upsample SimulationResult of length {total_steps} to size {num_steps}.")
-    
+        raise ValueError(
+            f"Cannot upsample SimulationResult of length {total_steps} to size {num_steps}."
+        )
+
     exact_sample_freq = total_steps / (num_steps)
     # print(total_steps, current_sample_freq)
     total_compress_freq = exact_sample_freq * result.compress_freq
@@ -196,4 +201,3 @@ def compress_result(result: SimulationResult, num_steps: int):
             compressed_result.add_step(live_state.as_state_update())
             next_sample_step += exact_sample_freq
     return compressed_result
-        

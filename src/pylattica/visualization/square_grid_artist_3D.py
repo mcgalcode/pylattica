@@ -6,6 +6,7 @@ import numpy as np
 import io
 import matplotlib.pyplot as plt
 from PIL import Image
+from matplotlib.lines import Line2D
 
 
 class SquareGridArtist3D(StructureArtist):
@@ -46,11 +47,50 @@ class SquareGridArtist3D(StructureArtist):
                 colors = [0.8, 0.8, 0.8, 0.2]
                 ax.voxels(data, facecolors=colors, edgecolor="k", linewidth=0)
             else:
-                colors = np.array(color_cache[color]) / 255
+                colors = list(np.array(color_cache[color]) / 255)
                 ax.voxels(data, facecolors=colors, edgecolor="k", linewidth=0.25)
 
-        ax.legend()
+        if kwargs.get("show_legend") == True:
+            legend = self.cell_artist.get_legend(state)
+            legend_handles = []
+            for phase, color in legend.items():
+                legend_handles.append(
+                    Line2D(
+                        [0],
+                        [0],
+                        marker="s",
+                        color="w",
+                        markerfacecolor=list(np.array(color) / 255),
+                        markersize=10,
+                        label=phase,
+                    )
+                )
+
+            # Add custom legend to the plot
+            legend_font_props = {"family": "Lato", "size": 14}
+
+            plt.legend(
+                handles=legend_handles,
+                loc="lower center",
+                prop=legend_font_props,
+                ncols=5,
+                frameon=False,
+            )
         plt.axis("off")
+        if kwargs.get("label") is not None:
+            x_text, y_text, z_text = 18, -5, 30
+
+            # Add the text
+            annotation_font = {
+                "size": 16,
+                "family": "Lato",
+                "color": np.array([194, 29, 63]) / 255,
+                "weight": "bold",
+            }
+            ax.text(
+                x_text, y_text, z_text, kwargs.get("label"), fontdict=annotation_font
+            )
+
         fig = ax.get_figure()
         buf = io.BytesIO()
         fig.savefig(buf)
