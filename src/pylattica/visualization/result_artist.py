@@ -8,13 +8,24 @@ from ..core import SimulationResult
 
 from PIL import Image
 
+from typing import Callable
+
 _dsr_globals = {}
+
+
+def default_annotation_builder(step, step_no):
+    return f"Step {step_no}"
 
 
 class ResultArtist:
     """A class for rendering simulation results as animated GIFs."""
 
-    def __init__(self, step_artist: StructureArtist, result: SimulationResult):
+    def __init__(
+        self,
+        step_artist: StructureArtist,
+        result: SimulationResult,
+        annotation_builder: Callable = default_annotation_builder,
+    ):
         """Instantiates the ResultArtist class.
 
         Parameters
@@ -26,6 +37,7 @@ class ResultArtist:
         """
         self._step_artist = step_artist
         self.result = result
+        self.annotation_builder = annotation_builder
 
     def _get_images(self, **kwargs):
         draw_freq = kwargs.get("draw_freq", 1)
@@ -47,9 +59,10 @@ class ResultArtist:
             with mp.get_context("fork").Pool(PROCESSES) as pool:
                 params = []
                 for idx in indices:
-                    label = f"Step {idx}"
-                    step_kwargs = {**kwargs, "label": label}
                     step = self.result.get_step(idx)
+                    label = self.annotation_builder(step, idx)
+                    step_kwargs = {**kwargs, "label": label}
+
                     params.append([step, step_kwargs])
 
                 for img in pool.starmap(_get_img_parallel, params):
@@ -57,11 +70,7 @@ class ResultArtist:
 
         return imgs
 
-    def jupyter_show_step(
-        self,
-        step_no: int,
-        cell_size=20,
-    ) -> None:
+    def jupyter_show_step(self, step_no: int, cell_size=20, **kwargs) -> None:
         """In a jupyter notebook environment, visualizes the step as a color coded phase grid.
 
         Parameters
@@ -71,17 +80,13 @@ class ResultArtist:
         cell_size : int, optional
             The size of each simulation cell, in pixels, by default 20
         """
-        label = f"Step {step_no}"  # pragma: no cover
         step = self.result.get_step(step_no)  # pragma: no cover
+        label = self.annotation_builder(step, step_no)
         self._step_artist.jupyter_show(
-            step, label=label, cell_size=cell_size
+            step, label=label, cell_size=cell_size, **kwargs
         )  # pragma: no cover
 
-    def jupyter_play(
-        self,
-        cell_size: int = 20,
-        wait: int = 1,
-    ):
+    def jupyter_play(self, cell_size: int = 20, wait: int = 1, **kwargs):
         """In a jupyter notebook environment, plays the simulation visualization back by showing a
         series of images with {wait} seconds between each one.
 
@@ -94,7 +99,7 @@ class ResultArtist:
         """
         from IPython.display import clear_output, display  # pragma: no cover
 
-        imgs = self._get_images(cell_size=cell_size)  # pragma: no cover
+        imgs = self._get_images(cell_size=cell_size, **kwargs)  # pragma: no cover
         for img in imgs:  # pragma: no cover
             clear_output()  # pragma: no cover
             display(img)  # pragma: no cover

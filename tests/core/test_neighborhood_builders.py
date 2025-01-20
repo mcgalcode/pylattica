@@ -3,11 +3,17 @@ import pytest
 import numpy as np
 import math
 
-from pylattica.core.neighborhood_builders import DistanceNeighborhoodBuilder, MotifNeighborhoodBuilder, AnnularNeighborhoodBuilder
-from pylattica.structures.square_grid.structure_builders import SimpleSquare2DStructureBuilder
+from pylattica.core.neighborhood_builders import (
+    DistanceNeighborhoodBuilder,
+    MotifNeighborhoodBuilder,
+    AnnularNeighborhoodBuilder,
+)
+from pylattica.structures.square_grid.structure_builders import (
+    SimpleSquare2DStructureBuilder,
+)
+
 
 def test_distance_nb_builder(square_grid_2D_4x4):
-
     builder = DistanceNeighborhoodBuilder(1.01)
     nbhood = builder.get(square_grid_2D_4x4)
     neighbors = nbhood.neighbors_of(1)
@@ -20,7 +26,6 @@ def test_distance_nb_builder(square_grid_2D_4x4):
     for _, nb_dist in nbs_w_dists:
         assert nb_dist == 1.0
 
-    
     builder = DistanceNeighborhoodBuilder(1.5)
     nbhood = builder.get(square_grid_2D_4x4)
     neighbors = nbhood.neighbors_of(1)
@@ -33,8 +38,9 @@ def test_distance_nb_builder(square_grid_2D_4x4):
     for _, nb_dist in nbs_w_dists:
         assert nb_dist == 1.0 or np.isclose(nb_dist, root_2, 0.01)
 
+
 def test_annular_nb_hood_builder():
-    struct = SimpleSquare2DStructureBuilder().build((5,5))
+    struct = SimpleSquare2DStructureBuilder().build((5, 5))
 
     builder = AnnularNeighborhoodBuilder(1.2, 2.1)
     nb_hood = builder.get(struct)
@@ -56,6 +62,6 @@ def test_struct_nb_hood_builder(square_grid_2D_4x4):
 
     assert len(nbs_w_dists) == 2
     assert len(set([nb[0] for nb in nbs_w_dists])) == 2
-    
+
     for nb_id, nb_dist in nbs_w_dists:
         assert nb_dist == 1.0

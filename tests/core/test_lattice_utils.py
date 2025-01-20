@@ -2,6 +2,7 @@ from pylattica.core.lattice import pbc_diff_frac_vec, Lattice
 
 import numpy as np
 
+
 def test_pbc_diff_frac_vec():
     pt1 = (0.1, 0)
     pt2 = (0.9, 0)
@@ -28,11 +29,9 @@ def test_pbc_diff_frac_vec():
     assert np.allclose(pbc_diff_frac_vec(pt7, pt6, np.array([0, 1])), [1.2, 0.2])
     assert np.allclose(pbc_diff_frac_vec(pt7, pt6, np.array([0, 0])), [1.2, 1.2])
 
+
 def test_pbc_diff_cart():
-    lvecs = [
-        [1, 0],
-        [0, 1]
-    ]
+    lvecs = [[1, 0], [0, 1]]
 
     pt1 = (0.1, 0.1)
     pt2 = (0.1, 0.9)
@@ -52,9 +51,3 @@ def test_pbc_diff_cart():
     assert np.isclose(l2.cartesian_periodic_distance(pt1, pt5), 1.0)
     assert np.isclose(l3.cartesian_periodic_distance(pt1, pt5), 0)
     assert np.isclose(l4.cartesian_periodic_distance(pt1, pt5), 1.0)
-
-    
-
-
-
-

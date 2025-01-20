@@ -6,6 +6,7 @@ from pylattica.core import StateAnalyzer
 
 from helpers.helpers import skip_windows_due_to_parallel
 
+
 @skip_windows_due_to_parallel
 def test_growth_setup():
     phases = PhaseSet(["A", "B", "C"])
@@ -14,11 +15,8 @@ def test_growth_setup():
     total_num_sites = 4
     background_phase = "A"
 
-    nuc_amts = {
-        'B': 1,
-        'C': 1
-    }
-    buffer = 2 # Each site should be at least 2 cells away from any other
+    nuc_amts = {"B": 1, "C": 1}
+    buffer = 2  # Each site should be at least 2 cells away from any other
 
     growth_setup = GrowthSetup(phases)
     simulation = growth_setup.grow(
@@ -27,10 +25,11 @@ def test_growth_setup():
         num_sites_desired=total_num_sites,
         nuc_amts=nuc_amts,
         buffer=buffer,
-        nb_builder=MooreNbHoodBuilder(1)
+        nb_builder=MooreNbHoodBuilder(1),
     )
 
     analyzer = StateAnalyzer(simulation.structure)
-    assert analyzer.get_site_count_where_equal(simulation.state, { DISCRETE_OCCUPANCY: "A" }) == 0
-
-
+    assert (
+        analyzer.get_site_count_where_equal(simulation.state, {DISCRETE_OCCUPANCY: "A"})
+        == 0
+    )

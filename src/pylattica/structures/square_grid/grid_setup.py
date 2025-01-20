@@ -348,9 +348,8 @@ class DiscreteGridSetup:
 
         while num_sites_planted < num_sites_desired:
             if total_attempts > 1000 * num_sites_desired:
-                raise RuntimeError(
-                    f"Too many nucleation sites at the specified buffer: {total_attempts} made at placing nuclei"
-                )
+                print(f"Only able to place {num_sites_planted} in {total_attempts} attempts")
+                break
 
             rand_site = random.choice(all_sites)
             rand_site_id = rand_site[SITE_ID]
