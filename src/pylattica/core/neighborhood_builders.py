@@ -3,6 +3,7 @@ from typing import Dict, List, Tuple
 import numpy as np
 import rustworkx as rx
 from tqdm import tqdm
+from scipy.spatial import cKDTree
 
 from abc import abstractmethod
 
@@ -93,6 +94,9 @@ class StochasticNeighborhoodBuilder(NeighborhoodBuilder):
 class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
     """This neighborhood builder creates neighbor connections between
     sites which are within some cutoff distance of eachother.
+
+    Uses a KD-tree with periodic boundary conditions for O(n log n)
+    performance instead of O(n²) brute force.
     """
 
     def __init__(self, cutoff: float):
@@ -105,19 +109,118 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         """
         self.cutoff = cutoff
 
-    def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
-        """Builds a NeighborGraph from the provided structure according
-        to the cutoff distance of this Builder.
+    def get(self, struct: PeriodicStructure, site_class: str = None) -> Neighborhood:
+        """Builds a Neighborhood from the provided structure using an optimized
+        KD-tree algorithm with periodic boundary conditions.
 
         Parameters
         ----------
         struct : PeriodicStructure
-            The structure from which a NeighborGraph should be constructed.
+            The structure for which the Neighborhood should be constructed.
+        site_class : str, optional
+            Specify a single class of sites to calculate the neighborhood for,
+            by default None
 
         Returns
         -------
-        NeighborGraph
-            The resulting NeighborGraph
+        Neighborhood
+            The resulting Neighborhood
+        """
+        graph = rx.PyDiGraph()
+
+        # Add all nodes first
+        all_sites = struct.sites()
+        for site in all_sites:
+            graph.add_node(site[SITE_ID])
+
+        # Get sites to process (either all or filtered by class)
+        if site_class is None:
+            sites_to_process = all_sites
+        else:
+            sites_to_process = struct.sites(site_class=site_class)
+
+        n_sites = len(all_sites)
+
+        # Extract locations and IDs as arrays for vectorized operations
+        locations = np.array([s[LOCATION] for s in all_sites])
+        site_ids = np.array([s[SITE_ID] for s in all_sites])
+
+        # Convert to fractional coordinates for periodic KD-tree
+        frac_coords = np.array([
+            struct.lattice.get_fractional_coords(loc) for loc in locations
+        ])
+
+        # Compute the maximum fractional radius that could correspond to
+        # the Cartesian cutoff. For non-orthogonal lattices, we need to use
+        # the maximum stretch factor of the inverse matrix (largest singular value).
+        # This gives an upper bound; we then post-filter with exact Cartesian distances.
+        inv_matrix = struct.lattice.inv_matrix
+        max_stretch = np.linalg.norm(inv_matrix, ord=2)  # Largest singular value
+        frac_cutoff = self.cutoff * max_stretch + 0.1  # Add margin
+
+        # Determine periodicity - use boxsize for periodic dims
+        periodic = struct.lattice.periodic
+        dim = struct.lattice.dim
+
+        # Build boxsize array: 1.0 for periodic dimensions, large value for non-periodic
+        boxsize = np.array([
+            1.0 if periodic[i] else 1e10 for i in range(dim)
+        ])
+
+        # Wrap fractional coordinates to [0, 1) for periodic dimensions
+        frac_coords_wrapped = frac_coords.copy()
+        for i in range(dim):
+            if periodic[i]:
+                frac_coords_wrapped[:, i] = frac_coords_wrapped[:, i] % 1.0
+
+        # Build KD-tree with periodic boundary conditions
+        tree = cKDTree(frac_coords_wrapped, boxsize=boxsize)
+
+        # Create index mapping from site_id to array index
+        id_to_idx = {sid: idx for idx, sid in enumerate(site_ids)}
+
+        # Process each site
+        sites_to_process_ids = set(s[SITE_ID] for s in sites_to_process)
+
+        for idx, site_id in enumerate(tqdm(site_ids, desc="Building neighborhood")):
+            if site_id not in sites_to_process_ids:
+                continue
+
+            # Query tree for candidates within fractional cutoff
+            curr_frac = frac_coords_wrapped[idx]
+            candidate_indices = tree.query_ball_point(curr_frac, frac_cutoff)
+
+            curr_loc = locations[idx]
+
+            # Post-filter with exact Cartesian periodic distance
+            for cand_idx in candidate_indices:
+                if cand_idx == idx:
+                    continue
+
+                cand_loc = locations[cand_idx]
+                dist = struct.lattice.cartesian_periodic_distance(cand_loc, curr_loc)
+
+                if dist < self.cutoff:
+                    graph.add_edge(site_id, site_ids[cand_idx], dist)
+
+        return Neighborhood(graph)
+
+    def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
+        """Builds a neighbor list for a single site. This method exists for
+        compatibility but using get() directly is more efficient for building
+        the full neighborhood graph.
+
+        Parameters
+        ----------
+        curr_site : Dict
+            The site to find neighbors for
+        struct : PeriodicStructure
+            The structure containing the sites
+
+        Returns
+        -------
+        List[Tuple]
+            List of (neighbor_id, distance) tuples
         """
         nbs = []
         curr_loc = curr_site[LOCATION]
@@ -140,6 +243,9 @@ class AnnularNeighborhoodBuilder(NeighborhoodBuilder):
     """This neighborhood builder creates neighbor connections between
     sites which are within a ring-shaped region around eachother. This region
     is specified by a minimum (inner radius) and maximum (outer radius) distance.
+
+    Uses a KD-tree with periodic boundary conditions for O(n log n)
+    performance instead of O(n²) brute force.
     """
 
     def __init__(self, inner_radius: float, outer_radius: float):
@@ -155,19 +261,114 @@ class AnnularNeighborhoodBuilder(NeighborhoodBuilder):
         self.inner_radius = inner_radius
         self.outer_radius = outer_radius
 
-    def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
-        """Builds a NeighborGraph from the provided structure according
-        to the cutoff distance of this Builder.
+    def get(self, struct: PeriodicStructure, site_class: str = None) -> Neighborhood:
+        """Builds a Neighborhood from the provided structure using an optimized
+        KD-tree algorithm with periodic boundary conditions.
 
         Parameters
         ----------
         struct : PeriodicStructure
-            The structure from which a NeighborGraph should be constructed.
+            The structure for which the Neighborhood should be constructed.
+        site_class : str, optional
+            Specify a single class of sites to calculate the neighborhood for,
+            by default None
 
         Returns
         -------
-        NeighborGraph
-            The resulting NeighborGraph
+        Neighborhood
+            The resulting Neighborhood
+        """
+        graph = rx.PyDiGraph()
+
+        # Add all nodes first
+        all_sites = struct.sites()
+        for site in all_sites:
+            graph.add_node(site[SITE_ID])
+
+        # Get sites to process (either all or filtered by class)
+        if site_class is None:
+            sites_to_process = all_sites
+        else:
+            sites_to_process = struct.sites(site_class=site_class)
+
+        # Extract locations and IDs as arrays for vectorized operations
+        locations = np.array([s[LOCATION] for s in all_sites])
+        site_ids = np.array([s[SITE_ID] for s in all_sites])
+
+        # Convert to fractional coordinates for periodic KD-tree
+        frac_coords = np.array([
+            struct.lattice.get_fractional_coords(loc) for loc in locations
+        ])
+
+        # Compute the maximum fractional radius for the outer cutoff.
+        # Use the maximum stretch factor of the inverse matrix for non-orthogonal lattices.
+        inv_matrix = struct.lattice.inv_matrix
+        max_stretch = np.linalg.norm(inv_matrix, ord=2)  # Largest singular value
+        frac_cutoff = self.outer_radius * max_stretch + 0.1
+
+        # Determine periodicity
+        periodic = struct.lattice.periodic
+        dim = struct.lattice.dim
+
+        # Build boxsize array
+        boxsize = np.array([
+            1.0 if periodic[i] else 1e10 for i in range(dim)
+        ])
+
+        # Wrap fractional coordinates to [0, 1) for periodic dimensions
+        frac_coords_wrapped = frac_coords.copy()
+        for i in range(dim):
+            if periodic[i]:
+                frac_coords_wrapped[:, i] = frac_coords_wrapped[:, i] % 1.0
+
+        # Build KD-tree with periodic boundary conditions
+        tree = cKDTree(frac_coords_wrapped, boxsize=boxsize)
+
+        # Create index mapping
+        sites_to_process_ids = set(s[SITE_ID] for s in sites_to_process)
+
+        for idx, site_id in enumerate(tqdm(site_ids, desc="Building neighborhood")):
+            if site_id not in sites_to_process_ids:
+                continue
+
+            # Query tree for candidates within fractional cutoff
+            curr_frac = frac_coords_wrapped[idx]
+            candidate_indices = tree.query_ball_point(curr_frac, frac_cutoff)
+
+            curr_loc = locations[idx]
+
+            # Post-filter with exact Cartesian periodic distance
+            for cand_idx in candidate_indices:
+                if cand_idx == idx:
+                    continue
+
+                cand_loc = locations[cand_idx]
+                dist = pbc_diff_cart(
+                    np.array(cand_loc),
+                    np.array(curr_loc),
+                    struct.lattice,
+                )
+
+                if self.inner_radius < dist < self.outer_radius:
+                    graph.add_edge(site_id, site_ids[cand_idx], dist)
+
+        return Neighborhood(graph)
+
+    def get_neighbors(self, curr_site: Dict, struct: PeriodicStructure) -> List[Tuple]:
+        """Builds a neighbor list for a single site. This method exists for
+        compatibility but using get() directly is more efficient.
+
+        Parameters
+        ----------
+        curr_site : Dict
+            The site to find neighbors for
+        struct : PeriodicStructure
+            The structure containing the sites
+
+        Returns
+        -------
+        List[Tuple]
+            List of (neighbor_id, distance) tuples
         """
         nbs = []
         for other_site in struct.sites():
