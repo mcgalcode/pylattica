@@ -89,6 +89,16 @@ class SimulationResult:
         self._checkpoint_step: int = 0
         self._total_steps: int = 0
 
+    def get_diffs(self) -> list[dict]:
+        """Returns the list of diffs.
+
+        Returns
+        -------
+        list[dict]
+            The list of state diffs.
+        """
+        return self._diffs
+
     def add_step(self, updates: Dict[int, Dict]) -> None:
         """Takes a set of updates as a dictionary mapping site IDs
         to the new values for various state parameters. For instance, if at the
@@ -335,9 +345,9 @@ def compress_result(result: SimulationResult, num_steps: int):
     total_compress_freq = exact_sample_freq * result.compress_freq
     compressed_result = SimulationResult(i_state, compress_freq=total_compress_freq)
 
-    live_state = SimulationState(copy.deepcopy(i_state._state))
+    live_state = SimulationState(copy.deepcopy(i_state.get_state()))
     next_sample_step = exact_sample_freq
-    for i, diff in enumerate(result._diffs):
+    for i, diff in enumerate(result.get_diffs()):
         curr_step = i + 1
         live_state.batch_update(diff)
         if curr_step > next_sample_step:

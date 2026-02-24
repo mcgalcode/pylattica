@@ -2,6 +2,8 @@ max-line-length: 120
 test-warnings: false
 doc-warnings: false
 strictness: medium
+with: []
+uses: []
 ignore-paths:
   - docs
   - tests
@@ -21,6 +23,7 @@ pycodestyle:
 
 pylint:
   disable:
+    - django-not-available
     - unsubscriptable-object
     - invalid-name
     - arguments-differ # to account for jobflow

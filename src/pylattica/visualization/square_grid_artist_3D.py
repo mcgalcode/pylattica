@@ -50,7 +50,7 @@ class SquareGridArtist3D(StructureArtist):
                 colors = list(np.array(color_cache[color]) / 255)
                 ax.voxels(data, facecolors=colors, edgecolor="k", linewidth=0.25)
 
-        if kwargs.get("show_legend") == True:
+        if kwargs.get("show_legend"):
             legend = self.cell_artist.get_legend(state)
             legend_handles = []
             for phase, color in legend.items():

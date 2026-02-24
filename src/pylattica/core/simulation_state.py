@@ -183,5 +183,15 @@ class SimulationState:
     def as_state_update(self) -> Dict:
         return copy.deepcopy(self._state)
 
+    def get_state(self) -> Dict:
+        """Returns the internal state dictionary.
+
+        Returns
+        -------
+        Dict
+            The internal state dictionary.
+        """
+        return self._state
+
     def __eq__(self, other: SimulationState) -> bool:
         return self._state == other._state

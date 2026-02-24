@@ -139,8 +139,6 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         else:
             sites_to_process = struct.sites(site_class=site_class)
 
-        n_sites = len(all_sites)
-
         # Extract locations and IDs as arrays for vectorized operations
         locations = np.array([s[LOCATION] for s in all_sites])
         site_ids = np.array([s[SITE_ID] for s in all_sites])
@@ -173,9 +171,6 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
 
         # Build KD-tree with periodic boundary conditions
         tree = cKDTree(frac_coords_wrapped, boxsize=boxsize)
-
-        # Create index mapping from site_id to array index
-        id_to_idx = {sid: idx for idx, sid in enumerate(site_ids)}
 
         # Process each site
         sites_to_process_ids = set(s[SITE_ID] for s in sites_to_process)

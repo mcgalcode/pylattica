@@ -38,7 +38,7 @@ class SynchronousRunner(Runner):
         self.parallel = parallel
         self.workers = workers
 
-    def _run(
+    def _run(  # pylint: disable=too-many-positional-arguments
         self,
         initial_state: SimulationState,
         result: SimulationResult,

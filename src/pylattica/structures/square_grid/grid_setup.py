@@ -145,7 +145,7 @@ class DiscreteGridSetup:
         )
         return Simulation(state, structure)
 
-    def setup_random_particles(
+    def setup_random_particles(  # pylint: disable=too-many-positional-arguments
         self,
         size: int,
         radius: int,
@@ -188,7 +188,7 @@ class DiscreteGridSetup:
 
         return Simulation(state, structure)
 
-    def add_particle_to_state(
+    def add_particle_to_state(  # pylint: disable=too-many-positional-arguments
         self,
         structure: PeriodicStructure,
         state: SimulationState,
@@ -276,7 +276,7 @@ class DiscreteGridSetup:
             )
         return Simulation(state, structure)
 
-    def setup_random_sites(
+    def setup_random_sites(  # pylint: disable=too-many-positional-arguments
         self,
         size: int,
         num_sites_desired: int,
