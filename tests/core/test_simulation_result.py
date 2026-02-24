@@ -3,6 +3,7 @@ import pytest
 import random
 import os
 from pylattica.core import SimulationResult, SimulationState
+from pylattica.core.simulation_result import compress_result
 
 
 @pytest.fixture
@@ -206,3 +207,93 @@ def test_max_history_none_unlimited(initial_state):
     assert len(result._diffs) == 500
     assert result._checkpoint_state is None
     assert result.earliest_available_step == 0
+
+
+def test_max_history_steps_generator(initial_state):
+    """Test that steps() works correctly with checkpoints."""
+    result = SimulationResult(initial_state, max_history=50)
+
+    for step in range(100):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # Iterate through available steps
+    steps_list = list(result.steps())
+
+    # Should have steps from checkpoint onward
+    expected_count = len(result._diffs) + 1  # diffs + checkpoint state
+    assert len(steps_list) == expected_count
+
+    # Each step should be a separate object (copies)
+    assert steps_list[0] is not steps_list[1]
+
+
+def test_max_history_load_steps(initial_state):
+    """Test that load_steps() works correctly with checkpoints."""
+    result = SimulationResult(initial_state, max_history=50)
+
+    for step in range(100):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # Load steps at interval
+    result.load_steps(interval=10)
+
+    # Should have cached states
+    assert len(result._stored_states) > 0
+
+    # Cached states should be after checkpoint
+    for step_no in result._stored_states:
+        assert step_no >= result.earliest_available_step
+
+
+def test_original_length(initial_state):
+    """Test the original_length property."""
+    result = SimulationResult(initial_state, compress_freq=1)
+
+    for step in range(10):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # With compress_freq=1, original_length should equal len
+    assert result.original_length == len(result)
+
+    # With compress_freq=2, original_length should be doubled
+    result_compressed = SimulationResult(initial_state, compress_freq=2)
+    for step in range(10):
+        updates = {0: {"value": step}}
+        result_compressed.add_step(updates)
+
+    assert result_compressed.original_length == len(result_compressed) * 2
+
+
+def test_compress_result(initial_state):
+    """Test the compress_result function."""
+    result = SimulationResult(initial_state)
+
+    # Add 100 steps with deterministic values
+    for step in range(100):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # Compress to 20 steps
+    compressed = compress_result(result, 20)
+
+    # Should have fewer steps
+    assert len(compressed) <= 25  # Some margin for sampling
+
+    # compress_freq should be updated
+    assert compressed.compress_freq > 1
+
+
+def test_compress_result_invalid_size(initial_state):
+    """Test that compress_result raises error for invalid target size."""
+    result = SimulationResult(initial_state)
+
+    for step in range(10):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # Can't compress to more steps than we have
+    with pytest.raises(ValueError, match="Cannot compress"):
+        compress_result(result, 100)
