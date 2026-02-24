@@ -27,7 +27,7 @@ class AsynchronousRunner(Runner):
     that this mode should be used with the is_async initialization parameter.
     """
 
-    def _run(
+    def _run(  # pylint: disable=too-many-positional-arguments
         self,
         _: SimulationState,
         result: SimulationResult,

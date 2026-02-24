@@ -13,7 +13,7 @@ from typing import Callable
 _dsr_globals = {}
 
 
-def default_annotation_builder(step, step_no):
+def default_annotation_builder(_step, step_no):
     return f"Step {step_no}"
 
 
@@ -97,7 +97,10 @@ class ResultArtist:
         wait : int, optional
             The time duration between frames in the animation. Defaults to 1., by default 1
         """
-        from IPython.display import clear_output, display  # pragma: no cover
+        from IPython.display import (
+            clear_output,
+            display,
+        )  # pylint: disable=import-error  # pragma: no cover
 
         imgs = self._get_images(cell_size=cell_size, **kwargs)  # pragma: no cover
         for img in imgs:  # pragma: no cover

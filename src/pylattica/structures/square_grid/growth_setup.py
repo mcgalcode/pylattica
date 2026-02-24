@@ -31,7 +31,7 @@ class GrowthSetup:
         self._phases = phase_set
         self.dim = dim
 
-    def grow(
+    def grow(  # pylint: disable=too-many-positional-arguments
         self,
         size: int,
         num_sites_desired: int,

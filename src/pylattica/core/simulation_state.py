@@ -58,12 +58,14 @@ class SimulationState:
     def size(self) -> int:
         """Gives the number of sites for which state information is stored.
 
+        This is O(1) - it does not create a list of site IDs.
+
         Returns
         -------
         int
             The number of sites for which state information is stored.
         """
-        return len(self.site_ids())
+        return len(self._state[SITES])
 
     def site_ids(self) -> List[int]:
         """A list of site IDs for which some state is stored.
@@ -180,6 +182,16 @@ class SimulationState:
 
     def as_state_update(self) -> Dict:
         return copy.deepcopy(self._state)
+
+    def get_state(self) -> Dict:
+        """Returns the internal state dictionary.
+
+        Returns
+        -------
+        Dict
+            The internal state dictionary.
+        """
+        return self._state
 
     def __eq__(self, other: SimulationState) -> bool:
         return self._state == other._state

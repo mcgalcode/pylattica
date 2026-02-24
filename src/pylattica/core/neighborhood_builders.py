@@ -139,16 +139,14 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         else:
             sites_to_process = struct.sites(site_class=site_class)
 
-        n_sites = len(all_sites)
-
         # Extract locations and IDs as arrays for vectorized operations
         locations = np.array([s[LOCATION] for s in all_sites])
         site_ids = np.array([s[SITE_ID] for s in all_sites])
 
         # Convert to fractional coordinates for periodic KD-tree
-        frac_coords = np.array([
-            struct.lattice.get_fractional_coords(loc) for loc in locations
-        ])
+        frac_coords = np.array(
+            [struct.lattice.get_fractional_coords(loc) for loc in locations]
+        )
 
         # Compute the maximum fractional radius that could correspond to
         # the Cartesian cutoff. For non-orthogonal lattices, we need to use
@@ -163,9 +161,7 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
         dim = struct.lattice.dim
 
         # Build boxsize array: 1.0 for periodic dimensions, large value for non-periodic
-        boxsize = np.array([
-            1.0 if periodic[i] else 1e10 for i in range(dim)
-        ])
+        boxsize = np.array([1.0 if periodic[i] else 1e10 for i in range(dim)])
 
         # Wrap fractional coordinates to [0, 1) for periodic dimensions
         frac_coords_wrapped = frac_coords.copy()
@@ -175,9 +171,6 @@ class DistanceNeighborhoodBuilder(NeighborhoodBuilder):
 
         # Build KD-tree with periodic boundary conditions
         tree = cKDTree(frac_coords_wrapped, boxsize=boxsize)
-
-        # Create index mapping from site_id to array index
-        id_to_idx = {sid: idx for idx, sid in enumerate(site_ids)}
 
         # Process each site
         sites_to_process_ids = set(s[SITE_ID] for s in sites_to_process)
@@ -296,9 +289,9 @@ class AnnularNeighborhoodBuilder(NeighborhoodBuilder):
         site_ids = np.array([s[SITE_ID] for s in all_sites])
 
         # Convert to fractional coordinates for periodic KD-tree
-        frac_coords = np.array([
-            struct.lattice.get_fractional_coords(loc) for loc in locations
-        ])
+        frac_coords = np.array(
+            [struct.lattice.get_fractional_coords(loc) for loc in locations]
+        )
 
         # Compute the maximum fractional radius for the outer cutoff.
         # Use the maximum stretch factor of the inverse matrix for non-orthogonal lattices.
@@ -311,9 +304,7 @@ class AnnularNeighborhoodBuilder(NeighborhoodBuilder):
         dim = struct.lattice.dim
 
         # Build boxsize array
-        boxsize = np.array([
-            1.0 if periodic[i] else 1e10 for i in range(dim)
-        ])
+        boxsize = np.array([1.0 if periodic[i] else 1e10 for i in range(dim)])
 
         # Wrap fractional coordinates to [0, 1) for periodic dimensions
         frac_coords_wrapped = frac_coords.copy()
