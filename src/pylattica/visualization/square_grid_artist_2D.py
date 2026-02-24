@@ -62,7 +62,9 @@ class SquareGridArtist2D(StructureArtist):
 
             for phase in legend_order:
                 color = legend.get(phase)
-                p_col_start = state_size * cell_size + legend_border_width + legend_hoffset
+                p_col_start = (
+                    state_size * cell_size + legend_border_width + legend_hoffset
+                )
                 p_row_start = count * cell_size + legend_voffset
                 for p_x in range(p_col_start, p_col_start + cell_size):
                     for p_y in range(p_row_start, p_row_start + cell_size):

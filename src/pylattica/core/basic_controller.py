@@ -39,4 +39,6 @@ class BasicController(ABC):
         return random.randint(0, state.size - 1)
 
     def instantiate_result(self, starting_state: SimulationState):
-        return SimulationResult(starting_state=starting_state, max_history=self.max_history)
+        return SimulationResult(
+            starting_state=starting_state, max_history=self.max_history
+        )

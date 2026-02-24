@@ -39,7 +39,9 @@ class SimulationResult:
         )
         # Restore checkpoint if present
         if "checkpoint_state" in res_dict and res_dict["checkpoint_state"] is not None:
-            res._checkpoint_state = SimulationState.from_dict(res_dict["checkpoint_state"])
+            res._checkpoint_state = SimulationState.from_dict(
+                res_dict["checkpoint_state"]
+            )
             res._checkpoint_step = res_dict.get("checkpoint_step", 0)
 
         for diff in diffs:
@@ -50,11 +52,18 @@ class SimulationResult:
             res._diffs.append(diff)  # Bypass add_step to avoid re-checkpointing
 
         # Restore total_steps from serialized data, or compute from diffs + checkpoint
-        res._total_steps = res_dict.get("total_steps", res._checkpoint_step + len(diffs))
+        res._total_steps = res_dict.get(
+            "total_steps", res._checkpoint_step + len(diffs)
+        )
 
         return res
 
-    def __init__(self, starting_state: SimulationState, compress_freq: int = 1, max_history: int = None):
+    def __init__(
+        self,
+        starting_state: SimulationState,
+        compress_freq: int = 1,
+        max_history: int = None,
+    ):
         """Initializes a SimulationResult with the specified starting_state.
 
         Parameters

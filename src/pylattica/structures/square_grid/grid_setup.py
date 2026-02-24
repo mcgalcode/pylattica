@@ -348,7 +348,9 @@ class DiscreteGridSetup:
 
         while num_sites_planted < num_sites_desired:
             if total_attempts > 1000 * num_sites_desired:
-                print(f"Only able to place {num_sites_planted} in {total_attempts} attempts")
+                print(
+                    f"Only able to place {num_sites_planted} in {total_attempts} attempts"
+                )
                 break
 
             rand_site = random.choice(all_sites)

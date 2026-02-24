@@ -54,13 +54,13 @@ class VonNeumannNbHood3DBuilder(NeighborhoodBuilder):
         # Generate Von Neumann neighborhood offsets (excluding origin)
         points = get_points_in_cube(-size, size + 1, 3)
         self._offsets = [
-            tuple(point) for point in points
+            tuple(point)
+            for point in points
             if sum(np.abs(p) for p in point) <= size and any(p != 0 for p in point)
         ]
         # Precompute distances for edge weights
         self._distances = {
-            offset: np.sqrt(sum(p**2 for p in offset))
-            for offset in self._offsets
+            offset: np.sqrt(sum(p**2 for p in offset)) for offset in self._offsets
         }
         # Cache for grid size (computed once per structure)
         self._cached_n = None
@@ -70,8 +70,8 @@ class VonNeumannNbHood3DBuilder(NeighborhoodBuilder):
         """Infer grid size n from structure (cached)."""
         n_sites = len(struct.site_ids)
         if n_sites != self._cached_n_sites:
-            n = int(round(n_sites ** (1/3)))
-            if n ** 3 != n_sites:
+            n = int(round(n_sites ** (1 / 3)))
+            if n**3 != n_sites:
                 raise ValueError(f"Structure has {n_sites} sites, not a perfect cube.")
             self._cached_n = n
             self._cached_n_sites = n_sites
