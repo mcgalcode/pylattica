@@ -31,7 +31,6 @@ class AsynchronousRunner(Runner):
         self,
         _: SimulationState,
         result: SimulationResult,
-        live_state: SimulationState,
         controller: BasicController,
         num_steps: int,
         verbose: bool = False,
@@ -58,6 +57,7 @@ class AsynchronousRunner(Runner):
         """
 
         site_queue = deque()
+        live_state = result.live_state
 
         def _add_sites_to_queue():
             next_site = controller.get_random_site(live_state)
@@ -84,7 +84,6 @@ class AsynchronousRunner(Runner):
                 state_updates = controller_response
 
             state_updates = merge_updates(state_updates, site_id=site_id)
-            live_state.batch_update(state_updates)
             site_queue.extend(next_sites)
 
             result.add_step(state_updates)
@@ -95,5 +94,4 @@ class AsynchronousRunner(Runner):
             if len(site_queue) == 0:
                 break
 
-        result.set_output(live_state)
         return result

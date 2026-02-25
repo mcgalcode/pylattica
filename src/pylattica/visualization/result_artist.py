@@ -97,10 +97,10 @@ class ResultArtist:
         wait : int, optional
             The time duration between frames in the animation. Defaults to 1., by default 1
         """
-        from IPython.display import (
+        from IPython.display import (  # pylint: disable=import-error
             clear_output,
             display,
-        )  # pylint: disable=import-error  # pragma: no cover
+        )  # pragma: no cover
 
         imgs = self._get_images(cell_size=cell_size, **kwargs)  # pragma: no cover
         for img in imgs:  # pragma: no cover

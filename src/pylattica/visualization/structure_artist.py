@@ -29,9 +29,9 @@ class StructureArtist:
         state : SimulationState
             The simulation state to display.
         """
-        from IPython.display import (
+        from IPython.display import (  # pylint: disable=import-error
             display,
-        )  # pylint: disable=import-error  # pragma: no cover
+        )  # pragma: no cover
 
         img = self.get_img(state, **kwargs)  # pragma: no cover
         display(img)  # pragma: no cover

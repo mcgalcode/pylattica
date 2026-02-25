@@ -21,6 +21,11 @@ class SimulationResult:
         Maximum number of diffs to keep in memory. When exceeded, older diffs
         are dropped and a checkpoint is created. Set to None for unlimited
         history (default, but may cause memory issues for long simulations).
+    live_compress : bool, optional
+        If True, store full state snapshots at compress_freq intervals during
+        simulation instead of diffs. This avoids the expensive O(n) reconstruction
+        in load_steps() at the cost of more memory per frame. When enabled,
+        load_steps() becomes a no-op since frames are already stored.
     """
 
     @classmethod
@@ -29,13 +34,15 @@ class SimulationResult:
 
     @classmethod
     def from_dict(cls, res_dict):
-        diffs = res_dict["diffs"]
+        diffs = res_dict.get("diffs", [])
         compress_freq = res_dict.get("compress_freq", 1)
         max_history = res_dict.get("max_history", None)
+        live_compress = res_dict.get("live_compress", False)
         res = cls(
             SimulationState.from_dict(res_dict["initial_state"]),
             compress_freq=compress_freq,
             max_history=max_history,
+            live_compress=live_compress,
         )
         # Restore checkpoint if present
         if "checkpoint_state" in res_dict and res_dict["checkpoint_state"] is not None:
@@ -43,6 +50,11 @@ class SimulationResult:
                 res_dict["checkpoint_state"]
             )
             res._checkpoint_step = res_dict.get("checkpoint_step", 0)
+
+        # Restore frames if present (for live_compress mode)
+        if "frames" in res_dict and res_dict["frames"]:
+            for step_str, state_dict in res_dict["frames"].items():
+                res._frames[int(step_str)] = SimulationState.from_dict(state_dict)
 
         for diff in diffs:
             if SITES in diff:
@@ -56,6 +68,18 @@ class SimulationResult:
             "total_steps", res._checkpoint_step + len(diffs)
         )
 
+        # Reconstruct live_state to reflect the final state
+        if res._frames:
+            # In live_compress mode, use the last frame
+            last_step = max(res._frames.keys())
+            res._live_state = res._frames[last_step].copy()
+        elif res._diffs:
+            # Replay all diffs to get final state
+            if res._checkpoint_state is not None:
+                res._live_state = res._checkpoint_state.copy()
+            for diff in res._diffs:
+                res._live_state.batch_update(diff)
+
         return res
 
     def __init__(
@@ -63,6 +87,7 @@ class SimulationResult:
         starting_state: SimulationState,
         compress_freq: int = 1,
         max_history: int = None,
+        live_compress: bool = False,
     ):
         """Initializes a SimulationResult with the specified starting_state.
 
@@ -71,23 +96,38 @@ class SimulationResult:
         starting_state : SimulationState
             The state with which the simulation started.
         compress_freq : int, optional
-            Compression frequency for sampling, by default 1.
+            Compression frequency for sampling, by default 1. When live_compress
+            is True, this controls how often full state snapshots are stored.
         max_history : int, optional
             Maximum number of diffs to keep in memory. When exceeded, a
             checkpoint is created and old diffs are dropped. This prevents
             unbounded memory growth during long simulations. Set to None
             (default) for unlimited history. Recommended: 1000-10000 for
-            long simulations.
+            long simulations. Ignored when live_compress is True.
+        live_compress : bool, optional
+            If True, store full state snapshots at compress_freq intervals
+            during simulation instead of storing diffs. This avoids the O(n)
+            reconstruction cost of load_steps() but uses more memory per stored
+            frame. Default is False (store diffs, reconstruct post-hoc).
         """
         self.initial_state = starting_state
         self.compress_freq = compress_freq
         self.max_history = max_history
+        self.live_compress = live_compress
         self._diffs: list[dict] = []
         self._stored_states = {}
+        self._frames: Dict[int, SimulationState] = {}  # For live_compress mode
         # Checkpoint support for bounded history
         self._checkpoint_state: SimulationState = None
         self._checkpoint_step: int = 0
         self._total_steps: int = 0
+
+        # Live state that gets updated with each step
+        self._live_state: SimulationState = starting_state.copy()
+
+        # Store initial state as frame 0 if live_compress is enabled
+        if self.live_compress:
+            self._frames[0] = starting_state.copy()
 
     def get_diffs(self) -> list[dict]:
         """Returns the list of diffs.
@@ -98,6 +138,15 @@ class SimulationResult:
             The list of state diffs.
         """
         return self._diffs
+
+    @property
+    def live_state(self) -> SimulationState:
+        """The current live state of the simulation.
+
+        This state is updated with each call to add_step(). Use this to access
+        the current simulation state during a run.
+        """
+        return self._live_state
 
     def add_step(self, updates: Dict[int, Dict]) -> None:
         """Takes a set of updates as a dictionary mapping site IDs
@@ -111,13 +160,29 @@ class SimulationResult:
             }
         }
 
+        This method:
+        1. Applies the updates to the internal live_state
+        2. Increments the step counter
+        3. In live_compress mode: stores frames at compress_freq intervals
+        4. In normal mode: stores the diff for later reconstruction
+
         Parameters
         ----------
         updates : dict
             The changes associated with a new simulation step.
         """
-        self._diffs.append(updates)
+        # Update the live state
+        self._live_state.batch_update(updates)
         self._total_steps += 1
+
+        # In live_compress mode, store frames at intervals instead of diffs
+        if self.live_compress:
+            if self._total_steps % self.compress_freq == 0:
+                self._frames[self._total_steps] = self._live_state.copy()
+            return
+
+        # Normal mode: store diffs
+        self._diffs.append(updates)
 
         # Check if we need to create a checkpoint and drop old diffs
         if self.max_history is not None and len(self._diffs) > self.max_history:
@@ -173,13 +238,20 @@ class SimulationResult:
         """Yields all available steps from this simulation.
 
         Note: When max_history is set, only steps from the checkpoint onward
-        are available. Use earliest_available_step to check.
+        are available. When live_compress is set, only frames at compress_freq
+        intervals are available. Use earliest_available_step to check.
 
         Yields
         ------
         SimulationState
             Each step's state (as a copy to avoid mutation issues).
         """
+        # If frames exist (live_compress mode), yield them in order
+        if self._frames:
+            for step_no in sorted(self._frames.keys()):
+                yield self._frames[step_no].copy()
+            return
+
         # Start from checkpoint or initial state
         if self._checkpoint_state is not None:
             live_state = self._checkpoint_state.copy()
@@ -206,17 +278,38 @@ class SimulationResult:
     def first_step(self):
         return self.get_step(0)
 
-    def set_output(self, step: SimulationState):
-        self.output = step
+    @property
+    def output(self) -> SimulationState:
+        """The final output state of the simulation (alias for live_state)."""
+        return self._live_state
 
     def load_steps(self, interval=1):
         """Pre-loads steps into memory at the specified interval for faster access.
+
+        When live_compress is enabled, this is a no-op since frames are already
+        stored during simulation. If a different interval is requested than what
+        was used during simulation (compress_freq), an error is raised.
 
         Parameters
         ----------
         interval : int, optional
             Store every Nth step in memory, by default 1.
+
+        Raises
+        ------
+        ValueError
+            If live_compress was used and requested interval doesn't match compress_freq.
         """
+        # If frames already exist (live_compress mode), no reconstruction needed
+        if self._frames:
+            if interval != self.compress_freq:
+                raise ValueError(
+                    f"Cannot load steps with interval={interval}. This result was "
+                    f"created with live_compress=True and compress_freq={self.compress_freq}. "
+                    f"Only interval={self.compress_freq} is available."
+                )
+            return
+
         # Clear old cache first
         self._stored_states.clear()
 
@@ -255,8 +348,20 @@ class SimulationResult:
         Raises
         ------
         ValueError
-            If step_no is before the earliest available step (when using max_history).
+            If step_no is before the earliest available step (when using max_history),
+            or if step_no is not available in live_compress mode.
         """
+        # Check frames first (live_compress mode)
+        if self._frames:
+            if step_no in self._frames:
+                return self._frames[step_no]
+            # In live_compress mode, only frames at compress_freq intervals exist
+            raise ValueError(
+                f"Cannot retrieve step {step_no}. This result was created with "
+                f"live_compress=True and compress_freq={self.compress_freq}. "
+                f"Available steps: {sorted(self._frames.keys())}"
+            )
+
         if step_no < self._checkpoint_step:
             raise ValueError(
                 f"Cannot retrieve step {step_no}. Earliest available step is "
@@ -288,6 +393,7 @@ class SimulationResult:
             "diffs": self._diffs,
             "compress_freq": self.compress_freq,
             "max_history": self.max_history,
+            "live_compress": self.live_compress,
             "total_steps": self._total_steps,
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
@@ -299,6 +405,15 @@ class SimulationResult:
         else:
             result["checkpoint_state"] = None
             result["checkpoint_step"] = 0
+
+        # Include frames if present (live_compress mode)
+        if self._frames:
+            result["frames"] = {
+                str(step): state.as_dict() for step, state in self._frames.items()
+            }
+        else:
+            result["frames"] = {}
+
         return result
 
     def to_file(self, fpath: str = None) -> None:
