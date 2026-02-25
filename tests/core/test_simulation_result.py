@@ -410,6 +410,43 @@ def test_live_state_property(initial_state):
     assert result.live_state.get_site_state(0)["value"] == 100
 
 
+def test_from_dict_restores_live_state_from_diffs(initial_state):
+    """Test that from_dict replays diffs to restore live_state."""
+    result = SimulationResult(initial_state)
+
+    for step in range(5):
+        result.add_step({0: {"value": step}})
+
+    # Serialize and deserialize
+    result_dict = result.as_dict()
+    restored = SimulationResult.from_dict(result_dict)
+
+    # live_state should be restored by replaying diffs
+    assert restored.live_state.get_site_state(0)["value"] == 4
+
+
+def test_from_dict_restores_live_state_from_checkpoint(initial_state):
+    """Test that from_dict uses checkpoint when restoring live_state."""
+    # Use max_history to trigger checkpoint creation
+    result = SimulationResult(initial_state, max_history=5)
+
+    # Add enough steps to trigger checkpoint
+    for step in range(10):
+        result.add_step({0: {"value": step}})
+
+    # Should have a checkpoint now
+    assert result._checkpoint_state is not None
+
+    # Serialize and deserialize
+    result_dict = result.as_dict()
+    restored = SimulationResult.from_dict(result_dict)
+
+    # live_state should be restored correctly (final value is 9)
+    assert restored.live_state.get_site_state(0)["value"] == 9
+    # Checkpoint should be restored
+    assert restored._checkpoint_state is not None
+
+
 def test_output_property(initial_state):
     """Test that output property is an alias for live_state."""
     result = SimulationResult(initial_state)
