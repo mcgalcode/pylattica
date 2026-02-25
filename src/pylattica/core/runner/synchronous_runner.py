@@ -42,7 +42,6 @@ class SynchronousRunner(Runner):
         self,
         initial_state: SimulationState,
         result: SimulationResult,
-        live_state: SimulationState,
         controller: BasicController,
         num_steps: int,
         verbose: bool = False,
@@ -74,11 +73,9 @@ class SynchronousRunner(Runner):
         else:
             printif(verbose, "Running in series.")
             for _ in tqdm(range(num_steps)):
-                updates = self._take_step(live_state, controller)
-                live_state.batch_update(updates)
+                updates = self._take_step(result.live_state, controller)
                 result.add_step(updates)
 
-        result.set_output(live_state)
         return result
 
     def _take_step_parallel(self, updates: dict, pool, chunk_size) -> SimulationState:

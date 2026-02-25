@@ -62,9 +62,7 @@ class Runner:
 
         result = controller.instantiate_result(initial_state.copy())
         controller.pre_run(initial_state)
-        live_state = initial_state.copy()
 
-        self._run(initial_state, result, live_state, controller, num_steps, verbose)
+        self._run(initial_state, result, controller, num_steps, verbose)
 
-        result.set_output(live_state)
         return result

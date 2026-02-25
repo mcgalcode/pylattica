@@ -297,3 +297,124 @@ def test_compress_result_invalid_size(initial_state):
     # Can't compress to more steps than we have
     with pytest.raises(ValueError, match="Cannot compress"):
         compress_result(result, 100)
+
+
+def test_live_compress_stores_frames(initial_state):
+    """Test that live_compress stores frames at compress_freq intervals."""
+    result = SimulationResult(initial_state, compress_freq=10, live_compress=True)
+
+    # Add 25 steps
+    for step in range(25):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # Should have frames at 0, 10, 20 (initial + steps 10 and 20)
+    assert 0 in result._frames
+    assert 10 in result._frames
+    assert 20 in result._frames
+    assert 25 not in result._frames  # Not a multiple of 10
+
+    # Diffs should be empty in live_compress mode
+    assert len(result._diffs) == 0
+
+
+def test_live_compress_get_step(initial_state):
+    """Test that get_step works with live_compress mode."""
+    result = SimulationResult(initial_state, compress_freq=5, live_compress=True)
+
+    for step in range(10):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # Can get steps at frame intervals
+    state_5 = result.get_step(5)
+    assert state_5.get_site_state(0)["value"] == 4  # 0-indexed, step 5 has value 4
+
+    state_10 = result.get_step(10)
+    assert state_10.get_site_state(0)["value"] == 9
+
+    # Cannot get steps that aren't at frame intervals
+    with pytest.raises(ValueError, match="live_compress"):
+        result.get_step(3)
+
+
+def test_live_compress_load_steps_noop(initial_state):
+    """Test that load_steps is a no-op in live_compress mode."""
+    result = SimulationResult(initial_state, compress_freq=5, live_compress=True)
+
+    for step in range(10):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # load_steps with matching interval should be a no-op
+    result.load_steps(interval=5)  # Should not raise
+
+    # load_steps with non-matching interval should raise
+    with pytest.raises(ValueError, match="interval"):
+        result.load_steps(interval=1)
+
+
+def test_live_compress_steps_generator(initial_state):
+    """Test that steps() yields frames in live_compress mode."""
+    result = SimulationResult(initial_state, compress_freq=5, live_compress=True)
+
+    for step in range(10):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # Should yield frames in order: 0, 5, 10
+    steps = list(result.steps())
+    assert len(steps) == 3  # Frames at 0, 5, 10
+
+    # First frame is initial (no value set yet)
+    # Frame at step 5 has value 4 (last update before step 5 frame is taken)
+    assert steps[1].get_site_state(0)["value"] == 4
+    # Frame at step 10 has value 9
+    assert steps[2].get_site_state(0)["value"] == 9
+
+
+def test_live_compress_serialization(initial_state):
+    """Test that live_compress results serialize and deserialize correctly."""
+    result = SimulationResult(initial_state, compress_freq=5, live_compress=True)
+
+    for step in range(10):
+        updates = {0: {"value": step}}
+        result.add_step(updates)
+
+    # Serialize and deserialize
+    result_dict = result.as_dict()
+    restored = SimulationResult.from_dict(result_dict)
+
+    # Check properties are preserved
+    assert restored.live_compress is True
+    assert restored.compress_freq == 5
+    assert len(restored._frames) == 3  # 0, 5, 10
+    assert len(restored._diffs) == 0
+
+    # Check live_state is correctly restored
+    assert restored.live_state.get_site_state(0)["value"] == 9
+
+
+def test_live_state_property(initial_state):
+    """Test that live_state property reflects current state."""
+    result = SimulationResult(initial_state)
+
+    # Initial live_state - site 0 doesn't exist yet
+    assert result.live_state.get_site_state(0) is None
+
+    # After adding steps, live_state is updated
+    result.add_step({0: {"value": 42}})
+    assert result.live_state.get_site_state(0)["value"] == 42
+
+    result.add_step({0: {"value": 100}})
+    assert result.live_state.get_site_state(0)["value"] == 100
+
+
+def test_output_property(initial_state):
+    """Test that output property is an alias for live_state."""
+    result = SimulationResult(initial_state)
+
+    result.add_step({0: {"value": 42}})
+
+    # output should be same as live_state
+    assert result.output is result.live_state
