@@ -70,11 +70,6 @@ class SynchronousRunner(Runner):
                         updates, pool, chunk_size=chunk_size
                     )
                     result.add_step(updates)
-
-                # The parallel path accumulates diffs without ever mutating
-                # live_state, so apply the final cumulative update before it is
-                # set as the result's output.
-                live_state.batch_update(updates)
         else:
             printif(verbose, "Running in series.")
             for _ in tqdm(range(num_steps)):
