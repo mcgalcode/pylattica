@@ -3,6 +3,7 @@ import pytest
 import random
 import os
 from pylattica.core import SimulationResult, SimulationState
+from pylattica.core.observed_result import ObservedResult
 from pylattica.core.simulation_result import compress_result
 
 
@@ -588,3 +589,150 @@ def test_num_frames_serialization(initial_state):
     assert restored.num_frames == 5
     assert restored.compress_freq == 4
     assert restored.live_state.get_site_state(0)["value"] == 19
+
+
+def step_reducer(state, step_no):
+    """A bare-callable reducer returning the step number."""
+    return step_no
+
+
+# ---------------------------------------------------------------------------
+# retain_history=False (minimum-memory) mode
+# ---------------------------------------------------------------------------
+
+
+def test_no_retention_stores_nothing(initial_state):
+    """retain_history=False keeps only the live state -- no diffs/frames."""
+    result = SimulationResult(initial_state, retain_history=False)
+
+    for step in range(10):
+        result.add_step({0: {"value": step}})
+
+    assert len(result._diffs) == 0
+    assert len(result._frames) == 0
+    assert result._total_steps == 10
+    assert result.live_state.get_site_state(0)["value"] == 9
+
+
+def test_no_retention_live_accessors_work(initial_state):
+    """live_state/output/last_step/first_step remain valid without history."""
+    result = SimulationResult(initial_state, retain_history=False)
+    result.add_step({0: {"value": 42}})
+
+    assert result.output.get_site_state(0)["value"] == 42
+    assert result.last_step.get_site_state(0)["value"] == 42
+    assert result.first_step.as_dict() == initial_state.as_dict()
+
+
+def test_no_retention_reconstruction_raises(initial_state):
+    """State reconstruction is unavailable when history is not retained."""
+    result = SimulationResult(initial_state, retain_history=False)
+    result.add_step({0: {"value": 1}})
+
+    with pytest.raises(RuntimeError, match="retain_history=False"):
+        list(result.steps())
+    with pytest.raises(RuntimeError, match="retain_history=False"):
+        result.get_step(1)
+    with pytest.raises(RuntimeError, match="retain_history=False"):
+        result.load_steps()
+
+
+def test_no_retention_with_compression_raises(initial_state):
+    """Compression and no-retention are mutually exclusive."""
+    with pytest.raises(ValueError, match="retain_history=False"):
+        SimulationResult(initial_state, retain_history=False, compress_freq=5)
+    with pytest.raises(ValueError, match="retain_history=False"):
+        SimulationResult(initial_state, retain_history=False, num_frames=5)
+
+
+def test_no_retention_serialization(initial_state):
+    """No-retention results persist the final state and round-trip."""
+    result = SimulationResult(initial_state, retain_history=False)
+    for step in range(10):
+        result.add_step({0: {"value": step}})
+
+    restored = SimulationResult.from_dict(result.as_dict())
+
+    assert restored.retain_history is False
+    assert restored._total_steps == 10
+    assert restored.live_state.get_site_state(0)["value"] == 9
+
+
+# ---------------------------------------------------------------------------
+# Observer fan-out (add_observed_result)
+# ---------------------------------------------------------------------------
+
+
+def test_observer_records_initial_state_on_attach(initial_state):
+    result = SimulationResult(initial_state)
+    observed = ObservedResult(observer=step_reducer, compress_freq=2)
+    result.add_observed_result(observed)
+
+    # Attaching records the step-0 observation immediately.
+    assert observed.observation_steps == [0]
+
+
+def test_observer_independent_cadence(initial_state):
+    """Observer cadence is independent of the result's storage cadence."""
+    result = SimulationResult(initial_state, compress_freq=5)
+    observed = ObservedResult(observer=step_reducer, compress_freq=3)
+    result.add_observed_result(observed)
+
+    for step in range(10):
+        result.add_step({0: {"value": step}})
+    result.finalize()
+
+    # Result frames land on multiples of 5 (+ finalized last step).
+    assert sorted(result._frames.keys()) == [0, 5, 10]
+    # Observation lands on multiples of 3 (+ finalized last step 10).
+    assert observed.observation_steps == [0, 3, 6, 9, 10]
+
+
+def test_observer_with_no_retention(initial_state):
+    """Observers accumulate even when the result retains no history."""
+    result = SimulationResult(initial_state, retain_history=False)
+    observed = ObservedResult(observer=step_reducer, compress_freq=4)
+    result.add_observed_result(observed)
+
+    for step in range(10):
+        result.add_step({0: {"value": step}})
+    result.finalize()
+
+    assert observed.observation_steps == [0, 4, 8, 10]
+    # Result itself stored nothing.
+    assert len(result._diffs) == 0
+    assert len(result._frames) == 0
+
+
+def test_observer_num_frames_prepared_by_result(initial_state):
+    """prepare_for_steps fans out so num_frames observers derive their cadence."""
+    result = SimulationResult(initial_state)
+    observed = ObservedResult(observer=step_reducer, num_frames=5)
+    result.add_observed_result(observed)
+
+    result.prepare_for_steps(20)
+    assert observed.compress_freq == 4
+
+
+def test_add_observed_result_after_steps_raises(initial_state):
+    result = SimulationResult(initial_state)
+    result.add_step({0: {"value": 1}})
+    observed = ObservedResult(observer=step_reducer)
+    with pytest.raises(RuntimeError, match="before recording steps"):
+        result.add_observed_result(observed)
+
+
+def test_multiple_observers(initial_state):
+    result = SimulationResult(initial_state)
+    fast = ObservedResult(observer=step_reducer, compress_freq=2)
+    slow = ObservedResult(observer=step_reducer, compress_freq=5)
+    result.add_observed_result(fast)
+    result.add_observed_result(slow)
+
+    for step in range(10):
+        result.add_step({0: {"value": step}})
+    result.finalize()
+
+    assert result.observed_results == [fast, slow]
+    assert fast.observation_steps == [0, 2, 4, 6, 8, 10]
+    assert slow.observation_steps == [0, 5, 10]
