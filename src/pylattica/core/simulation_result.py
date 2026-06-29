@@ -1,3 +1,4 @@
+import math
 import tqdm
 
 from typing import Dict, List
@@ -25,7 +26,14 @@ class SimulationResult:
         If True, store full state snapshots at compress_freq intervals during
         simulation instead of diffs. This avoids the expensive O(n) reconstruction
         in load_steps() at the cost of more memory per frame. When enabled,
-        load_steps() becomes a no-op since frames are already stored.
+        load_steps() becomes a no-op since frames are already stored. Specifying
+        either compress_freq or num_frames implies live_compress=True.
+    num_frames : int, optional
+        Target total number of frames to store, as an alternative to specifying
+        compress_freq directly. The sampling frequency is derived from the planned
+        number of steps once it is known (see prepare_for_steps). The initial and
+        final frames are always included, so the stored count is approximately
+        num_frames. Cannot be combined with compress_freq.
     """
 
     @classmethod
@@ -37,13 +45,19 @@ class SimulationResult:
         diffs = res_dict.get("diffs", [])
         compress_freq = res_dict.get("compress_freq", 1)
         max_history = res_dict.get("max_history", None)
+        # Read the (derived) live_compress flag for back-compat with older
+        # serialized results that predate compress_freq/num_frames implying it.
         live_compress = res_dict.get("live_compress", False)
+        num_frames = res_dict.get("num_frames", None)
+        # Reconstruct using the already-derived compress_freq so we don't
+        # re-derive it (and to sidestep the mutually-exclusive validation).
         res = cls(
             SimulationState.from_dict(res_dict["initial_state"]),
-            compress_freq=compress_freq,
+            compress_freq=compress_freq if live_compress else None,
             max_history=max_history,
-            live_compress=live_compress,
         )
+        # Preserve the original num_frames target for round-tripping.
+        res.num_frames = num_frames
         # Restore checkpoint if present
         if "checkpoint_state" in res_dict and res_dict["checkpoint_state"] is not None:
             res._checkpoint_state = SimulationState.from_dict(
@@ -85,35 +99,45 @@ class SimulationResult:
     def __init__(
         self,
         starting_state: SimulationState,
-        compress_freq: int = 1,
+        compress_freq: int = None,
         max_history: int = None,
-        live_compress: bool = False,
+        num_frames: int = None,
     ):
         """Initializes a SimulationResult with the specified starting_state.
+
+        By default the result stores per-step diffs and reconstructs states on
+        demand. Specifying either compress_freq or num_frames switches it into
+        "live compression" mode, where full state snapshots (frames) are stored
+        during the run instead of diffs.
 
         Parameters
         ----------
         starting_state : SimulationState
             The state with which the simulation started.
         compress_freq : int, optional
-            Compression frequency for sampling, by default 1. When live_compress
-            is True, this controls how often full state snapshots are stored.
+            Compression frequency for sampling. When set, a full state snapshot
+            is stored every compress_freq steps. Cannot be combined with
+            num_frames. Defaults to None (diff mode).
         max_history : int, optional
             Maximum number of diffs to keep in memory. When exceeded, a
             checkpoint is created and old diffs are dropped. This prevents
             unbounded memory growth during long simulations. Set to None
             (default) for unlimited history. Recommended: 1000-10000 for
-            long simulations. Ignored when live_compress is True.
-        live_compress : bool, optional
-            If True, store full state snapshots at compress_freq intervals
-            during simulation instead of storing diffs. This avoids the O(n)
-            reconstruction cost of load_steps() but uses more memory per stored
-            frame. Default is False (store diffs, reconstruct post-hoc).
+            long simulations. Ignored in live compression mode.
+        num_frames : int, optional
+            Target total number of frames to store, as an alternative to
+            compress_freq. The sampling frequency is derived from the planned
+            number of steps via prepare_for_steps(). The initial and final
+            frames are always included. Cannot be combined with compress_freq.
+
+        Raises
+        ------
+        ValueError
+            If both compress_freq and num_frames are specified, or if either is
+            not a positive integer.
         """
         self.initial_state = starting_state
-        self.compress_freq = compress_freq
         self.max_history = max_history
-        self.live_compress = live_compress
         self._diffs: list[dict] = []
         self._stored_states = {}
         self._frames: Dict[int, SimulationState] = {}  # For live_compress mode
@@ -125,9 +149,60 @@ class SimulationResult:
         # Live state that gets updated with each step
         self._live_state: SimulationState = starting_state.copy()
 
-        # Store initial state as frame 0 if live_compress is enabled
+        # Set up the frame-sampling strategy (also stores frame 0 if enabled).
+        self.configure_compression(compress_freq=compress_freq, num_frames=num_frames)
+
+    def configure_compression(
+        self, compress_freq: int = None, num_frames: int = None
+    ) -> None:
+        """Configures the frame-sampling strategy.
+
+        Called from __init__, and also by the runner after instantiation once
+        run-time options are known. Must be called before any steps have been
+        recorded. Passing neither argument leaves the result in diff mode.
+
+        Parameters
+        ----------
+        compress_freq : int, optional
+            Store a full state snapshot every compress_freq steps. Cannot be
+            combined with num_frames.
+        num_frames : int, optional
+            Target total number of frames; the interval is derived later via
+            prepare_for_steps(). Cannot be combined with compress_freq.
+
+        Raises
+        ------
+        ValueError
+            If both compress_freq and num_frames are specified, or if either is
+            not a positive integer.
+        RuntimeError
+            If called after steps have already been recorded.
+        """
+        if self._total_steps > 0 or self._diffs:
+            raise RuntimeError(
+                "configure_compression must be called before recording steps."
+            )
+        if compress_freq is not None and num_frames is not None:
+            raise ValueError(
+                "Specify either compress_freq or num_frames, not both."
+            )
+        if compress_freq is not None and compress_freq < 1:
+            raise ValueError(f"compress_freq must be >= 1, got {compress_freq}.")
+        if num_frames is not None and num_frames < 1:
+            raise ValueError(f"num_frames must be >= 1, got {num_frames}.")
+
+        # Specifying a sampling strategy (frequency or frame count) enables
+        # live compression (storing frames instead of diffs).
+        self.live_compress = compress_freq is not None or num_frames is not None
+        self.num_frames = num_frames
+        # Effective sampling interval. When num_frames is set this is derived
+        # later (prepare_for_steps); until then default to every step.
+        self.compress_freq = compress_freq if compress_freq is not None else 1
+
+        # Store the initial state as frame 0 when live compression is enabled.
+        self._frames = {}
         if self.live_compress:
-            self._frames[0] = starting_state.copy()
+            self._frames[0] = self._live_state.copy()
 
     def get_diffs(self) -> list[dict]:
         """Returns the list of diffs.
@@ -147,6 +222,39 @@ class SimulationResult:
         the current simulation state during a run.
         """
         return self._live_state
+
+    def prepare_for_steps(self, num_steps: int) -> None:
+        """Finalizes the frame sampling strategy now that the total number of
+        steps is known.
+
+        When the result was configured with num_frames, the sampling frequency
+        cannot be determined at construction time (the total step count is only
+        known by the runner). This method derives compress_freq so that roughly
+        num_frames frames are stored over the course of the run. It is a no-op
+        for diff mode or when compress_freq was specified directly.
+
+        Parameters
+        ----------
+        num_steps : int
+            The total number of steps the simulation will run.
+        """
+        if self.num_frames is None or num_steps is None:
+            return
+
+        # Derive the interval so that ~num_frames snapshots are stored. The
+        # initial (and final, via finalize) frames are always included.
+        self.compress_freq = max(1, math.ceil(num_steps / self.num_frames))
+
+    def finalize(self) -> None:
+        """Ensures the final state is stored as a frame.
+
+        In live compression mode the last step may not land on a compress_freq
+        boundary, so it would otherwise be omitted. This stores the current
+        live state as the frame for the final step. It is a no-op in diff mode
+        or before any steps have been taken.
+        """
+        if self.live_compress and self._total_steps > 0:
+            self._frames[self._total_steps] = self._live_state.copy()
 
     def add_step(self, updates: Dict[int, Dict]) -> None:
         """Takes a set of updates as a dictionary mapping site IDs
@@ -394,6 +502,7 @@ class SimulationResult:
             "compress_freq": self.compress_freq,
             "max_history": self.max_history,
             "live_compress": self.live_compress,
+            "num_frames": self.num_frames,
             "total_steps": self._total_steps,
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,

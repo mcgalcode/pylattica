@@ -93,6 +93,79 @@ def test_general_state_async_controller(square_grid_2D_4x4: PeriodicStructure):
         assert gen == i
 
 
+def test_runner_num_frames(square_grid_2D_4x4):
+    """run(num_frames=...) configures live compression and derives the interval."""
+
+    class CountingController(BasicController):
+        def get_state_update(self, site_id: int, prev_state: SimulationState):
+            prev = prev_state.get_site_state(site_id)["value"]
+            return {site_id: {"value": prev + 1}}
+
+    initial_state = SimulationState()
+    for site in square_grid_2D_4x4.sites():
+        initial_state.set_site_state(site[SITE_ID], {"value": 0})
+
+    runner = AsynchronousRunner()
+    controller = CountingController()
+    num_steps = 100
+    result = runner.run(
+        initial_state, controller=controller, num_steps=num_steps, num_frames=5
+    )
+
+    assert result.live_compress is True
+    assert result.num_frames == 5
+    # ceil(100 / 5) == 20
+    assert result.compress_freq == 20
+    # Final frame is always captured even off the interval boundary.
+    assert num_steps in result._frames
+
+
+def test_runner_compress_freq(square_grid_2D_4x4):
+    """run(compress_freq=...) enables live compression at the given interval."""
+
+    class CountingController(BasicController):
+        def get_state_update(self, site_id: int, prev_state: SimulationState):
+            prev = prev_state.get_site_state(site_id)["value"]
+            return {site_id: {"value": prev + 1}}
+
+    initial_state = SimulationState()
+    for site in square_grid_2D_4x4.sites():
+        initial_state.set_site_state(site[SITE_ID], {"value": 0})
+
+    runner = AsynchronousRunner()
+    controller = CountingController()
+    result = runner.run(
+        initial_state, controller=controller, num_steps=10, compress_freq=5
+    )
+
+    assert result.live_compress is True
+    assert result.compress_freq == 5
+    assert 10 in result._frames
+
+
+def test_runner_both_compression_args_raises(square_grid_2D_4x4):
+    """Passing both compress_freq and num_frames to run() must raise."""
+
+    class CountingController(BasicController):
+        def get_state_update(self, site_id: int, prev_state: SimulationState):
+            return {site_id: {"value": 1}}
+
+    initial_state = SimulationState()
+    for site in square_grid_2D_4x4.sites():
+        initial_state.set_site_state(site[SITE_ID], {"value": 0})
+
+    runner = AsynchronousRunner()
+    controller = CountingController()
+    with pytest.raises(ValueError, match="either"):
+        runner.run(
+            initial_state,
+            controller=controller,
+            num_steps=10,
+            compress_freq=5,
+            num_frames=5,
+        )
+
+
 def test_async_controller_next_sites(square_grid_2D_4x4):
     CHANGED_STATE = 3
 

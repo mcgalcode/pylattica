@@ -301,7 +301,7 @@ def test_compress_result_invalid_size(initial_state):
 
 def test_live_compress_stores_frames(initial_state):
     """Test that live_compress stores frames at compress_freq intervals."""
-    result = SimulationResult(initial_state, compress_freq=10, live_compress=True)
+    result = SimulationResult(initial_state, compress_freq=10)
 
     # Add 25 steps
     for step in range(25):
@@ -320,7 +320,7 @@ def test_live_compress_stores_frames(initial_state):
 
 def test_live_compress_get_step(initial_state):
     """Test that get_step works with live_compress mode."""
-    result = SimulationResult(initial_state, compress_freq=5, live_compress=True)
+    result = SimulationResult(initial_state, compress_freq=5)
 
     for step in range(10):
         updates = {0: {"value": step}}
@@ -340,7 +340,7 @@ def test_live_compress_get_step(initial_state):
 
 def test_live_compress_load_steps_noop(initial_state):
     """Test that load_steps is a no-op in live_compress mode."""
-    result = SimulationResult(initial_state, compress_freq=5, live_compress=True)
+    result = SimulationResult(initial_state, compress_freq=5)
 
     for step in range(10):
         updates = {0: {"value": step}}
@@ -356,7 +356,7 @@ def test_live_compress_load_steps_noop(initial_state):
 
 def test_live_compress_steps_generator(initial_state):
     """Test that steps() yields frames in live_compress mode."""
-    result = SimulationResult(initial_state, compress_freq=5, live_compress=True)
+    result = SimulationResult(initial_state, compress_freq=5)
 
     for step in range(10):
         updates = {0: {"value": step}}
@@ -375,7 +375,7 @@ def test_live_compress_steps_generator(initial_state):
 
 def test_live_compress_serialization(initial_state):
     """Test that live_compress results serialize and deserialize correctly."""
-    result = SimulationResult(initial_state, compress_freq=5, live_compress=True)
+    result = SimulationResult(initial_state, compress_freq=5)
 
     for step in range(10):
         updates = {0: {"value": step}}
@@ -455,3 +455,136 @@ def test_output_property(initial_state):
 
     # output should be same as live_state
     assert result.output is result.live_state
+
+
+def test_num_frames_implies_live_compress(initial_state):
+    """Specifying num_frames should enable live compression."""
+    result = SimulationResult(initial_state, num_frames=5)
+    assert result.live_compress is True
+    assert result.num_frames == 5
+
+
+def test_compress_freq_implies_live_compress(initial_state):
+    """Specifying compress_freq should enable live compression."""
+    result = SimulationResult(initial_state, compress_freq=5)
+    assert result.live_compress is True
+    assert result.num_frames is None
+
+
+def test_no_compression_args_means_diff_mode(initial_state):
+    """With neither argument the result stays in diff mode."""
+    result = SimulationResult(initial_state)
+    assert result.live_compress is False
+    assert result.num_frames is None
+
+
+def test_both_compression_args_raises(initial_state):
+    """Supplying both compress_freq and num_frames must raise."""
+    with pytest.raises(ValueError, match="either"):
+        SimulationResult(initial_state, compress_freq=5, num_frames=5)
+
+
+def test_compress_freq_below_one_raises(initial_state):
+    with pytest.raises(ValueError, match="compress_freq"):
+        SimulationResult(initial_state, compress_freq=0)
+
+
+def test_num_frames_below_one_raises(initial_state):
+    with pytest.raises(ValueError, match="num_frames"):
+        SimulationResult(initial_state, num_frames=0)
+
+
+def test_prepare_for_steps_derives_freq(initial_state):
+    """num_frames mode derives compress_freq from the total step count."""
+    result = SimulationResult(initial_state, num_frames=10)
+    # Default before prepare is every step.
+    assert result.compress_freq == 1
+
+    result.prepare_for_steps(100)
+    assert result.compress_freq == 10
+
+
+def test_prepare_for_steps_rounds_up(initial_state):
+    """The derived interval rounds up so frame count does not exceed target."""
+    result = SimulationResult(initial_state, num_frames=3)
+    result.prepare_for_steps(100)
+    # ceil(100 / 3) == 34
+    assert result.compress_freq == 34
+
+
+def test_prepare_for_steps_noop_for_compress_freq(initial_state):
+    """prepare_for_steps does not alter an explicitly set compress_freq."""
+    result = SimulationResult(initial_state, compress_freq=7)
+    result.prepare_for_steps(100)
+    assert result.compress_freq == 7
+
+
+def test_prepare_for_steps_noop_for_diff_mode(initial_state):
+    """prepare_for_steps is a no-op in diff mode."""
+    result = SimulationResult(initial_state)
+    result.prepare_for_steps(100)
+    assert result.live_compress is False
+
+
+def test_finalize_includes_last_frame(initial_state):
+    """finalize stores the final step even when it is off a frame boundary."""
+    result = SimulationResult(initial_state, compress_freq=5)
+
+    for step in range(7):
+        result.add_step({0: {"value": step}})
+
+    # Without finalize, frames land at 0 and 5 only.
+    assert 7 not in result._frames
+
+    result.finalize()
+    assert 7 in result._frames
+    assert result._frames[7].get_site_state(0)["value"] == 6
+
+
+def test_finalize_noop_in_diff_mode(initial_state):
+    """finalize does nothing in diff mode."""
+    result = SimulationResult(initial_state)
+    result.add_step({0: {"value": 1}})
+    result.finalize()
+    assert len(result._frames) == 0
+
+
+def test_num_frames_full_flow(initial_state):
+    """Simulate a runner-style flow: configure, prepare, add steps, finalize."""
+    result = SimulationResult(initial_state, num_frames=5)
+    result.prepare_for_steps(20)
+    assert result.compress_freq == 4
+
+    for step in range(20):
+        result.add_step({0: {"value": step}})
+
+    result.finalize()
+
+    # Frames at 0, 4, 8, 12, 16, 20.
+    assert sorted(result._frames.keys()) == [0, 4, 8, 12, 16, 20]
+    assert result._frames[20].get_site_state(0)["value"] == 19
+
+
+def test_configure_compression_after_steps_raises(initial_state):
+    """Reconfiguring after steps have been recorded must raise."""
+    result = SimulationResult(initial_state)
+    result.add_step({0: {"value": 1}})
+    with pytest.raises(RuntimeError, match="before recording steps"):
+        result.configure_compression(compress_freq=5)
+
+
+def test_num_frames_serialization(initial_state):
+    """num_frames survives a serialization round-trip."""
+    result = SimulationResult(initial_state, num_frames=5)
+    result.prepare_for_steps(20)
+
+    for step in range(20):
+        result.add_step({0: {"value": step}})
+    result.finalize()
+
+    restored = SimulationResult.from_dict(result.as_dict())
+
+    assert restored.live_compress is True
+    assert restored.num_frames == 5
+    assert restored.compress_freq == 4
+    assert restored.live_state.get_site_state(0)["value"] == 19

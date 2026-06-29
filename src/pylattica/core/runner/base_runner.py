@@ -38,6 +38,8 @@ class Runner:
         controller: BasicController,
         num_steps: int,
         verbose=False,
+        compress_freq: int = None,
+        num_frames: int = None,
     ) -> SimulationResult:
         """Run the simulation for the prescribed number of steps. Recall that one
         asynchronous simulation step involves one application of the update rule,
@@ -53,6 +55,12 @@ class Runner:
             The number of steps for which the simulation should run.
         verbose : bool, optional
             If True, debug information is printed during the run, by default False
+        compress_freq : int, optional
+            If set, the result stores a full state snapshot every compress_freq
+            steps instead of per-step diffs. Cannot be combined with num_frames.
+        num_frames : int, optional
+            If set, the result stores roughly this many full state snapshots over
+            the course of the run. Cannot be combined with compress_freq.
 
         Returns
         -------
@@ -61,8 +69,22 @@ class Runner:
         """
 
         result = controller.instantiate_result(initial_state.copy())
+        # Configure live compression after instantiation when run-time options
+        # are provided. This keeps storage policy out of the controller while
+        # leaving instantiate_result overrides untouched.
+        if compress_freq is not None or num_frames is not None:
+            result.configure_compression(
+                compress_freq=compress_freq, num_frames=num_frames
+            )
+        # Let the result derive its frame-sampling strategy now that the total
+        # step count is known (used when configured with num_frames).
+        result.prepare_for_steps(num_steps)
         controller.pre_run(initial_state)
 
         self._run(initial_state, result, controller, num_steps, verbose)
+
+        # Ensure the final state is captured (e.g. as the last frame in live
+        # compression mode).
+        result.finalize()
 
         return result
