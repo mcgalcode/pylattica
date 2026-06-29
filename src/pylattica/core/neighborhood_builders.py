@@ -438,7 +438,7 @@ class MotifNeighborhoodBuilder(NeighborhoodBuilder):
         for neighbor_vec in self._motif:
             loc = tuple(s + n for s, n in zip(location, neighbor_vec))
             nb_id = struct.id_at(loc)
-            if nb_id != curr_site[SITE_ID]:
+            if nb_id is not None and nb_id != curr_site[SITE_ID]:
                 nbs.append((nb_id, self.distances.get_dist(neighbor_vec)))
         return nbs
 

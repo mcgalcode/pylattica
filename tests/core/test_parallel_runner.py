@@ -34,6 +34,28 @@ def test_parallel_runner(square_grid_2D_4x4: PeriodicStructure):
 
 
 @skip_windows_due_to_parallel
+def test_parallel_runner_output_is_final_state(square_grid_2D_4x4: PeriodicStructure):
+    class SimpleParallelController(BasicController):
+        def get_state_update(self, site_id: int, prev_state: SimulationState):
+            prev = prev_state.get_site_state(site_id)["value"]
+            new_state = prev + 1
+            return {site_id: {"value": new_state}}
+
+    initial_state = SimulationState()
+    for site in square_grid_2D_4x4.sites():
+        initial_state.set_site_state(site[SITE_ID], {"value": 0})
+
+    runner = SynchronousRunner(parallel=True)
+
+    controller = SimpleParallelController()
+    result = runner.run(initial_state, controller=controller, num_steps=10)
+
+    # result.output should be the final, evolved state - not the initial state
+    for site_state in result.output.all_site_states():
+        assert site_state["value"] == 10
+
+
+@skip_windows_due_to_parallel
 def test_parallel_runner_speed(square_grid_2D_4x4: PeriodicStructure):
     class SimpleParallelController(BasicController):
         def get_state_update(self, site_id: int, prev_state: SimulationState):
