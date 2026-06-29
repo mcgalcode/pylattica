@@ -49,12 +49,14 @@ class SimulationResult:
         # serialized results that predate compress_freq/num_frames implying it.
         live_compress = res_dict.get("live_compress", False)
         num_frames = res_dict.get("num_frames", None)
+        retain_history = res_dict.get("retain_history", True)
         # Reconstruct using the already-derived compress_freq so we don't
         # re-derive it (and to sidestep the mutually-exclusive validation).
         res = cls(
             SimulationState.from_dict(res_dict["initial_state"]),
             compress_freq=compress_freq if live_compress else None,
             max_history=max_history,
+            retain_history=retain_history,
         )
         # Preserve the original num_frames target for round-tripping.
         res._sampler.num_frames = num_frames
@@ -83,7 +85,10 @@ class SimulationResult:
         )
 
         # Reconstruct live_state to reflect the final state
-        if res._frames:
+        if "final_state" in res_dict and res_dict["final_state"] is not None:
+            # No-retention mode persists the final state directly.
+            res._live_state = SimulationState.from_dict(res_dict["final_state"])
+        elif res._frames:
             # In live_compress mode, use the last frame
             last_step = max(res._frames.keys())
             res._live_state = res._frames[last_step].copy()
@@ -102,6 +107,7 @@ class SimulationResult:
         compress_freq: int = None,
         max_history: int = None,
         num_frames: int = None,
+        retain_history: bool = True,
     ):
         """Initializes a SimulationResult with the specified starting_state.
 
@@ -129,15 +135,31 @@ class SimulationResult:
             compress_freq. The sampling frequency is derived from the planned
             number of steps via prepare_for_steps(). The initial and final
             frames are always included. Cannot be combined with compress_freq.
+        retain_history : bool, optional
+            If False, the result retains only the current (live) state during a
+            run -- no diffs and no frames are stored. This is the minimum-memory
+            mode, intended for use alongside observers that accumulate a reduced
+            view of the trajectory (see add_observer). State reconstruction
+            (get_step/steps/load_steps) is unavailable in this mode, but
+            live_state/output/last_step/first_state remain valid. Cannot be
+            combined with compress_freq or num_frames. Defaults to True.
 
         Raises
         ------
         ValueError
-            If both compress_freq and num_frames are specified, or if either is
-            not a positive integer.
+            If both compress_freq and num_frames are specified, if either is
+            not a positive integer, or if retain_history is False alongside a
+            compression argument.
         """
+        if not retain_history and (compress_freq is not None or num_frames is not None):
+            raise ValueError(
+                "retain_history=False cannot be combined with compress_freq or "
+                "num_frames; configure the cadence on an observer instead."
+            )
+
         self.initial_state = starting_state
         self.max_history = max_history
+        self._retain_history = retain_history
         self._diffs: list[dict] = []
         self._stored_states = {}
         self._frames: Dict[int, SimulationState] = {}  # For live_compress mode
@@ -145,6 +167,10 @@ class SimulationResult:
         self._checkpoint_state: SimulationState = None
         self._checkpoint_step: int = 0
         self._total_steps: int = 0
+
+        # ObservedResults that accumulate reduced views of the trajectory. The
+        # result fans out its live state to each one's record() in add_step().
+        self._observed_results: list = []
 
         # Live state that gets updated with each step
         self._live_state: SimulationState = starting_state.copy()
@@ -206,6 +232,43 @@ class SimulationResult:
         """The target frame count, if configured by frame count."""
         return self._sampler.num_frames
 
+    @property
+    def retain_history(self) -> bool:
+        """Whether full history (diffs/frames) is retained during the run."""
+        return self._retain_history
+
+    @property
+    def observed_results(self) -> list:
+        """The ObservedResults attached to this result."""
+        return self._observed_results
+
+    def add_observed_result(self, observed_result) -> None:
+        """Attach an ObservedResult that accumulates a reduced view of the run.
+
+        The result fans out its live state to each attached ObservedResult's
+        record() at every step; each one applies its own sampling cadence. The
+        initial state is recorded immediately as the step-0 observation.
+
+        Must be called before any steps have been recorded.
+
+        Parameters
+        ----------
+        observed_result : ObservedResult
+            The accumulator to attach.
+
+        Raises
+        ------
+        RuntimeError
+            If called after steps have already been recorded.
+        """
+        if self._total_steps > 0 or self._diffs:
+            raise RuntimeError(
+                "add_observed_result must be called before recording steps."
+            )
+        self._observed_results.append(observed_result)
+        # Capture the initial state as the step-0 observation.
+        observed_result.record(self._live_state, 0)
+
     def get_diffs(self) -> list[dict]:
         """Returns the list of diffs.
 
@@ -244,17 +307,24 @@ class SimulationResult:
         # initial (and final, via finalize) frames are always included. A no-op
         # unless configured with num_frames.
         self._sampler.prepare_for_steps(num_steps)
+        # Let each ObservedResult derive its own (independent) cadence too.
+        for observed_result in self._observed_results:
+            observed_result.prepare_for_steps(num_steps)
 
     def finalize(self) -> None:
-        """Ensures the final state is stored as a frame.
+        """Ensures the final state is captured as a frame and by observers.
 
         In live compression mode the last step may not land on a compress_freq
         boundary, so it would otherwise be omitted. This stores the current
-        live state as the frame for the final step. It is a no-op in diff mode
-        or before any steps have been taken.
+        live state as the frame for the final step. It is a no-op for frame
+        storage in diff mode or before any steps have been taken. Attached
+        observers are always finalized so they capture the final step.
         """
         if self.live_compress and self._total_steps > 0:
             self._frames[self._total_steps] = self._live_state.copy()
+
+        for observed_result in self._observed_results:
+            observed_result.finalize(self._live_state, self._total_steps)
 
     def add_step(self, updates: Dict[int, Dict]) -> None:
         """Takes a set of updates as a dictionary mapping site IDs
@@ -271,8 +341,10 @@ class SimulationResult:
         This method:
         1. Applies the updates to the internal live_state
         2. Increments the step counter
-        3. In live_compress mode: stores frames at compress_freq intervals
-        4. In normal mode: stores the diff for later reconstruction
+        3. Fans the live state out to any attached observers
+        4. In live_compress mode: stores frames at compress_freq intervals
+        5. In normal mode: stores the diff for later reconstruction
+        6. In retain_history=False mode: stores nothing (only the live state)
 
         Parameters
         ----------
@@ -282,6 +354,15 @@ class SimulationResult:
         # Update the live state
         self._live_state.batch_update(updates)
         self._total_steps += 1
+
+        # Fan out to observers (each samples at its own cadence). They read a
+        # reduced view, so the live state is passed without copying.
+        for observed_result in self._observed_results:
+            observed_result.record(self._live_state, self._total_steps)
+
+        # Minimum-memory mode: retain only the live state, store no history.
+        if not self._retain_history:
+            return
 
         # In live_compress mode, store frames at intervals instead of diffs
         if self.live_compress:
@@ -342,6 +423,19 @@ class SimulationResult:
         # Total steps = checkpoint step + remaining diffs + 1 (for initial state)
         return self._total_steps + 1
 
+    def _require_history(self, operation: str) -> None:
+        """Guard for operations that require retained state history.
+
+        The operation label is used only to build the error message; it is not
+        part of any external API.
+        """
+        if not self._retain_history:
+            raise RuntimeError(
+                f"{operation} is unavailable when retain_history=False; only "
+                "live_state / output / last_step / first_step are accessible. "
+                "Attach an observer to capture a reduced view of the trajectory."
+            )
+
     def steps(self) -> List[SimulationState]:
         """Yields all available steps from this simulation.
 
@@ -354,6 +448,7 @@ class SimulationResult:
         SimulationState
             Each step's state (as a copy to avoid mutation issues).
         """
+        self._require_history("steps()")
         # If frames exist (live_compress mode), yield them in order
         if self._frames:
             for step_no in sorted(self._frames.keys()):
@@ -380,11 +475,15 @@ class SimulationResult:
         SimulationState
             The last step of the simulation
         """
-        return self.get_step(len(self) - 1)
+        # The final state is exactly the live state (updated every add_step),
+        # which is always available regardless of the retention mode.
+        return self._live_state
 
     @property
     def first_step(self):
-        return self.get_step(0)
+        # Step 0 is always the (always-retained) initial state. Reconstructing
+        # via get_step(0) would needlessly fail under max_history checkpointing.
+        return self.initial_state
 
     @property
     def output(self) -> SimulationState:
@@ -408,6 +507,7 @@ class SimulationResult:
         ValueError
             If live_compress was used and requested interval doesn't match compress_freq.
         """
+        self._require_history("load_steps()")
         # If frames already exist (live_compress mode), no reconstruction needed
         if self._frames:
             if interval != self.compress_freq:
@@ -459,6 +559,7 @@ class SimulationResult:
             If step_no is before the earliest available step (when using max_history),
             or if step_no is not available in live_compress mode.
         """
+        self._require_history("get_step()")
         # Check frames first (live_compress mode)
         if self._frames:
             if step_no in self._frames:
@@ -503,10 +604,15 @@ class SimulationResult:
             "max_history": self.max_history,
             "live_compress": self.live_compress,
             "num_frames": self.num_frames,
+            "retain_history": self._retain_history,
             "total_steps": self._total_steps,
             "@module": self.__class__.__module__,
             "@class": self.__class__.__name__,
         }
+        # With no retained history there are no diffs or frames to reconstruct
+        # the final state from, so persist the live state explicitly.
+        if not self._retain_history:
+            result["final_state"] = self._live_state.as_dict()
         # Include checkpoint if present
         if self._checkpoint_state is not None:
             result["checkpoint_state"] = self._checkpoint_state.as_dict()
