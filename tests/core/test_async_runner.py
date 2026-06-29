@@ -1,12 +1,29 @@
 import pytest
 
-from pylattica.core import AsynchronousRunner, BasicController
+from pylattica.core import AsynchronousRunner, BasicController, ObservedResult
 from pylattica.core.simulation_state import SimulationState
 from pylattica.core.simulation_result import SimulationResult
 from pylattica.core.periodic_structure import PeriodicStructure
 from pylattica.core.constants import SITE_ID, GENERAL
 
 import random
+
+
+class _IncrementController(BasicController):
+    """Increments the value at a single (random) site each step.
+
+    With one site updated per async step, the total of all site values equals
+    the step number, giving deterministic observations for tests.
+    """
+
+    def get_state_update(self, site_id: int, prev_state: SimulationState):
+        prev = prev_state.get_site_state(site_id)["value"]
+        return {site_id: {"value": prev + 1}}
+
+
+def _total_value(state, step_no):
+    """A reducer summing all site values (equals step_no for the controller)."""
+    return sum(s["value"] for s in state.all_site_states())
 
 
 def test_simple_async_controller(square_grid_2D_4x4: PeriodicStructure):
@@ -163,6 +180,110 @@ def test_runner_both_compression_args_raises(square_grid_2D_4x4):
             num_steps=10,
             compress_freq=5,
             num_frames=5,
+        )
+
+
+def test_runner_bare_observer(square_grid_2D_4x4):
+    """A bare reducer is wrapped into an ObservedResult at observe_freq."""
+    initial_state = SimulationState()
+    for site in square_grid_2D_4x4.sites():
+        initial_state.set_site_state(site[SITE_ID], {"value": 0})
+
+    runner = AsynchronousRunner()
+    result = runner.run(
+        initial_state,
+        controller=_IncrementController(),
+        num_steps=10,
+        observers=[_total_value],
+        observe_freq=2,
+    )
+
+    assert len(result.observed_results) == 1
+    observed = result.observed_results[0]
+    # Samples at 0, 2, 4, 6, 8, 10; reduced total equals the step number.
+    assert observed.observation_steps == [0, 2, 4, 6, 8, 10]
+    assert observed.observation_at(4) == 4
+    assert observed.observation_at(10) == 10
+
+
+def test_runner_observer_num_frames(square_grid_2D_4x4):
+    """observe_num_frames derives the observer cadence from the step count."""
+    initial_state = SimulationState()
+    for site in square_grid_2D_4x4.sites():
+        initial_state.set_site_state(site[SITE_ID], {"value": 0})
+
+    runner = AsynchronousRunner()
+    result = runner.run(
+        initial_state,
+        controller=_IncrementController(),
+        num_steps=100,
+        observers=[_total_value],
+        observe_num_frames=5,
+    )
+
+    observed = result.observed_results[0]
+    # ceil(100 / 5) == 20
+    assert observed.compress_freq == 20
+    assert observed.observation_steps == [0, 20, 40, 60, 80, 100]
+
+
+def test_runner_explicit_observed_result_passthrough(square_grid_2D_4x4):
+    """A pre-built ObservedResult is attached as-is (per-observer cadence)."""
+    initial_state = SimulationState()
+    for site in square_grid_2D_4x4.sites():
+        initial_state.set_site_state(site[SITE_ID], {"value": 0})
+
+    explicit = ObservedResult(observer=_total_value, compress_freq=5)
+    runner = AsynchronousRunner()
+    result = runner.run(
+        initial_state,
+        controller=_IncrementController(),
+        num_steps=10,
+        observers=[explicit],
+    )
+
+    assert result.observed_results[0] is explicit
+    assert explicit.observation_steps == [0, 5, 10]
+
+
+def test_runner_no_retention_with_observer(square_grid_2D_4x4):
+    """retain_history=False keeps only the live state; observers still record."""
+    initial_state = SimulationState()
+    for site in square_grid_2D_4x4.sites():
+        initial_state.set_site_state(site[SITE_ID], {"value": 0})
+
+    runner = AsynchronousRunner()
+    result = runner.run(
+        initial_state,
+        controller=_IncrementController(),
+        num_steps=10,
+        retain_history=False,
+        observers=[_total_value],
+        observe_freq=5,
+    )
+
+    assert result.retain_history is False
+    assert len(result._diffs) == 0
+    assert len(result._frames) == 0
+    # Final live state still reflects 10 increments.
+    assert _total_value(result.last_step, 10) == 10
+    assert result.observed_results[0].observation_steps == [0, 5, 10]
+
+
+def test_runner_no_retention_with_compression_raises(square_grid_2D_4x4):
+    """retain_history=False cannot be combined with compression."""
+    initial_state = SimulationState()
+    for site in square_grid_2D_4x4.sites():
+        initial_state.set_site_state(site[SITE_ID], {"value": 0})
+
+    runner = AsynchronousRunner()
+    with pytest.raises(ValueError, match="retain_history=False"):
+        runner.run(
+            initial_state,
+            controller=_IncrementController(),
+            num_steps=10,
+            retain_history=False,
+            compress_freq=5,
         )
 
 

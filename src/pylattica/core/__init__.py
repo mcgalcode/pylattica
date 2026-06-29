@@ -1,6 +1,8 @@
 # fmt: off
 from .basic_controller import BasicController
 from .simulation_result import SimulationResult
+from .observed_result import ObservedResult
+from .observers import StateObserver
 from .runner import SynchronousRunner, AsynchronousRunner
 from .simulation_state import SimulationState
 from .periodic_structure import PeriodicStructure

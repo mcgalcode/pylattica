@@ -209,6 +209,14 @@ class SimulationResult:
                 "configure_compression must be called before recording steps."
             )
 
+        if not self._retain_history and (
+            compress_freq is not None or num_frames is not None
+        ):
+            raise ValueError(
+                "retain_history=False cannot be combined with compress_freq or "
+                "num_frames; configure the cadence on an observer instead."
+            )
+
         # FrameSampler is the single source of truth for the sampling cadence;
         # it validates mutual-exclusivity and positivity of the arguments.
         self._sampler = FrameSampler(compress_freq=compress_freq, num_frames=num_frames)
@@ -236,6 +244,39 @@ class SimulationResult:
     def retain_history(self) -> bool:
         """Whether full history (diffs/frames) is retained during the run."""
         return self._retain_history
+
+    def set_retain_history(self, retain_history: bool) -> None:
+        """Set the history-retention mode before any steps are recorded.
+
+        Used by the runner to apply a run-time retain_history option without
+        threading it through the controller's instantiate_result. A no-op when
+        retain_history is True (the default).
+
+        Parameters
+        ----------
+        retain_history : bool
+            If False, only the live state is retained (no diffs/frames).
+
+        Raises
+        ------
+        RuntimeError
+            If called after steps have already been recorded.
+        ValueError
+            If disabling retention while live compression is already enabled.
+        """
+        if retain_history:
+            self._retain_history = True
+            return
+        if self._total_steps > 0 or self._diffs:
+            raise RuntimeError(
+                "set_retain_history must be called before recording steps."
+            )
+        if self.live_compress:
+            raise ValueError(
+                "retain_history=False cannot be combined with compress_freq or "
+                "num_frames; configure the cadence on an observer instead."
+            )
+        self._retain_history = False
 
     @property
     def observed_results(self) -> list:
