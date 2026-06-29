@@ -1,4 +1,3 @@
-import math
 import tqdm
 
 from typing import Dict, List
@@ -6,6 +5,7 @@ from typing import Dict, List
 from monty.serialization import dumpfn, loadfn
 import datetime
 from .simulation_state import SimulationState
+from .frame_sampler import FrameSampler
 from .constants import GENERAL, SITES
 
 import copy
@@ -57,7 +57,7 @@ class SimulationResult:
             max_history=max_history,
         )
         # Preserve the original num_frames target for round-tripping.
-        res.num_frames = num_frames
+        res._sampler.num_frames = num_frames
         # Restore checkpoint if present
         if "checkpoint_state" in res_dict and res_dict["checkpoint_state"] is not None:
             res._checkpoint_state = SimulationState.from_dict(
@@ -182,27 +182,29 @@ class SimulationResult:
             raise RuntimeError(
                 "configure_compression must be called before recording steps."
             )
-        if compress_freq is not None and num_frames is not None:
-            raise ValueError(
-                "Specify either compress_freq or num_frames, not both."
-            )
-        if compress_freq is not None and compress_freq < 1:
-            raise ValueError(f"compress_freq must be >= 1, got {compress_freq}.")
-        if num_frames is not None and num_frames < 1:
-            raise ValueError(f"num_frames must be >= 1, got {num_frames}.")
+
+        # FrameSampler is the single source of truth for the sampling cadence;
+        # it validates mutual-exclusivity and positivity of the arguments.
+        self._sampler = FrameSampler(compress_freq=compress_freq, num_frames=num_frames)
 
         # Specifying a sampling strategy (frequency or frame count) enables
         # live compression (storing frames instead of diffs).
         self.live_compress = compress_freq is not None or num_frames is not None
-        self.num_frames = num_frames
-        # Effective sampling interval. When num_frames is set this is derived
-        # later (prepare_for_steps); until then default to every step.
-        self.compress_freq = compress_freq if compress_freq is not None else 1
 
         # Store the initial state as frame 0 when live compression is enabled.
         self._frames = {}
         if self.live_compress:
             self._frames[0] = self._live_state.copy()
+
+    @property
+    def compress_freq(self) -> int:
+        """The effective frame-sampling interval (delegated to FrameSampler)."""
+        return self._sampler.compress_freq
+
+    @property
+    def num_frames(self) -> int:
+        """The target frame count, if configured by frame count."""
+        return self._sampler.num_frames
 
     def get_diffs(self) -> list[dict]:
         """Returns the list of diffs.
@@ -238,12 +240,10 @@ class SimulationResult:
         num_steps : int
             The total number of steps the simulation will run.
         """
-        if self.num_frames is None or num_steps is None:
-            return
-
         # Derive the interval so that ~num_frames snapshots are stored. The
-        # initial (and final, via finalize) frames are always included.
-        self.compress_freq = max(1, math.ceil(num_steps / self.num_frames))
+        # initial (and final, via finalize) frames are always included. A no-op
+        # unless configured with num_frames.
+        self._sampler.prepare_for_steps(num_steps)
 
     def finalize(self) -> None:
         """Ensures the final state is stored as a frame.
@@ -285,7 +285,7 @@ class SimulationResult:
 
         # In live_compress mode, store frames at intervals instead of diffs
         if self.live_compress:
-            if self._total_steps % self.compress_freq == 0:
+            if self._sampler.should_sample(self._total_steps):
                 self._frames[self._total_steps] = self._live_state.copy()
             return
 
