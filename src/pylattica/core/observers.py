@@ -32,4 +32,3 @@ class StateObserver(ABC):
         Any
             A small, serializable value summarizing the state.
         """
-        ...  # pragma: no cover

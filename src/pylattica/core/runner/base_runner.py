@@ -40,6 +40,7 @@ class Runner:
         initial_state: SimulationState,
         controller: BasicController,
         num_steps: int,
+        *,
         verbose=False,
         compress_freq: int = None,
         num_frames: int = None,
