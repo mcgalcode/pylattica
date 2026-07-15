@@ -7,7 +7,6 @@ from .frame_sampler import FrameSampler
 from .observers import StateObserver
 from .simulation_state import SimulationState
 
-
 Observer = Union[StateObserver, Callable[[SimulationState, int], Any]]
 
 
